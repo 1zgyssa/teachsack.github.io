@@ -1336,25 +1336,25 @@
                     <li><a href="#features">功能特性</a></li>
                     <li><a href="#showcase">产品展示</a></li>
                     <li><a href="#download">下载中心</a></li>
-                    <li><a href="#">更新日志</a></li>
+                    <li><a href="https://github.com/1zgyssa/teachsack.github.io/releases" target="_blank">更新日志</a></li>
                 </ul>
             </div>
             <div>
                 <h4 class="footer-title">支持</h4>
                 <ul class="footer-links">
                     <li><a href="#faq">常见问题</a></li>
-                    <li><a href="#">使用指南</a></li>
-                    <li><a href="#">技术支持</a></li>
-                    <li><a href="#">反馈建议</a></li>
+                    <li><a href="#" onclick="showGuide(); return false;">使用指南</a></li>
+                    <li><a href="#" onclick="showSupport(); return false;">技术支持</a></li>
+                    <li><a href="#" onclick="showFeedback(); return false;">反馈建议</a></li>
                 </ul>
             </div>
             <div>
                 <h4 class="footer-title">关于</h4>
                 <ul class="footer-links">
-                    <li><a href="#">关于我们</a></li>
-                    <li><a href="#">隐私政策</a></li>
-                    <li><a href="#">用户协议</a></li>
-                    <li><a href="#">联系我们</a></li>
+                    <li><a href="#" onclick="showAbout(); return false;">关于我们</a></li>
+                    <li><a href="#" onclick="showPrivacy(); return false;">隐私政策</a></li>
+                    <li><a href="#" onclick="showTerms(); return false;">用户协议</a></li>
+                    <li><a href="mailto:support@teachsack.cn">联系我们</a></li>
                 </ul>
             </div>
         </div>
@@ -1436,6 +1436,113 @@
             input.select();
             document.execCommand('copy');
             showToast('✅ 下载链接已复制到剪贴板');
+        }
+
+        function showGuide() {
+            const guideContent = `
+                <h3>📖 使用指南</h3>
+                <p>TeachSack是一款专为教师打造的智能化教学辅助工具。</p>
+                <ul style="text-align: left; margin: 1rem 0;">
+                    <li><strong>🎴 智能卡牌点名</strong>：点击点名按钮，系统会随机抽取一名学生，配合精美的卡牌动画效果。</li>
+                    <li><strong>📊 成绩管理系统</strong>：支持成绩录入、统计分析、排名展示等功能。</li>
+                    <li><strong>🎯 课堂互动挑战</strong>：丰富的课堂挑战项目，激发学生的学习积极性。</li>
+                    <li><strong>👥 学生名单管理</strong>：支持批量导入、导出学生名单，智能分组管理。</li>
+                    <li><strong>🔑 激活码系统</strong>：支持激活码验证、设备绑定、试用功能。</li>
+                    <li><strong>🎨 个性化主题</strong>：支持浅色和深色两种主题模式。</li>
+                </ul>
+                <p>更多详细教程请参考常见问题或联系技术支持。</p>
+            `;
+            showModal('使用指南', guideContent);
+        }
+
+        function showSupport() {
+            const supportContent = `
+                <h3>🛠️ 技术支持</h3>
+                <p>如果您在使用过程中遇到任何问题，可以通过以下方式获取帮助：</p>
+                <ul style="text-align: left; margin: 1rem 0;">
+                    <li><strong>📋 常见问题</strong>：查看网站上的常见问题页面，可能已经有您需要的答案。</li>
+                    <li><strong>📧 邮件支持</strong>：发送邮件到 support@teachsack.cn，我们会在24小时内回复。</li>
+                    <li><strong>🐙 GitHub</strong>：访问 GitHub 仓库提交 Issue。</li>
+                </ul>
+                <p>我们建议您先查看常见问题，大多数问题都能在那里找到答案。</p>
+            `;
+            showModal('技术支持', supportContent);
+        }
+
+        function showFeedback() {
+            const feedbackContent = `
+                <h3>💡 反馈建议</h3>
+                <p>感谢您使用 TeachSack！我们非常重视您的反馈。</p>
+                <p>如果您有任何建议或意见，请发送邮件到：</p>
+                <p style="font-size: 1.2rem; font-weight: 600; margin: 1rem 0;">feedback@teachsack.cn</p>
+                <p>或者在 GitHub 上提交 Issue。</p>
+                <p>您的每一条反馈都对我们非常重要，帮助我们不断改进产品。</p>
+            `;
+            showModal('反馈建议', feedbackContent);
+        }
+
+        function showAbout() {
+            const aboutContent = `
+                <h3>🎓 关于 TeachSack</h3>
+                <p>TeachSack是一款专为教师打造的智能化教学辅助工具，致力于让课堂更有趣，让教学更高效。</p>
+                <p><strong>愿景</strong>：成为最受教师喜爱的教学辅助工具</p>
+                <p><strong>使命</strong>：用技术赋能教育，让每一堂课都精彩</p>
+                <p><strong>价值观</strong>：创新、专注、用户至上</p>
+                <p style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8;">版本：v1.2.4</p>
+            `;
+            showModal('关于我们', aboutContent);
+        }
+
+        function showPrivacy() {
+            const privacyContent = `
+                <h3>🔒 隐私政策</h3>
+                <p>我们非常重视您的隐私。TeachSack是一款本地应用，所有数据都存储在您的设备上。</p>
+                <ul style="text-align: left; margin: 1rem 0;">
+                    <li><strong>数据存储</strong>：所有数据（学生名单、成绩、设置等）仅存储在您的本地设备上，不会上传到任何服务器。</li>
+                    <li><strong>激活验证</strong>：激活码验证仅在本地进行，无需联网。</li>
+                    <li><strong>设备信息</strong>：为了实现设备绑定功能，我们会收集设备的硬件信息用于生成唯一的设备ID。</li>
+                    <li><strong>数据安全</strong>：您的数据完全由您控制，您可以随时导出或删除所有数据。</li>
+                </ul>
+                <p>我们承诺不会收集、存储或传输任何个人身份信息。</p>
+            `;
+            showModal('隐私政策', privacyContent);
+        }
+
+        function showTerms() {
+            const termsContent = `
+                <h3>📝 用户协议</h3>
+                <p>欢迎使用 TeachSack！请仔细阅读以下用户协议。</p>
+                <ul style="text-align: left; margin: 1rem 0;">
+                    <li><strong>授权使用</strong>：TeachSack提供免费试用，激活后可享受持续使用权限。</li>
+                    <li><strong>激活码</strong>：每个激活码仅适用于一台设备，不得转让或分享。</li>
+                    <li><strong>软件修改</strong>：未经授权，不得修改、复制或分发TeachSack软件。</li>
+                    <li><strong>免责声明</strong>：TeachSack仅供教学辅助使用，对于因使用本软件造成的任何损失，我们不承担责任。</li>
+                    <li><strong>协议更新</strong>：我们保留随时更新本协议的权利，更新后会通过软件通知用户。</li>
+                </ul>
+                <p>使用本软件即表示您同意以上条款。</p>
+            `;
+            showModal('用户协议', termsContent);
+        }
+
+        function showModal(title, content) {
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; animation: fadeIn 0.3s ease;';
+            
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = 'background: linear-gradient(135deg, #1e1b4b, #312e81); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2.5rem; max-width: 500px; width: 90%; text-align: center; color: white; animation: scaleIn 0.3s ease;';
+            
+            modalContent.innerHTML = `
+                <h2 style="margin-bottom: 1.5rem;">${title}</h2>
+                <div style="color: #e2e8f0; line-height: 1.8;">${content}</div>
+                <button onclick="this.closest('[style*=position: fixed]').remove()" style="margin-top: 2rem; padding: 0.75rem 2rem; border-radius: 10px; border: none; background: linear-gradient(135deg, #6366f1, #ec4899); color: white; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">关闭</button>
+            `;
+            
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+            
+            const style = document.createElement('style');
+            style.textContent = '@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } } @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }';
+            document.head.appendChild(style);
         }
 
         const faqItems = document.querySelectorAll('.faq-item');
