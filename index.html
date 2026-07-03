@@ -759,76 +759,7 @@
             box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
         }
 
-        .download-form {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 1rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
 
-        .download-form input,
-        .download-form select {
-            padding: 0.875rem 1.25rem;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-primary);
-            font-size: 0.9375rem;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .download-form input::placeholder {
-            color: var(--text-muted);
-        }
-
-        .download-form input:focus,
-        .download-form select:focus {
-            border-color: var(--primary-color);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .download-form select {
-            cursor: pointer;
-            min-width: 150px;
-        }
-
-        .download-form option {
-            background: var(--bg-gradient-start);
-            color: var(--text-primary);
-        }
-
-        .download-submit-btn {
-            padding: 0.875rem 2rem;
-            border-radius: 10px;
-            border: none;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            font-weight: 600;
-            font-size: 0.9375rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
-        }
-
-        .download-submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
-        }
-
-        .download-submit-btn:active {
-            transform: translateY(0);
-        }
-
-        .download-hint {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            margin-bottom: 2rem;
-        }
 
         .platform-icon {
             font-size: 2rem;
@@ -1302,18 +1233,6 @@
                 <h2 class="download-title">立即下载TeachSack</h2>
                 <p class="download-description">免费下载使用，支持Windows、macOS、Linux平台，无广告干扰。</p>
                 
-                <div class="download-form">
-                    <input type="email" id="download-email" placeholder="请输入您的邮箱地址" required>
-                    <select id="download-platform">
-                        <option value="windows">🪟 Windows</option>
-                        <option value="macos">🍎 macOS</option>
-                        <option value="linux">🐧 Linux</option>
-                    </select>
-                    <button id="download-submit" class="download-submit-btn">获取下载链接</button>
-                </div>
-                
-                <p class="download-hint">我们会将下载链接发送到您的邮箱，确保您获得最新版本。</p>
-                
                 <div class="download-platforms">
                     <div class="download-card-item">
                         <div class="platform-icon">🪟</div>
@@ -1571,63 +1490,7 @@
             alert('Linux 版本即将发布，敬请期待！');
         };
 
-        const downloadSubmitBtn = document.getElementById('download-submit');
-        const downloadEmail = document.getElementById('download-email');
-        const downloadPlatform = document.getElementById('download-platform');
 
-        downloadSubmitBtn.addEventListener('click', () => {
-            const email = downloadEmail.value.trim();
-            const platform = downloadPlatform.options[downloadPlatform.selectedIndex].textContent;
-            
-            if (!email) {
-                showDownloadToast('请输入邮箱地址', 'error');
-                return;
-            }
-            
-            if (!email.includes('@')) {
-                showDownloadToast('请输入有效的邮箱地址', 'error');
-                return;
-            }
-            
-            downloadSubmitBtn.textContent = '发送中...';
-            downloadSubmitBtn.disabled = true;
-            
-            setTimeout(() => {
-                showDownloadToast(`📧 下载链接已发送到 ${email}`, 'success');
-                downloadEmail.value = '';
-                downloadSubmitBtn.textContent = '获取下载链接';
-                downloadSubmitBtn.disabled = false;
-            }, 1500);
-        });
-
-        function showDownloadToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            const bgColor = type === 'success' ? 'linear-gradient(135deg, #10b981, #059669)' : 
-                           type === 'error' ? 'linear-gradient(135deg, #ef4444, #dc2626)' :
-                           'linear-gradient(135deg, #6366f1, #ec4899)';
-            
-            toast.style.cssText = `
-                position: fixed;
-                bottom: 30px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: ${bgColor};
-                color: white;
-                padding: 1rem 2rem;
-                border-radius: 12px;
-                font-weight: 600;
-                box-shadow: 0 10px 40px rgba(99, 102, 241, 0.4);
-                z-index: 10000;
-                animation: slideUp 0.3s ease, fadeOut 0.3s ease 2.5s forwards;
-                text-align: center;
-            `;
-            toast.innerHTML = message;
-            document.body.appendChild(toast);
-
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
-        }
 
         const style = document.createElement('style');
         style.textContent = `
