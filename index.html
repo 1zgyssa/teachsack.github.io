@@ -1376,24 +1376,29 @@
         platformBtns.forEach(btn => {
             const originalHTML = btn.innerHTML;
             const platformName = btn.querySelector('.platform-name').textContent;
-            const platformIcon = btn.querySelector('.platform-icon').textContent;
             
             btn.addEventListener('click', (e) => {
                 const href = btn.getAttribute('href');
                 if (href && href !== '#') {
-                    showDownloadToast(`⏳ 正在开始 ${platformName} 下载...`, 'info');
-                    btn.innerHTML = `<div class="platform-icon">⏳</div><div class="platform-info"><div class="platform-name">下载中...</div><div class="platform-version">请稍候</div></div>`;
-                    btn.style.opacity = '0.7';
-                    btn.style.cursor = 'wait';
-                    
-                    setTimeout(() => {
-                        btn.innerHTML = `<div class="platform-icon">✅</div><div class="platform-info"><div class="platform-name">下载已开始</div><div class="platform-version">${platformName}</div></div>`;
+                    e.preventDefault();
+                    const downloadWindow = window.open(href, '_blank');
+                    if (downloadWindow) {
+                        showDownloadToast(`⏳ 正在开始 ${platformName} 下载...`, 'info');
+                        btn.innerHTML = `<div class="platform-icon">⏳</div><div class="platform-info"><div class="platform-name">下载中...</div><div class="platform-version">请稍候</div></div>`;
+                        btn.style.opacity = '0.7';
+                        btn.style.cursor = 'wait';
+                        
                         setTimeout(() => {
-                            btn.innerHTML = originalHTML;
-                            btn.style.opacity = '1';
-                            btn.style.cursor = 'pointer';
+                            btn.innerHTML = `<div class="platform-icon">✅</div><div class="platform-info"><div class="platform-name">下载已开始</div><div class="platform-version">${platformName}</div></div>`;
+                            setTimeout(() => {
+                                btn.innerHTML = originalHTML;
+                                btn.style.opacity = '1';
+                                btn.style.cursor = 'pointer';
+                            }, 2000);
                         }, 2000);
-                    }, 2000);
+                    } else {
+                        showDownloadToast('⚠️ 请允许弹出新窗口', 'error');
+                    }
                 } else {
                     e.preventDefault();
                     showDownloadToast(`${platformName}版本即将发布`, 'info');
