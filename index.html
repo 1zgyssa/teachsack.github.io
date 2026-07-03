@@ -1374,17 +1374,29 @@
 
         const platformBtns = document.querySelectorAll('.platform-btn');
         platformBtns.forEach(btn => {
+            const originalHTML = btn.innerHTML;
+            const platformName = btn.querySelector('.platform-name').textContent;
+            const platformIcon = btn.querySelector('.platform-icon').textContent;
+            
             btn.addEventListener('click', (e) => {
                 const href = btn.getAttribute('href');
                 if (href && href !== '#') {
+                    showDownloadToast(`⏳ 正在开始 ${platformName} 下载...`, 'info');
                     btn.innerHTML = `<div class="platform-icon">⏳</div><div class="platform-info"><div class="platform-name">下载中...</div><div class="platform-version">请稍候</div></div>`;
+                    btn.style.opacity = '0.7';
+                    btn.style.cursor = 'wait';
+                    
                     setTimeout(() => {
-                        btn.innerHTML = `<div class="platform-icon">${btn.querySelector('.platform-icon')?.textContent || '📦'}</div><div class="platform-info"><div class="platform-name">${btn.querySelector('.platform-name')?.textContent || '下载'}</div><div class="platform-version">v1.2.4</div></div>`;
-                    }, 3000);
+                        btn.innerHTML = `<div class="platform-icon">✅</div><div class="platform-info"><div class="platform-name">下载已开始</div><div class="platform-version">${platformName}</div></div>`;
+                        setTimeout(() => {
+                            btn.innerHTML = originalHTML;
+                            btn.style.opacity = '1';
+                            btn.style.cursor = 'pointer';
+                        }, 2000);
+                    }, 2000);
                 } else {
                     e.preventDefault();
-                    const platform = btn.querySelector('.platform-name').textContent;
-                    showDownloadToast(platform);
+                    showDownloadToast(`${platformName}版本即将发布`, 'info');
                 }
             });
         });
