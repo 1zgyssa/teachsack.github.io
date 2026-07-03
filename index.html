@@ -1336,7 +1336,7 @@
                     <li><a href="#features">功能特性</a></li>
                     <li><a href="#showcase">产品展示</a></li>
                     <li><a href="#download">下载中心</a></li>
-                    <li><a href="https://github.com/1zgyssa/teachsack.github.io/releases" target="_blank">更新日志</a></li>
+                    <li><a href="#" onclick="showChangelog(); return false;">更新日志</a></li>
                 </ul>
             </div>
             <div>
@@ -1354,7 +1354,7 @@
                     <li><a href="#" onclick="showAbout(); return false;">关于我们</a></li>
                     <li><a href="#" onclick="showPrivacy(); return false;">隐私政策</a></li>
                     <li><a href="#" onclick="showTerms(); return false;">用户协议</a></li>
-                    <li><a href="mailto:support@teachsack.cn">联系我们</a></li>
+                    <li><a href="#" onclick="showContact(); return false;">联系我们</a></li>
                 </ul>
             </div>
         </div>
@@ -1522,6 +1522,51 @@
                 <p>使用本软件即表示您同意以上条款。</p>
             `;
             showModal('用户协议', termsContent);
+        }
+
+        function showChangelog() {
+            const changelogContent = `
+                <h3>📝 更新日志</h3>
+                <div style="text-align: left; margin: 1rem 0;">
+                    <p><strong>v1.2.4</strong> (2026-07-03)</p>
+                    <ul style="margin-left: 1.5rem;">
+                        <li>✅ 修复重置数据功能，确保学生名单被清空</li>
+                        <li>✅ 优化数据保存和加载逻辑</li>
+                        <li>✅ 修复激活码状态丢失问题</li>
+                        <li>✅ 改进初始化顺序控制</li>
+                        <li>✅ 优化官网下载按钮功能</li>
+                    </ul>
+                    <p style="margin-top: 1rem;"><strong>v1.2.3</strong> (2026-06-28)</p>
+                    <ul style="margin-left: 1.5rem;">
+                        <li>✨ 新增智能卡牌点名功能</li>
+                        <li>✨ 新增成绩管理系统</li>
+                        <li>✨ 新增课堂互动挑战</li>
+                        <li>✨ 新增学生名单管理</li>
+                        <li>✨ 新增激活码验证系统</li>
+                    </ul>
+                    <p style="margin-top: 1rem;"><strong>v1.0.0</strong> (2026-06-01)</p>
+                    <ul style="margin-left: 1.5rem;">
+                        <li>🎯 初始版本发布</li>
+                        <li>🎯 基础功能开发完成</li>
+                    </ul>
+                </div>
+            `;
+            showModal('更新日志', changelogContent);
+        }
+
+        function showContact() {
+            const contactContent = `
+                <h3>📧 联系我们</h3>
+                <p>感谢您使用 TeachSack！如有任何问题或建议，欢迎联系我们。</p>
+                <p><strong>📧 邮箱地址</strong></p>
+                <p style="font-size: 1.1rem; margin: 1rem 0;">support@teachsack.cn</p>
+                <p><strong>💡 反馈建议</strong></p>
+                <p style="font-size: 1.1rem; margin: 1rem 0;">feedback@teachsack.cn</p>
+                <p><strong>🐙 GitHub</strong></p>
+                <p style="margin: 1rem 0;">https://github.com/1zgyssa/teachsack.github.io</p>
+                <p>我们会在24小时内回复您的邮件。</p>
+            `;
+            showModal('联系我们', contactContent);
         }
 
         function showModal(title, content) {
