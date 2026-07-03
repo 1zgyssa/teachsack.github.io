@@ -1226,21 +1226,21 @@
                 <p class="download-hint">我们会将下载链接发送到您的邮箱，确保您获得最新版本。</p>
                 
                 <div class="download-platforms">
-                    <button class="platform-btn" onclick="startDownload('Windows', 'https://1zgyssa.github.io/teachsack.github.io/downloads/TeachSack-Windows-v1.2.4.exe')">
+                    <button class="platform-btn" onclick="startDownload(this, 'Windows', 'https://1zgyssa.github.io/teachsack.github.io/downloads/TeachSack-Windows-v1.2.4.exe')">
                         <div class="platform-icon">🪟</div>
                         <div class="platform-info">
                             <div class="platform-name">Windows</div>
                             <div class="platform-version">v1.2.4</div>
                         </div>
                     </button>
-                    <button class="platform-btn" onclick="showComingSoon('macOS')">
+                    <button class="platform-btn" onclick="showComingSoon(this, 'macOS')">
                         <div class="platform-icon">🍎</div>
                         <div class="platform-info">
                             <div class="platform-name">macOS</div>
                             <div class="platform-version">即将发布</div>
                         </div>
                     </button>
-                    <button class="platform-btn" onclick="showComingSoon('Linux')">
+                    <button class="platform-btn" onclick="showComingSoon(this, 'Linux')">
                         <div class="platform-icon">🐧</div>
                         <div class="platform-info">
                             <div class="platform-name">Linux</div>
@@ -1372,8 +1372,7 @@
             });
         });
 
-        function startDownload(platform, url) {
-            const btn = event.currentTarget;
+        function startDownload(btn, platform, url) {
             const originalHTML = btn.innerHTML;
             
             showDownloadToast(`⏳ 正在开始 ${platform} 下载...`, 'info');
@@ -1397,7 +1396,7 @@
             }, 2000);
         }
 
-        function showComingSoon(platform) {
+        function showComingSoon(btn, platform) {
             showDownloadToast(`${platform}版本即将发布，敬请期待！`, 'info');
         }
 
