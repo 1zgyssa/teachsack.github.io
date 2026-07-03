@@ -1226,27 +1226,27 @@
                 <p class="download-hint">我们会将下载链接发送到您的邮箱，确保您获得最新版本。</p>
                 
                 <div class="download-platforms">
-                    <a href="https://1zgyssa.github.io/teachsack.github.io/downloads/TeachSack-Windows-v1.2.4.exe" class="platform-btn" target="_blank" download="TeachSack-Windows-v1.2.4.exe">
+                    <button class="platform-btn" onclick="downloadFile('https://1zgyssa.github.io/teachsack.github.io/downloads/TeachSack-Windows-v1.2.4.exe', 'TeachSack-Windows-v1.2.4.exe', this)">
                         <div class="platform-icon">🪟</div>
                         <div class="platform-info">
                             <div class="platform-name">Windows</div>
                             <div class="platform-version">v1.2.4</div>
                         </div>
-                    </a>
-                    <a href="#" class="platform-btn" onclick="alert('macOS版本即将发布，敬请期待！'); return false;">
+                    </button>
+                    <button class="platform-btn" onclick="showToast('macOS版本即将发布，敬请期待！')">
                         <div class="platform-icon">🍎</div>
                         <div class="platform-info">
                             <div class="platform-name">macOS</div>
                             <div class="platform-version">即将发布</div>
                         </div>
-                    </a>
-                    <a href="#" class="platform-btn" onclick="alert('Linux版本即将发布，敬请期待！'); return false;">
+                    </button>
+                    <button class="platform-btn" onclick="showToast('Linux版本即将发布，敬请期待！')">
                         <div class="platform-icon">🐧</div>
                         <div class="platform-info">
                             <div class="platform-name">Linux</div>
                             <div class="platform-version">即将发布</div>
                         </div>
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -1348,6 +1348,72 @@
     </footer>
 
     <script>
+        function downloadFile(url, filename, btn) {
+            const originalHTML = btn.innerHTML;
+            
+            btn.innerHTML = '<div class="platform-icon">⏳</div><div class="platform-info"><div class="platform-name">下载中...</div><div class="platform-version">请稍候</div></div>';
+            btn.style.opacity = '0.7';
+            btn.style.cursor = 'wait';
+            
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.responseType = 'blob';
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    const blob = new Blob([xhr.response], { type: 'application/octet-stream' });
+                    const downloadUrl = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = downloadUrl;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(downloadUrl);
+                    
+                    btn.innerHTML = '<div class="platform-icon">✅</div><div class="platform-info"><div class="platform-name">下载已开始</div><div class="platform-version">Windows</div></div>';
+                    setTimeout(() => {
+                        btn.innerHTML = originalHTML;
+                        btn.style.opacity = '1';
+                        btn.style.cursor = 'pointer';
+                    }, 2000);
+                } else {
+                    btn.innerHTML = '<div class="platform-icon">❌</div><div class="platform-info"><div class="platform-name">下载失败</div><div class="platform-version">请重试</div></div>';
+                    setTimeout(() => {
+                        btn.innerHTML = originalHTML;
+                        btn.style.opacity = '1';
+                        btn.style.cursor = 'pointer';
+                    }, 3000);
+                }
+            };
+            
+            xhr.onerror = function() {
+                btn.innerHTML = '<div class="platform-icon">❌</div><div class="platform-info"><div class="platform-name">下载失败</div><div class="platform-version">网络错误</div></div>';
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'pointer';
+                }, 3000);
+            };
+            
+            xhr.send();
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = 'position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #6366f1, #ec4899); color: white; padding: 1rem 2rem; border-radius: 12px; font-weight: 600; box-shadow: 0 10px 40px rgba(99, 102, 241, 0.4); z-index: 10000; animation: slideUp 0.3s ease, fadeOut 0.3s ease 2.5s forwards; text-align: center;';
+            toast.innerHTML = message;
+            document.body.appendChild(toast);
+            
+            const style = document.createElement('style');
+            style.textContent = '@keyframes slideUp { from { transform: translateX(-50%) translateY(50px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } } @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }';
+            document.head.appendChild(style);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
         const faqItems = document.querySelectorAll('.faq-item');
         
         faqItems.forEach(item => {
