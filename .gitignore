@@ -1,0 +1,8 @@
+node_modules/
+dist/
+dist_newest/
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+教学工具箱数据.json

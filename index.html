@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教学工具箱 - 让课堂更有趣·让教学更高效</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary-color: #ec4899;
+            --accent-color: #f59e0b;
+            --bg-gradient-start: #0f172a;
+            --bg-gradient-end: #1e1b4b;
+            --card-bg: rgba(30, 27, 75, 0.6);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: rgba(148, 163, 184, 0.1);
+        }
+
+        @font-face {
+            font-family: 'PingFang SC';
+            src: local('PingFang SC'), local('Microsoft YaHei');
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .glow-effect {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .glow-purple {
+            width: 600px;
+            height: 600px;
+            background: var(--primary-color);
+            top: -200px;
+            left: -100px;
+        }
+
+        .glow-pink {
+            width: 500px;
+            height: 500px;
+            background: var(--secondary-color);
+            bottom: -150px;
+            right: -100px;
+        }
+
+        .glow-orange {
+            width: 400px;
+            height: 400px;
+            background: var(--accent-color);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.2;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+        }
+
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 2rem 4rem;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+        }
+
+        .hero-text {
+            text-align: left;
+        }
+
+        .hero-subtitle {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary-light);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.6);
+        }
+
+        .secondary-btn {
+            background: transparent;
+            color: var(--text-primary);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .secondary-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--text-secondary);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .hero-image {
+            position: relative;
+        }
+
+        .app-mockup {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .app-screen {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+        }
+
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 16px;
+            margin-bottom: 1rem;
+        }
+
+        .app-header-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .app-content {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        .app-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .app-card:hover {
+            transform: scale(1.05);
+        }
+
+        .app-card-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .app-card-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .floating-element {
+            position: absolute;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            width: 60px;
+            height: 60px;
+            background: rgba(99, 102, 241, 0.2);
+            border-radius: 16px;
+            top: 20%;
+            right: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 40px;
+            height: 40px;
+            background: rgba(236, 72, 153, 0.2);
+            border-radius: 50%;
+            top: 60%;
+            left: 5%;
+            animation-delay: 1.5s;
+        }
+
+        .floating-element:nth-child(3) {
+            width: 50px;
+            height: 50px;
+            background: rgba(245, 158, 11, 0.2);
+            border-radius: 12px;
+            bottom: 20%;
+            right: 20%;
+            animation-delay: 3s;
+        }
+
+        .floating-element:nth-child(4) {
+            width: 35px;
+            height: 35px;
+            background: rgba(16, 185, 129, 0.2);
+            border-radius: 50%;
+            top: 40%;
+            right: 30%;
+            animation-delay: 4.5s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(10deg);
+            }
+        }
+
+        .features {
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-subtitle {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary-light);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-description {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .showcase {
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .showcase-image {
+            position: relative;
+        }
+
+        .showcase-screenshot {
+            width: 100%;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .showcase-list {
+            list-style: none;
+        }
+
+        .showcase-item {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .showcase-item:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+            transform: translateX(5px);
+        }
+
+        .showcase-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(99, 102, 241, 0.15);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .showcase-content h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .showcase-content p {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+        }
+
+        .download {
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .download-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            padding: 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+        }
+
+        .download-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 2rem;
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.4);
+        }
+
+        .download-title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .download-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .download-platforms {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .platform-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .platform-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .platform-icon {
+            font-size: 2rem;
+        }
+
+        .platform-info {
+            text-align: left;
+        }
+
+        .platform-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .platform-version {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .faq {
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .faq-grid {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.active {
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+
+        .faq-question:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .faq-arrow {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-arrow {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+        }
+
+        .footer {
+            padding: 4rem 2rem 2rem;
+            border-top: 1px solid var(--border-color);
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        .footer-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand {
+            grid-column: span 1;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .footer-description {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9375rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .footer-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-copyright {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 4rem;
+                text-align: center;
+            }
+
+            .hero-text {
+                text-align: center;
+            }
+
+            .hero-description {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-title {
+                font-size: 2.75rem;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .showcase-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.25rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-stats {
+                gap: 2rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .download-card {
+                padding: 2rem;
+            }
+
+            .download-title {
+                font-size: 1.75rem;
+            }
+
+            .platform-btn {
+                padding: 1rem 1.5rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.75rem;
+            }
+
+            .hero-description {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .primary-btn, .secondary-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .download-platforms {
+                flex-direction: column;
+            }
+
+            .platform-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glow-effect glow-purple"></div>
+    <div class="glow-effect glow-pink"></div>
+    <div class="glow-effect glow-orange"></div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">🎓</div>
+                <span>教学工具箱</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#features">功能特性</a></li>
+                <li><a href="#showcase">产品展示</a></li>
+                <li><a href="#download">下载中心</a></li>
+                <li><a href="#faq">常见问题</a></li>
+            </ul>
+            <a href="#download" class="download-btn">立即下载</a>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-text">
+                <span class="hero-subtitle">v1.2.4 全新版本</span>
+                <h1 class="hero-title">让课堂更有趣<br>让教学更高效</h1>
+                <p class="hero-description">教学工具箱是一款专为教师打造的智能化教学辅助工具，集成卡牌点名、成绩管理、课堂互动等多种功能，让您的课堂焕发新活力。</p>
+                <div class="hero-buttons">
+                    <a href="#download" class="primary-btn">📥 免费下载</a>
+                    <a href="#features" class="secondary-btn">🎯 了解更多</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">50K+</div>
+                        <div class="stat-label">活跃用户</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">4.9</div>
+                        <div class="stat-label">用户评分</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">100+</div>
+                        <div class="stat-label">功能特性</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="floating-elements">
+                    <div class="floating-element"></div>
+                    <div class="floating-element"></div>
+                    <div class="floating-element"></div>
+                    <div class="floating-element"></div>
+                </div>
+                <div class="app-mockup">
+                    <div class="app-screen">
+                        <div class="app-header">
+                            <span class="app-header-title">教学工具箱</span>
+                            <span>⚡</span>
+                        </div>
+                        <div class="app-content">
+                            <div class="app-card">
+                                <div class="app-card-icon">🎴</div>
+                                <div class="app-card-label">卡牌点名</div>
+                            </div>
+                            <div class="app-card">
+                                <div class="app-card-icon">📊</div>
+                                <div class="app-card-label">成绩管理</div>
+                            </div>
+                            <div class="app-card">
+                                <div class="app-card-icon">🎯</div>
+                                <div class="app-card-label">课堂互动</div>
+                            </div>
+                            <div class="app-card">
+                                <div class="app-card-icon">⚙️</div>
+                                <div class="app-card-label">系统设置</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-subtitle">核心功能</span>
+                <h2 class="section-title">强大的教学辅助工具</h2>
+                <p class="section-description">教学工具箱提供全方位的教学辅助功能，帮助教师轻松管理课堂，提升教学效率。</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎴</div>
+                    <h3 class="feature-title">智能卡牌点名</h3>
+                    <p class="feature-description">支持随机点名、分组点名、手动点名等多种方式，配合精美卡牌动画效果，让课堂提问更加有趣。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">成绩管理系统</h3>
+                    <p class="feature-description">支持成绩录入、统计分析、排名展示等功能，自动生成成绩报表，让成绩管理更加便捷。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">课堂互动挑战</h3>
+                    <p class="feature-description">丰富的课堂挑战项目，包括体能挑战、脑力挑战等，激发学生的学习积极性。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3 class="feature-title">学生名单管理</h3>
+                    <p class="feature-description">支持批量导入、导出学生名单，智能分组管理，轻松管理班级信息。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔑</div>
+                    <h3 class="feature-title">激活码系统</h3>
+                    <p class="feature-description">支持激活码验证、设备绑定、试用功能，保障软件版权安全。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3 class="feature-title">个性化主题</h3>
+                    <p class="feature-description">多种主题风格可选，支持自定义颜色、动画效果，打造专属教学环境。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="showcase" id="showcase">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-subtitle">产品展示</span>
+                <h2 class="section-title">直观的操作体验</h2>
+                <p class="section-description">简洁美观的界面设计，流畅的操作体验，让教学工作更加轻松愉悦。</p>
+            </div>
+            <div class="showcase-grid">
+                <div class="showcase-image">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Modern%20educational%20software%20interface%20with%20colorful%20cards%20showing%20student%20names%2C%20clean%20UI%20design%2C%20dark%20theme%2C%20professional%20teaching%20tool&image_size=landscape_16_9" alt="教学工具箱界面" class="showcase-screenshot">
+                </div>
+                <ul class="showcase-list">
+                    <li class="showcase-item">
+                        <div class="showcase-icon">✨</div>
+                        <div class="showcase-content">
+                            <h3>流畅动画效果</h3>
+                            <p>精美的卡牌翻转动画，让点名过程更加生动有趣</p>
+                        </div>
+                    </li>
+                    <li class="showcase-item">
+                        <div class="showcase-icon">📱</div>
+                        <div class="showcase-content">
+                            <h3>跨平台支持</h3>
+                            <p>支持Windows、macOS、Linux等多种操作系统</p>
+                        </div>
+                    </li>
+                    <li class="showcase-item">
+                        <div class="showcase-icon">💾</div>
+                        <div class="showcase-content">
+                            <h3>数据自动备份</h3>
+                            <p>自动保存数据到本地，确保数据安全不丢失</p>
+                        </div>
+                    </li>
+                    <li class="showcase-item">
+                        <div class="showcase-icon">🔄</div>
+                        <div class="showcase-content">
+                            <h3>一键数据重置</h3>
+                            <p>支持一键清空所有数据，保留激活状态，方便重新开始</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="download" id="download">
+        <div class="section-container">
+            <div class="download-card">
+                <div class="download-icon">📦</div>
+                <h2 class="download-title">立即下载教学工具箱</h2>
+                <p class="download-description">免费下载使用，支持Windows、macOS、Linux平台，永久免费，无广告干扰。</p>
+                <div class="download-platforms">
+                    <a href="#" class="platform-btn">
+                        <div class="platform-icon">🪟</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Windows</div>
+                            <div class="platform-version">v1.2.4</div>
+                        </div>
+                    </a>
+                    <a href="#" class="platform-btn">
+                        <div class="platform-icon">🍎</div>
+                        <div class="platform-info">
+                            <div class="platform-name">macOS</div>
+                            <div class="platform-version">v1.2.4</div>
+                        </div>
+                    </a>
+                    <a href="#" class="platform-btn">
+                        <div class="platform-icon">🐧</div>
+                        <div class="platform-info">
+                            <div class="platform-name">Linux</div>
+                            <div class="platform-version">v1.2.4</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq" id="faq">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-subtitle">常见问题</span>
+                <h2 class="section-title">您可能想了解的问题</h2>
+                <p class="section-description">我们整理了用户最常问的问题，希望能帮助您更好地使用教学工具箱。</p>
+            </div>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>教学工具箱是免费的吗？</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">是的，教学工具箱完全免费使用，无任何功能限制，也不会有广告干扰。我们希望能帮助更多教师提升教学效率。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>数据会上传到服务器吗？</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">不会，所有数据都存储在您的本地设备上，我们不会上传任何用户数据到服务器，确保您的数据隐私安全。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>如何获取激活码？</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">激活码可以通过官方渠道获取，新用户可获得免费试用次数。激活后可享受完整功能和技术支持服务。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>支持导入学生名单吗？</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">支持！您可以通过文本文件批量导入学生名单，系统会自动处理并去重，方便快捷。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>遇到问题如何反馈？</span>
+                        <span class="faq-arrow">▼</span>
+                    </div>
+                    <div class="faq-answer">您可以通过官方网站、邮箱或社交媒体联系我们，我们会尽快回复并帮助您解决问题。</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <div class="footer-logo-icon">🎓</div>
+                    <span>教学工具箱</span>
+                </div>
+                <p class="footer-description">让课堂更有趣，让教学更高效。专为教师打造的智能化教学辅助工具。</p>
+                <div class="footer-social">
+                    <a href="#" class="social-link">📧</a>
+                    <a href="#" class="social-link">💬</a>
+                    <a href="#" class="social-link">🐙</a>
+                </div>
+            </div>
+            <div>
+                <h4 class="footer-title">产品</h4>
+                <ul class="footer-links">
+                    <li><a href="#features">功能特性</a></li>
+                    <li><a href="#showcase">产品展示</a></li>
+                    <li><a href="#download">下载中心</a></li>
+                    <li><a href="#">更新日志</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-title">支持</h4>
+                <ul class="footer-links">
+                    <li><a href="#faq">常见问题</a></li>
+                    <li><a href="#">使用指南</a></li>
+                    <li><a href="#">技术支持</a></li>
+                    <li><a href="#">反馈建议</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-title">关于</h4>
+                <ul class="footer-links">
+                    <li><a href="#">关于我们</a></li>
+                    <li><a href="#">隐私政策</a></li>
+                    <li><a href="#">用户协议</a></li>
+                    <li><a href="#">联系我们</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-copyright">© 2026 教学工具箱. 保留所有权利.</div>
+            <div>版本 v1.2.4</div>
+        </div>
+    </footer>
+
+    <script>
+        const faqItems = document.querySelectorAll('.faq-item');
+        
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                item.classList.toggle('active');
+            });
+        });
+
+        const navLinks = document.querySelectorAll('nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.style.background = 'rgba(15, 23, 42, 0.95)';
+                nav.style.backdropFilter = 'blur(30px)';
+            } else {
+                nav.style.background = 'rgba(15, 23, 42, 0.8)';
+                nav.style.backdropFilter = 'blur(20px)';
+            }
+        });
+    </script>
+</body>
+</html>

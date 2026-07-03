@@ -1,0 +1,81 @@
+{
+  "name": "teaching-toolbox",
+  "version": "1.2.4",
+  "description": "让课堂更有趣·让教学更高效 - 教学工具箱",
+  "main": "main.js",
+  "author": "Teaching Toolbox",
+  "license": "MIT",
+  "scripts": {
+    "start": "node server.js",
+    "start:electron": "electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux"
+  },
+  "build": {
+    "appId": "com.teaching.toolbox",
+    "productName": "教学工具箱",
+    "directories": {
+        "output": "dist_newest"
+      },
+    "files": [
+      "main.js",
+      "preload.js",
+      "教学工具箱.html",
+      "sounds/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "sign": null,
+      "signAndEditExecutable": false,
+      "compression": "maximum",
+      "extraResources": [
+        {
+          "from": "sounds",
+          "to": "sounds"
+        }
+      ],
+      "asarUnpack": [
+        "sounds/**/*"
+      ]
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "icon.icns"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "icon": "build/icon.png"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "your-github-username",
+        "repo": "teaching-toolbox",
+        "releaseType": "release"
+      }
+    ]
+  },
+  "devDependencies": {
+    "canvas": "^3.2.3",
+    "electron": "^28.3.3",
+    "electron-builder": "^24.9.1",
+    "png-to-ico": "^3.0.1",
+    "rcedit": "^5.0.2"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.9"
+  }
+}

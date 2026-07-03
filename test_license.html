@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>激活码防共享测试</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { text-align: center; margin-bottom: 30px; color: #ffd700; }
+        .test-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .test-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #00d9ff;
+        }
+        .device-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .device-btn {
+            padding: 10px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .device-btn.active {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+        }
+        .license-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-family: monospace;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #ffd700, #ffb700);
+            color: #1a1a2e;
+        }
+        .btn-primary:hover { transform: translateY(-2px); }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .result.success { background: rgba(76, 175, 80, 0.2); border-left: 4px solid #4CAF50; }
+        .result.fail { background: rgba(244, 67, 54, 0.2); border-left: 4px solid #f44336; }
+        .result.info { background: rgba(33, 150, 243, 0.2); border-left: 4px solid #2196F3; }
+        .log {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        .log-entry { margin-bottom: 5px; }
+        .log-time { color: #888; }
+        .log-info { color: #00d9ff; }
+        .log-success { color: #4CAF50; }
+        .log-fail { color: #f44336; }
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+        .step-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #ffd700;
+            color: #1a1a2e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .step-done .step-num { background: #4CAF50; color: white; }
+        .step-fail .step-num { background: #f44336; color: white; }
+        .clear-btn {
+            float: right;
+            padding: 5px 15px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔒 激活码防共享测试</h1>
+        
+        <div class="test-section">
+            <div class="test-title">📋 测试流程</div>
+            <div class="step" id="step1">
+                <div class="step-num">1</div>
+                <span>生成测试激活码</span>
+            </div>
+            <div class="step" id="step2">
+                <div class="step-num">2</div>
+                <span>在设备A上激活（应成功）</span>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-num">3</div>
+                <span>切换到设备B，尝试激活（应失败）</span>
+            </div>
+            <div class="step" id="step4">
+                <div class="step-num">4</div>
+                <span>切换回设备A，再次激活（应成功）</span>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">⚡ 激活码生成器</div>
+            <button class="btn btn-primary" onclick="generateTestLicense()">生成测试激活码</button>
+            <input type="text" class="license-input" id="testLicense" readonly placeholder="生成的激活码将显示在这里">
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">🔧 模拟设备选择</div>
+            <div class="device-selector">
+                <button class="device-btn active" id="deviceA" onclick="selectDevice('A')">📱 设备A (Desktop-PC-001)</button>
+                <button class="device-btn" id="deviceB" onclick="selectDevice('B')">💻 设备B (Laptop-Mac-002)</button>
+                <button class="device-btn" id="deviceC" onclick="selectDevice('C')">🖥️ 设备C (Workstation-XPS-003)</button>
+            </div>
+            <div class="result info">
+                当前设备ID: <span id="currentDeviceId">Desktop-PC-001</span>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">🎯 激活验证测试</div>
+            <input type="text" class="license-input" id="inputLicense" placeholder="输入激活码">
+            <button class="btn btn-primary" onclick="testActivation()">验证激活</button>
+            <button class="btn btn-secondary" onclick="clearTestData()">🗑️ 清除测试数据</button>
+            <div class="result" id="activationResult"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">📊 绑定信息查看</div>
+            <button class="btn btn-secondary" onclick="showBindings()">查看所有绑定</button>
+            <div class="log" id="bindingLog"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">📝 测试日志</div>
+            <div class="log" id="testLog"></div>
+        </div>
+    </div>
+
+    <script>
+        const CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        let currentDevice = 'A';
+        
+        const DEVICES = {
+            'A': 'Desktop-PC-001',
+            'B': 'Laptop-Mac-002',
+            'C': 'Workstation-XPS-003'
+        };
+
+        function log(msg, type = 'info') {
+            const logEl = document.getElementById('testLog');
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-${type}">${msg}</span>`;
+            logEl.appendChild(entry);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        const SECRET_KEY = 'K3yG3n3r@t0r!2024';
+
+        function computeChecksum(body) {
+            let hash = 0;
+            for (let i = 0; i < body.length; i++) {
+                hash = ((hash << 5) - hash) + body.charCodeAt(i);
+                hash |= 0;
+            }
+            for (let i = 0; i < SECRET_KEY.length; i++) {
+                hash = ((hash << 5) - hash) + SECRET_KEY.charCodeAt(i);
+                hash |= 0;
+            }
+            hash = Math.abs(hash);
+            let result = '';
+            for (let i = 0; i < 4; i++) {
+                result += CHARS[hash % CHARS.length];
+                hash = Math.floor(hash / CHARS.length);
+            }
+            return result;
+        }
+
+        function generateTestLicense() {
+            let code = '';
+            for (let i = 0; i < 12; i++) {
+                code += CHARS[Math.floor(Math.random() * CHARS.length)];
+            }
+            code += computeChecksum(code);
+            const formatted = code.slice(0, 4) + '-' + code.slice(4, 8) + '-' + code.slice(8, 12) + '-' + code.slice(12);
+            document.getElementById('testLicense').value = formatted;
+            document.getElementById('inputLicense').value = formatted;
+            log(`生成激活码: ${formatted}`, 'info');
+            document.getElementById('step1').classList.add('step-done');
+        }
+
+        function selectDevice(device) {
+            currentDevice = device;
+            document.querySelectorAll('.device-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('device' + device).classList.add('active');
+            document.getElementById('currentDeviceId').textContent = DEVICES[device];
+            log(`切换到设备${device}: ${DEVICES[device]}`, 'info');
+        }
+
+        async function validateLicense(key) {
+            if (!key) return { valid: false, reason: '激活码为空' };
+            
+            const upperKey = key.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            
+            const LICENSE_KEYS = ['TEST', 'TEACHINGTOOLBOX', 'CLASSBOX2024'];
+            if (LICENSE_KEYS.includes(upperKey)) {
+                return { valid: true, reason: '内置测试码', isBuiltin: true };
+            }
+            
+            if (upperKey.length !== 16) {
+                return { valid: false, reason: '格式错误（必须16位）' };
+            }
+            
+            const body = upperKey.slice(0, 12);
+            const checksum = upperKey.slice(12);
+            const computed = computeChecksum(body);
+            
+            if (checksum !== computed) {
+                return { valid: false, reason: '校验码无效' };
+            }
+            
+            const boundDevice = localStorage.getItem('license_device_' + upperKey);
+            if (boundDevice) {
+                const deviceId = DEVICES[currentDevice];
+                if (boundDevice !== deviceId) {
+                    return { valid: false, reason: `已绑定其他设备: ${boundDevice}`, boundDevice: boundDevice };
+                }
+                return { valid: true, reason: '已在当前设备激活', isRebind: true };
+            }
+            
+            return { valid: true, reason: '首次激活，未绑定设备' };
+        }
+
+        async function bindLicenseToDevice(key) {
+            const upperKey = key.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            const LICENSE_KEYS = ['TEST', 'TEACHINGTOOLBOX', 'CLASSBOX2024'];
+            if (LICENSE_KEYS.includes(upperKey)) return;
+            
+            const boundDevice = localStorage.getItem('license_device_' + upperKey);
+            if (!boundDevice) {
+                const deviceId = DEVICES[currentDevice];
+                localStorage.setItem('license_device_' + upperKey, deviceId);
+                log(`激活码 ${key} 已绑定到设备 ${deviceId}`, 'success');
+            }
+        }
+
+        async function testActivation() {
+            const key = document.getElementById('inputLicense').value.trim();
+            const resultEl = document.getElementById('activationResult');
+            
+            if (!key) {
+                resultEl.className = 'result fail';
+                resultEl.textContent = '❌ 请输入激活码';
+                log('请输入激活码', 'fail');
+                return;
+            }
+            
+            log(`开始验证激活码: ${key}`, 'info');
+            
+            const result = await validateLicense(key);
+            
+            if (result.valid) {
+                resultEl.className = 'result success';
+                if (result.isBuiltin) {
+                    resultEl.innerHTML = `✅ 激活成功！<br>内置测试码，不受设备绑定限制`;
+                    log(`激活成功：内置测试码`, 'success');
+                } else if (result.isRebind) {
+                    resultEl.innerHTML = `✅ 验证通过！<br>激活码已绑定到当前设备`;
+                    log(`验证通过：激活码已绑定到当前设备`, 'success');
+                    updateStep(4);
+                } else {
+                    await bindLicenseToDevice(key);
+                    resultEl.innerHTML = `✅ 激活成功！<br>激活码已绑定到设备 ${DEVICES[currentDevice]}`;
+                    log(`激活成功：绑定到设备 ${DEVICES[currentDevice]}`, 'success');
+                    if (currentDevice === 'A') updateStep(2);
+                }
+            } else {
+                resultEl.className = 'result fail';
+                if (result.boundDevice) {
+                    resultEl.innerHTML = `❌ 激活失败！<br>激活码已绑定到其他设备：${result.boundDevice}<br>当前设备：${DEVICES[currentDevice]}`;
+                    log(`激活失败：激活码已绑定到 ${result.boundDevice}`, 'fail');
+                    if (currentDevice !== 'A') updateStep(3);
+                } else {
+                    resultEl.innerHTML = `❌ 激活失败！<br>${result.reason}`;
+                    log(`激活失败：${result.reason}`, 'fail');
+                }
+            }
+        }
+
+        function updateStep(stepNum) {
+            const steps = [null, 'step1', 'step2', 'step3', 'step4'];
+            const stepId = steps[stepNum];
+            if (stepId) {
+                const el = document.getElementById(stepId);
+                if (stepNum === 3) {
+                    el.classList.remove('step-done');
+                    el.classList.add('step-fail');
+                } else {
+                    el.classList.add('step-done');
+                }
+            }
+        }
+
+        function clearTestData() {
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('license_device_')) {
+                    localStorage.removeItem(key);
+                }
+            });
+            localStorage.removeItem('trial_license');
+            
+            document.getElementById('inputLicense').value = '';
+            document.getElementById('activationResult').innerHTML = '';
+            document.getElementById('bindingLog').innerHTML = '';
+            document.getElementById('testLog').innerHTML = '';
+            
+            ['step1', 'step2', 'step3', 'step4'].forEach(id => {
+                document.getElementById(id).className = 'step';
+            });
+            
+            log('测试数据已清除', 'info');
+        }
+
+        function showBindings() {
+            const logEl = document.getElementById('bindingLog');
+            logEl.innerHTML = '';
+            
+            let hasBindings = false;
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('license_device_')) {
+                    const license = key.replace('license_device_', '');
+                    const device = localStorage.getItem(key);
+                    logEl.innerHTML += `激活码: ${license}<br>绑定设备: ${device}<br><br>`;
+                    hasBindings = true;
+                }
+            });
+            
+            if (!hasBindings) {
+                logEl.textContent = '暂无绑定记录';
+            }
+        }
+
+        log('测试页面已加载，请按顺序执行测试', 'info');
+    </script>
+</body>
+</html>
