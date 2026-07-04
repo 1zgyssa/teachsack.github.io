@@ -7,3 +7,10 @@ dist_newest/
 Thumbs.db
 教学工具箱数据.json
 generator.html
+test_license.html
+test_reset.html
+test_reset.js
+test-update.*
+update-server.js
+find-asar.py
+generate-icon.js
