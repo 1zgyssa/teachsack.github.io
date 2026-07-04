@@ -497,6 +497,69 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         }
 
+        .product-features {
+            padding: 6rem 2rem;
+            position: relative;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .product-features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .product-feature-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .product-feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ffd700, #ffaa00);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .product-feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .product-feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 215, 0, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #ffd700;
+        }
+
+        .product-feature-description {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
         .feature-icon {
             width: 50px;
             height: 50px;
@@ -992,6 +1055,10 @@
                 grid-template-columns: 1fr;
             }
 
+            .product-features-grid {
+                grid-template-columns: 1fr;
+            }
+
             .hero-stats {
                 gap: 2rem;
             }
@@ -1069,6 +1136,7 @@
             </a>
             <ul class="nav-links">
                 <li><a href="#features">功能特性</a></li>
+                <li><a href="#product-features">产品特色</a></li>
                 <li><a href="#showcase">产品展示</a></li>
                 <li><a href="#download">下载中心</a></li>
                 <li><a href="#faq">常见问题</a></li>
@@ -1176,6 +1244,33 @@
                     <div class="feature-icon">🎨</div>
                     <h3 class="feature-title">个性化主题</h3>
                     <p class="feature-description">支持浅色和深色两种主题模式，切换界面风格，打造舒适的教学环境。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="product-features" id="product-features">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-subtitle">产品特色</span>
+                <h2 class="section-title">为什么选择 TeachSack</h2>
+                <p class="section-description">TeachSack致力于为教师提供最优质的教学辅助体验。</p>
+            </div>
+            <div class="product-features-grid">
+                <div class="product-feature-card">
+                    <div class="product-feature-icon">🚫</div>
+                    <h3 class="product-feature-title">绝对无广告</h3>
+                    <p class="product-feature-description">无需登陆，告别繁琐操作，专注教学本身。</p>
+                </div>
+                <div class="product-feature-card">
+                    <div class="product-feature-icon">💰</div>
+                    <h3 class="product-feature-title">买断制产品</h3>
+                    <p class="product-feature-description">购买即享永久使用，后续产品更新迭代完全免费。</p>
+                </div>
+                <div class="product-feature-card">
+                    <div class="product-feature-icon">✨</div>
+                    <h3 class="product-feature-title">精美动画效果</h3>
+                    <p class="product-feature-description">获取独一份的体验，让教学更加生动有趣。</p>
                 </div>
             </div>
         </div>
@@ -1334,6 +1429,7 @@
                 <h4 class="footer-title">产品</h4>
                 <ul class="footer-links">
                     <li><a href="#features">功能特性</a></li>
+                    <li><a href="#product-features">产品特色</a></li>
                     <li><a href="#showcase">产品展示</a></li>
                     <li><a href="#download">下载中心</a></li>
                     <li><a href="#" onclick="showChangelog(); return false;">更新日志</a></li>
