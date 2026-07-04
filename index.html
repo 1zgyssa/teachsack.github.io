@@ -174,16 +174,16 @@
         }
 
         .hero-content {
-            max-width: 1200px;
+            max-width: 800px;
             width: 100%;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6rem;
+            display: flex;
+            justify-content: center;
             align-items: center;
         }
 
         .hero-text {
-            text-align: left;
+            text-align: center;
+            width: 100%;
         }
 
         .hero-subtitle {
@@ -1015,8 +1015,6 @@
 
         @media (max-width: 1024px) {
             .hero-content {
-                grid-template-columns: 1fr;
-                gap: 4rem;
                 text-align: center;
             }
 
