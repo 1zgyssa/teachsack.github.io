@@ -187,11 +187,13 @@
         }
 
         .hero-subtitle {
-            display: inline-block;
+            display: block;
             background: rgba(99, 102, 241, 0.15);
             color: var(--primary-light);
             padding: 0.5rem 1rem;
             border-radius: 20px;
+            width: fit-content;
+            margin: 0 auto 1.5rem;
             font-size: 0.875rem;
             font-weight: 500;
             margin-bottom: 1.5rem;
@@ -214,13 +216,16 @@
             color: var(--text-secondary);
             line-height: 1.8;
             margin-bottom: 2rem;
-            max-width: 500px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .hero-buttons {
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .primary-btn {
