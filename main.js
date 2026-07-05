@@ -3,34 +3,18 @@ const path = require('path');
 const fs = require('fs');
 const { autoUpdater } = require('electron-updater');
 
-// 单例模式 - 使用文件锁确保只有一个应用实例运行
-const lockFilePath = path.join(app.getPath('temp'), '教学工具箱.lock');
-try {
-    fs.writeFileSync(lockFilePath, process.pid.toString(), { flag: 'wx' });
-    process.on('exit', () => {
-        try { fs.unlinkSync(lockFilePath); } catch (e) {}
-    });
-} catch (e) {
-    try {
-        const pid = fs.readFileSync(lockFilePath, 'utf8');
-        if (pid) {
-            try {
-                process.kill(parseInt(pid), 0);
-            } catch (err) {
-                fs.unlinkSync(lockFilePath);
-                fs.writeFileSync(lockFilePath, process.pid.toString());
-                process.on('exit', () => {
-                    try { fs.unlinkSync(lockFilePath); } catch (e) {}
-                });
-                app.quit();
-                process.exit(0);
-            }
-        }
-    } catch (err) {
-    }
+// 单例模式 - 使用 Electron 官方 API
+if (!app.requestSingleInstanceLock()) {
     app.quit();
     process.exit(0);
 }
+
+app.on('second-instance', () => {
+    if (mainWindow) {
+        mainWindow.show();
+        mainWindow.focus();
+    }
+});
 
 // 性能优化配置（保守模式）
 

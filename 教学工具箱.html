@@ -238,11 +238,7 @@
             height: 100%;
             background: linear-gradient(90deg, #ffd700, #ffaa00);
             border-radius: 2px;
-            animation: splashProgress 1s ease-out 0.8s forwards;
-        }
-        @keyframes splashProgress {
-            from { width: 0%; }
-            to { width: 100%; }
+            transition: width 1s ease-out;
         }
         /* ========== 主题切换 ========== */
         .theme-btn {
@@ -3656,8 +3652,8 @@
     <!-- ========== 启动画面 ========== -->
     <div class="splash-screen" id="splashScreen">
         <div class="splash-particles" id="splashParticles"></div>
-        <div class="splash-icon">🧰</div>
-        <div class="splash-title">教学工具箱</div>
+        <div class="splash-icon">🎓</div>
+        <div class="splash-title">Teach Sack</div>
         <div class="splash-subtitle">让课堂更有趣 · 让教学更高效</div>
         <div class="splash-progress">
             <div class="splash-progress-bar"></div>
@@ -3678,7 +3674,7 @@
         <div id="toolboxPage">
             <div class="toolbox-header">
                 <button class="settings-btn" id="settingsBtn" onclick="showPage('settings')" title="设置">⚙️</button>
-                <div class="toolbox-title">🧰 课趣·教学工具箱</div>
+                <div class="toolbox-title">🎓 TeachSack</div>
                 <div class="toolbox-subtitle">让课堂更有趣 · 让教学更高效</div>
                 <button class="check-update-btn" id="checkUpdateBtn" onclick="checkForUpdates()">🔄 检查更新</button>
             </div>
@@ -3725,8 +3721,8 @@
             </div>
             
             <div class="settings-brand">
-                <div class="toolbox-title">🧰 课趣</div>
-                <div class="toolbox-subtitle">让课堂快乐起来</div>
+                <div class="toolbox-title">🎓 TeachSack</div>
+                <div class="toolbox-subtitle">让课堂更有趣 · 让教学更高效</div>
             </div>
             
             <div class="settings-container">
@@ -3763,6 +3759,7 @@
                     <div class="settings-section-title">📝 意见反馈</div>
                     <button class="settings-feedback-btn" onclick="openFeedbackLink()">💬 前往兔小巢提交反馈</button>
                     <div class="settings-feedback-desc">点击跳转到兔小巢反馈平台，您的建议对我们很重要</div>
+                    <div class="settings-feedback-desc">邮箱地址：<a href="mailto:zayugu@zohomail.com" style="color: #ffd700; text-decoration: none;">zayugu@zohomail.com</a></div>
                 </div>
 
                 <div class="settings-section">
@@ -4367,7 +4364,7 @@
                 'CLASSBOX2024'
             ];
 
-            const SECRET_KEY = 'K3yG3n3r@t0r!2024';
+            const SECRET_KEY = 'T3@chS@ck!2024#K3y';
             const CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
             async function validateLicense(key) {
@@ -4639,23 +4636,25 @@
 
         let focusInterval = null;
 
-        document.addEventListener('DOMContentLoaded', async () => {
-            const trialResult = await TrialManager.checkTrial();
-            if (!trialResult) {
-                return;
-            }
-            ThemeConfig.init();
-            initSettings();
-
-            focusInterval = setInterval(() => {
-                if (document.activeElement && document.activeElement.tagName === 'BODY') {
-                    window.focus();
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(async () => {
+                const trialResult = await TrialManager.checkTrial();
+                if (!trialResult) {
+                    return;
                 }
-            }, 5000);
+                ThemeConfig.init();
+                initSettings();
 
-            document.addEventListener('click', () => {
-                window.focus();
-            }, true);
+                focusInterval = setInterval(() => {
+                    if (document.activeElement && document.activeElement.tagName === 'BODY') {
+                        window.focus();
+                    }
+                }, 5000);
+
+                document.addEventListener('click', () => {
+                    window.focus();
+                }, true);
+            }, 500);
         });
 
         window.addEventListener('beforeunload', () => {
@@ -4855,6 +4854,9 @@
         function initSplashScreen() {
             const splashScreen = document.getElementById('splashScreen');
             const splashParticles = document.getElementById('splashParticles');
+            const progressBar = splashScreen.querySelector('.splash-progress-bar');
+            
+            splashParticles.innerHTML = '';
             
             for (let i = 0; i < 20; i++) {
                 const particle = document.createElement('div');
@@ -4864,6 +4866,22 @@
                 particle.style.width = `${Math.random() * 8 + 4}px`;
                 particle.style.height = particle.style.width;
                 splashParticles.appendChild(particle);
+            }
+            
+            splashScreen.classList.remove('hidden');
+            
+            const splashIcon = splashScreen.querySelector('.splash-icon');
+            if (splashIcon) {
+                splashIcon.style.animation = 'none';
+                void splashIcon.offsetWidth;
+                splashIcon.style.animation = null;
+            }
+            
+            if (progressBar) {
+                progressBar.style.width = '0%';
+                setTimeout(() => {
+                    progressBar.style.width = '100%';
+                }, 100);
             }
             
             setTimeout(() => {
