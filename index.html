@@ -827,6 +827,52 @@
             box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
         }
 
+        .download-warning {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1.25rem;
+            padding: 1.5rem;
+            background: rgba(251, 191, 36, 0.08);
+            border-radius: 12px;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            align-items: flex-start;
+        }
+
+        .warning-icon {
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .warning-content {
+            flex: 1;
+            text-align: left;
+        }
+
+        .warning-content h4 {
+            color: #fbbf24;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .warning-content p {
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .warning-content ol {
+            color: var(--text-secondary);
+            padding-left: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .warning-content li {
+            margin-bottom: 0.25rem;
+        }
+
 
 
         .platform-icon {
@@ -1314,6 +1360,21 @@
                     <p>直接下载链接：</p>
                     <input type="text" value="https://teachsack.cn/downloads/TeachSack-Windows-v1.2.4.exe" readonly id="download-url-input">
                     <button onclick="copyDownloadUrl()">复制链接</button>
+                </div>
+                
+                <div class="download-warning">
+                    <div class="warning-icon">⚠️</div>
+                    <div class="warning-content">
+                        <h4>📥 Windows下载提示</h4>
+                        <p>Windows可能会显示"未知发布者"安全警告，这是正常现象。</p>
+                        <ol>
+                            <li>下载完成后，右键点击安装包</li>
+                            <li>选择"属性"</li>
+                            <li>在"常规"选项卡底部点击"解除锁定"</li>
+                            <li>或在打开警告时点击"更多信息" → "仍要运行"</li>
+                        </ol>
+                        <p style="font-size: 0.85rem; color: #94a3b8;">如有疑问，请联系我们：zayugu@zohomail.com</p>
+                    </div>
                 </div>
             </div>
         </div>
