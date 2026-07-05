@@ -873,6 +873,18 @@
             margin-bottom: 0.25rem;
         }
 
+        .warning-image {
+            flex-shrink: 0;
+            width: 200px;
+        }
+
+        .warning-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
 
 
         .platform-icon {
@@ -1369,11 +1381,13 @@
                         <p>Windows可能会显示"未知发布者"安全警告，这是正常现象。</p>
                         <ol>
                             <li>下载完成后，右键点击安装包</li>
-                            <li>选择"属性"</li>
-                            <li>在"常规"选项卡底部点击"解除锁定"</li>
-                            <li>或在打开警告时点击"更多信息" → "仍要运行"</li>
+                            <li>选择保留</li>
+                            <li>弹出的选项卡中选择右下角的仍然保留即可</li>
                         </ol>
                         <p style="font-size: 0.85rem; color: #94a3b8;">如有疑问，请联系我们：zayugu@zohomail.com</p>
+                    </div>
+                    <div class="warning-image">
+                        <img src="images/smartscreen-warning.png" alt="SmartScreen警告截图" />
                     </div>
                 </div>
             </div>
