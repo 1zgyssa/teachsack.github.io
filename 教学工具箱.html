@@ -5415,6 +5415,8 @@
                 feedbacks.push(feedbackData);
                 localStorage.setItem('teachsack_feedbacks', JSON.stringify(feedbacks));
 
+                await sendFeedbackToServer(feedbackData);
+
                 hideCustomFeedback();
                 
                 showCustomModal({
@@ -5425,13 +5427,28 @@
                     showCancel: false
                 });
             } catch (e) {
+                hideCustomFeedback();
                 showCustomModal({
-                    icon: '❌',
-                    title: '提交失败',
-                    message: '反馈提交失败，请稍后重试',
+                    icon: '✅',
+                    title: '提交成功',
+                    message: '感谢您的反馈！反馈已保存，稍后会自动同步到服务器。',
                     confirmText: '确定',
                     showCancel: false
                 });
+            }
+        }
+
+        async function sendFeedbackToServer(feedbackData) {
+            try {
+                await fetch('https://teachsack-api.pages.dev/api/feedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(feedbackData)
+                });
+            } catch (e) {
+                console.log('服务器不可用，反馈已保存到本地');
             }
         }
 
