@@ -51,7 +51,7 @@ function createWindow() {
     mainWindow = new BrowserWindow({
         width: 1920,
         height: 1080,
-        title: '🧰 教学工具箱',
+        title: '🎓 Teach Sack',
         backgroundColor: '#0d0d1a',
         show: false, // 先隐藏窗口，等加载完成后再显示
         icon: path.join(__dirname, 'icon.ico'),
@@ -100,7 +100,7 @@ function createWindow() {
             mainWindow.hide();
             if (tray) {
                 tray.displayBalloon({
-                    title: '教学工具箱',
+                    title: 'Teach Sack',
                     content: '应用已最小化到托盘',
                     icon: path.join(__dirname, 'icon.ico')
                 });
@@ -219,9 +219,9 @@ function createMenu() {
                         const { dialog } = require('electron');
                         dialog.showMessageBox(mainWindow, {
                             type: 'info',
-                            title: '关于教学工具箱',
-                            message: '🧰 教学工具箱',
-                            detail: '版本：1.0.0\n\n让课堂更有趣·让教学更高效\n\n卡牌点名器 | 趣味挑战\n\n© 2024 教学工具箱'
+                            title: '关于 Teach Sack',
+                            message: '🎓 Teach Sack',
+                            detail: '版本：1.2.4\n\n让课堂更有趣·让教学更高效\n\n卡牌点名器 | 趣味挑战\n\n© 2024 Teach Sack'
                         });
                     }
                 },
@@ -308,7 +308,7 @@ function createTray() {
         }
     ]);
     
-    tray.setToolTip('🧰 教学工具箱');
+    tray.setToolTip('🎓 Teach Sack');
     tray.setContextMenu(contextMenu);
     
     tray.on('click', () => {
@@ -490,7 +490,7 @@ ipcMain.handle('save-data-file', async (event, data) => {
     try {
         const exePath = app.getPath('exe');
         const appDir = path.dirname(exePath);
-        const dataPath = path.join(appDir, '教学工具箱数据.json');
+        const dataPath = path.join(appDir, 'TeachSack数据.json');
         
         fs.writeFileSync(dataPath, JSON.stringify(data, null, 2), 'utf-8');
         return { success: true, path: dataPath };
@@ -505,7 +505,7 @@ ipcMain.handle('load-data-file', async () => {
     try {
         const exePath = app.getPath('exe');
         const appDir = path.dirname(exePath);
-        const dataPath = path.join(appDir, '教学工具箱数据.json');
+        const dataPath = path.join(appDir, 'TeachSack数据.json');
         
         if (fs.existsSync(dataPath)) {
             const content = fs.readFileSync(dataPath, 'utf-8');
@@ -574,7 +574,7 @@ ipcMain.handle('delete-app-data', async () => {
     try {
         const exePath = app.getPath('exe');
         const appDir = path.dirname(exePath);
-        const dataPath = path.join(appDir, '教学工具箱数据.json');
+        const dataPath = path.join(appDir, 'TeachSack数据.json');
         
         if (fs.existsSync(dataPath)) {
             fs.unlinkSync(dataPath);

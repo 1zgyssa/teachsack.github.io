@@ -9,8 +9,9 @@
     <meta name="theme-color" content="#1a1a2e">
     <meta name="description" content="让课堂更有趣·让教学更高效 - 卡牌点名器与趣味挑战工具">
     <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%231a1a2e'/><text x='256' y='350' font-size='280' text-anchor='middle'>🧰</text></svg>">
-    <title>🧰 教学工具箱</title>
+    <link rel="apple-touch-icon" href="images/teachsack-icon.svg">
+    <link rel="icon" href="images/teachsack-icon.svg" type="image/svg+xml">
+    <title>🎓 Teach Sack</title>
     <style>
         /* ========== 主题变量定义 ========== */
         :root {
@@ -4382,13 +4383,30 @@
                 
                 if (checksum !== computed) return false;
                 
-                const boundDevice = localStorage.getItem('license_device_' + upperKey);
-                if (boundDevice) {
-                    const deviceId = await getDeviceId();
-                    return boundDevice === deviceId;
-                }
+                const deviceId = await getDeviceId();
                 
-                return true;
+                try {
+                    const response = await fetch('http://localhost:3000/api/validate', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ key: upperKey, deviceId })
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        return true;
+                    }
+                    console.log('Server validation failed:', result.message);
+                    return false;
+                } catch (e) {
+                    console.log('Server unreachable, falling back to local validation:', e);
+                    
+                    const boundDevice = localStorage.getItem('license_device_' + upperKey);
+                    if (boundDevice) {
+                        return boundDevice === deviceId;
+                    }
+                    
+                    return true;
+                }
             }
 
             async function getDeviceId() {
@@ -4503,7 +4521,7 @@
                         <div class="trial-expired-modal">
                             <div class="trial-expired-icon">🔒</div>
                             <div class="trial-expired-title">试用期已结束</div>
-                            <div class="trial-expired-message">感谢您使用教学工具箱！<br>您的试用期已结束，请购买正式版继续使用。</div>
+                            <div class="trial-expired-message">感谢您使用 Teach Sack！<br>您的试用期已结束，请购买正式版继续使用。</div>
                             <div class="trial-expired-input-group">
                                 <input type="text" id="licenseInput" placeholder="请输入激活码" maxlength="20">
                             </div>
@@ -4577,7 +4595,7 @@
                     showCustomModal({
                         icon: '✅',
                         title: '激活成功',
-                        message: '恭喜！您已成功激活教学工具箱，现在可以无限次使用所有功能。',
+                        message: '恭喜！您已成功激活 Teach Sack，现在可以无限次使用所有功能。',
                         confirmText: '确定',
                         showCancel: false,
                         onConfirm: function() {
@@ -4985,7 +5003,7 @@
             showCustomModal({
                 icon: '🚪',
                 title: '退出确认',
-                message: '确定要退出教学工具箱吗？',
+                message: '确定要退出 Teach Sack 吗？',
                 confirmText: '确定',
                 cancelText: '取消',
                 onConfirm: function() {

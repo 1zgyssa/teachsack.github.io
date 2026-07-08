@@ -15,20 +15,29 @@
   },
   "build": {
     "appId": "com.teaching.toolbox",
-    "productName": "教学工具箱",
+    "productName": "Teach Sack",
     "directories": {
-        "output": "dist_newest"
-      },
+      "output": "dist_newest",
+      "buildResources": "build"
+    },
     "files": [
       "main.js",
       "preload.js",
       "教学工具箱.html",
-      "sounds/**/*"
+      "sounds/**/*",
+      "images/**/*"
     ],
     "win": {
+      "icon": "build/icon.png",
       "target": [
         {
           "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "nsis",
           "arch": [
             "x64"
           ]
@@ -58,24 +67,18 @@
         "AppImage"
       ],
       "icon": "build/icon.png"
-    },
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "your-github-username",
-        "repo": "teaching-toolbox",
-        "releaseType": "release"
-      }
-    ]
+    }
   },
   "devDependencies": {
     "canvas": "^3.2.3",
     "electron": "^28.3.3",
     "electron-builder": "^24.9.1",
-    "png-to-ico": "^3.0.1",
+    "png-to-ico": "^3.0.2",
     "rcedit": "^5.0.2"
   },
   "dependencies": {
-    "electron-updater": "^6.8.9"
+    "cors": "^2.8.6",
+    "electron-updater": "^6.8.9",
+    "express": "^5.2.1"
   }
 }
