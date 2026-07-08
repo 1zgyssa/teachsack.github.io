@@ -2755,6 +2755,235 @@
             display: none;
         }
 
+        .feedback-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .feedback-modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+        }
+
+        .feedback-modal-content {
+            position: relative;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 24px;
+            padding: 0;
+            max-width: 520px;
+            width: 90%;
+            max-height: 85vh;
+            overflow: hidden;
+            border: 2px solid rgba(99, 102, 241, 0.4);
+            box-shadow: 
+                0 0 50px rgba(99, 102, 241, 0.2),
+                inset 0 0 60px rgba(0, 0, 0, 0.5);
+            animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .feedback-modal-header {
+            display: flex;
+            align-items: center;
+            padding: 24px 28px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .feedback-modal-icon {
+            font-size: 32px;
+            margin-right: 12px;
+        }
+
+        .feedback-modal-title {
+            flex: 1;
+            font-size: 20px;
+            font-weight: 800;
+            color: #e0e7ff;
+        }
+
+        .feedback-modal-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .feedback-modal-close:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .feedback-modal-body {
+            padding: 24px 28px;
+            overflow-y: auto;
+            max-height: calc(85vh - 140px);
+        }
+
+        .feedback-form-group {
+            margin-bottom: 20px;
+        }
+
+        .feedback-form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 8px;
+        }
+
+        .feedback-form-select {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+        }
+
+        .feedback-form-select:hover {
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+
+        .feedback-form-select:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .feedback-form-select option {
+            background: #1a1a2e;
+            color: #ffffff;
+            padding: 10px;
+        }
+
+        .feedback-form-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+
+        .feedback-form-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .feedback-form-textarea:hover {
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+
+        .feedback-form-textarea:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .feedback-form-counter {
+            text-align: right;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 6px;
+        }
+
+        .feedback-form-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+
+        .feedback-form-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .feedback-form-input:hover {
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+
+        .feedback-form-input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .feedback-modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 20px 28px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .feedback-modal-btn {
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .feedback-modal-btn.primary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .feedback-modal-btn.primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.5);
+        }
+
+        .feedback-modal-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .feedback-modal-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: scale(1.05);
+        }
+
         @keyframes particleBurst {
             0% {
                 opacity: 1;
@@ -3758,8 +3987,8 @@
 
                 <div class="settings-section">
                     <div class="settings-section-title">📝 意见反馈</div>
-                    <button class="settings-feedback-btn" onclick="openFeedbackLink()">💬 前往兔小巢提交反馈</button>
-                    <div class="settings-feedback-desc">点击跳转到兔小巢反馈平台，您的建议对我们很重要</div>
+                    <button class="settings-feedback-btn" onclick="showCustomFeedback()">💬 提交反馈</button>
+                    <div class="settings-feedback-desc">您的建议对我们很重要，感谢您的支持！</div>
                     <div class="settings-feedback-desc">邮箱地址：<a href="mailto:zayugu@zohomail.com" style="color: #ffd700; text-decoration: none;">zayugu@zohomail.com</a></div>
                 </div>
 
@@ -4308,6 +4537,41 @@
             <div class="custom-modal-buttons" id="customModalButtons">
                 <button class="custom-modal-btn primary" id="customModalConfirm">确定</button>
                 <button class="custom-modal-btn secondary" id="customModalCancel">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="feedback-modal" id="feedbackModal" style="display: none;">
+        <div class="feedback-modal-overlay"></div>
+        <div class="feedback-modal-content">
+            <div class="feedback-modal-header">
+                <div class="feedback-modal-icon">💬</div>
+                <div class="feedback-modal-title">提交反馈</div>
+                <button class="feedback-modal-close" onclick="hideCustomFeedback()">✕</button>
+            </div>
+            <div class="feedback-modal-body">
+                <div class="feedback-form-group">
+                    <label class="feedback-form-label">反馈类型</label>
+                    <select class="feedback-form-select" id="feedbackType">
+                        <option value="suggestion">💡 功能建议</option>
+                        <option value="bug">🐛 问题反馈</option>
+                        <option value="feature">✨ 新功能需求</option>
+                        <option value="other">📝 其他</option>
+                    </select>
+                </div>
+                <div class="feedback-form-group">
+                    <label class="feedback-form-label">反馈内容</label>
+                    <textarea class="feedback-form-textarea" id="feedbackContent" placeholder="请详细描述您的建议或问题..." maxlength="500"></textarea>
+                    <div class="feedback-form-counter">0/500</div>
+                </div>
+                <div class="feedback-form-group">
+                    <label class="feedback-form-label">联系方式（选填）</label>
+                    <input type="text" class="feedback-form-input" id="feedbackContact" placeholder="邮箱或手机号">
+                </div>
+            </div>
+            <div class="feedback-modal-footer">
+                <button class="feedback-modal-btn secondary" onclick="hideCustomFeedback()">取消</button>
+                <button class="feedback-modal-btn primary" onclick="submitFeedback()">提交反馈</button>
             </div>
         </div>
     </div>
@@ -5100,16 +5364,74 @@
             app.classList.add('animation-' + settingsConfig.animationSpeed);
         }
 
-        function openFeedbackLink() {
-            const url = 'https://support.qq.com/product/801127';
+        function showCustomFeedback() {
+            const modal = document.getElementById('feedbackModal');
+            modal.style.display = 'flex';
+            document.getElementById('feedbackContent').value = '';
+            document.getElementById('feedbackContact').value = '';
+            document.getElementById('feedbackType').value = 'suggestion';
+            updateFeedbackCounter();
+        }
+
+        function hideCustomFeedback() {
+            const modal = document.getElementById('feedbackModal');
+            modal.style.display = 'none';
+        }
+
+        function updateFeedbackCounter() {
+            const textarea = document.getElementById('feedbackContent');
+            const counter = document.querySelector('.feedback-form-counter');
+            counter.textContent = textarea.value.length + '/500';
+        }
+
+        document.getElementById('feedbackContent').addEventListener('input', updateFeedbackCounter);
+
+        async function submitFeedback() {
+            const type = document.getElementById('feedbackType').value;
+            const content = document.getElementById('feedbackContent').value.trim();
+            const contact = document.getElementById('feedbackContact').value.trim();
+
+            if (!content) {
+                showCustomModal({
+                    icon: '⚠️',
+                    title: '提示',
+                    message: '请填写反馈内容',
+                    confirmText: '确定',
+                    showCancel: false
+                });
+                return;
+            }
+
+            const feedbackData = {
+                type: type,
+                content: content,
+                contact: contact,
+                timestamp: new Date().toISOString(),
+                version: '1.2.4'
+            };
+
             try {
-                if (window.electronAPI && typeof window.electronAPI.openExternal === 'function') {
-                    window.electronAPI.openExternal(url);
-                } else {
-                    window.open(url, '_blank');
-                }
+                let feedbacks = JSON.parse(localStorage.getItem('teachsack_feedbacks') || '[]');
+                feedbacks.push(feedbackData);
+                localStorage.setItem('teachsack_feedbacks', JSON.stringify(feedbacks));
+
+                hideCustomFeedback();
+                
+                showCustomModal({
+                    icon: '✅',
+                    title: '提交成功',
+                    message: '感谢您的反馈！我们会认真对待每一条建议。',
+                    confirmText: '确定',
+                    showCancel: false
+                });
             } catch (e) {
-                window.open(url, '_blank');
+                showCustomModal({
+                    icon: '❌',
+                    title: '提交失败',
+                    message: '反馈提交失败，请稍后重试',
+                    confirmText: '确定',
+                    showCancel: false
+                });
             }
         }
 
