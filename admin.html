@@ -450,7 +450,7 @@
             const todayFeedbacks = feedbacks.filter(f => new Date(f.timestamp).toDateString() === today);
             todayCount.textContent = todayFeedbacks.length;
 
-            const bugFeedbacks = feedbacks.filter(f => f.type === 'bug');
+            const bugFeedbacks = feedbacks.filter(f => f.type === 'bug' || f.type === '问题反馈');
             bugCount.textContent = bugFeedbacks.length;
         }
 
@@ -491,14 +491,22 @@
                     suggestion: '💡',
                     bug: '🐛',
                     feature: '✨',
-                    other: '📝'
+                    other: '📝',
+                    '功能建议': '💡',
+                    '问题反馈': '🐛',
+                    '新功能需求': '✨',
+                    '其他': '📝'
                 };
 
                 const typeNames = {
                     suggestion: '功能建议',
                     bug: '问题反馈',
                     feature: '新功能需求',
-                    other: '其他'
+                    other: '其他',
+                    '功能建议': '功能建议',
+                    '问题反馈': '问题反馈',
+                    '新功能需求': '新功能需求',
+                    '其他': '其他'
                 };
 
                 const date = new Date(feedback.timestamp);
