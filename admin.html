@@ -125,6 +125,13 @@
             border-color: #6366f1;
         }
 
+        .filter-select option {
+            background: #1e1e2e;
+            color: #ffffff;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
         .feedback-list {
             display: grid;
             gap: 20px;
@@ -462,7 +469,13 @@
             let filteredFeedbacks = feedbacks;
 
             if (typeFilter !== 'all') {
-                filteredFeedbacks = filteredFeedbacks.filter(f => f.type === typeFilter);
+                const typeMap = {
+                    suggestion: ['suggestion', '功能建议'],
+                    bug: ['bug', '问题反馈'],
+                    feature: ['feature', '新功能需求'],
+                    other: ['other', '其他']
+                };
+                filteredFeedbacks = filteredFeedbacks.filter(f => typeMap[typeFilter] && typeMap[typeFilter].includes(f.type));
             }
 
             if (searchInput) {
@@ -608,7 +621,13 @@
 
             let filteredFeedbacks = feedbacks;
             if (typeFilter !== 'all') {
-                filteredFeedbacks = filteredFeedbacks.filter(f => f.type === typeFilter);
+                const typeMap = {
+                    suggestion: ['suggestion', '功能建议'],
+                    bug: ['bug', '问题反馈'],
+                    feature: ['feature', '新功能需求'],
+                    other: ['other', '其他']
+                };
+                filteredFeedbacks = filteredFeedbacks.filter(f => typeMap[typeFilter] && typeMap[typeFilter].includes(f.type));
             }
             if (searchInput) {
                 filteredFeedbacks = filteredFeedbacks.filter(f => 
