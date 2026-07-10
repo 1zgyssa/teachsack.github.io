@@ -1060,6 +1060,48 @@
             box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
         }
 
+        .payment-screenshot {
+            margin-bottom: 1rem;
+        }
+
+        .screenshot-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 24px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .screenshot-label:hover {
+            border-color: #6366f1;
+            color: #a5b4fc;
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .screenshot-input {
+            display: none;
+        }
+
+        .screenshot-icon {
+            font-size: 1.5rem;
+        }
+
+        .screenshot-preview {
+            width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-top: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
         .pricing-note {
             text-align: center;
             margin-top: 24px;
@@ -1597,6 +1639,14 @@
                         <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 1rem;">我们会在24小时内将激活码发送到您的邮箱或手机</p>
                         <input type="email" id="payment-email" placeholder="请输入您的邮箱地址（选填）" class="payment-input" />
                         <input type="tel" id="payment-phone" placeholder="请输入您的手机号码（选填）" class="payment-input" />
+                        <div class="payment-screenshot">
+                            <label for="payment-screenshot-input" class="screenshot-label">
+                                <input type="file" id="payment-screenshot-input" accept="image/*" class="screenshot-input" />
+                                <div class="screenshot-icon">📷</div>
+                                <span id="screenshot-text">上传付款截图（必填）</span>
+                            </label>
+                            <img id="screenshot-preview" class="screenshot-preview" style="display: none;" />
+                        </div>
                         <button onclick="submitPayment()" class="payment-btn">提交付款信息</button>
                     </div>
                 </div>
@@ -1857,6 +1907,22 @@
             showModal('用户协议', termsContent);
         }
 
+        let screenshotBase64 = '';
+
+        document.getElementById('payment-screenshot-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    screenshotBase64 = event.target.result;
+                    document.getElementById('screenshot-preview').src = screenshotBase64;
+                    document.getElementById('screenshot-preview').style.display = 'block';
+                    document.getElementById('screenshot-text').textContent = '截图已上传';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
         function submitPayment() {
             const email = document.getElementById('payment-email').value;
             const phone = document.getElementById('payment-phone').value;
@@ -1877,6 +1943,11 @@
                 return;
             }
             
+            if (!screenshotBase64) {
+                showToast('请上传付款截图');
+                return;
+            }
+            
             fetch('https://master.teachsack-api.pages.dev/api/payment', {
                 method: 'POST',
                 headers: {
@@ -1886,6 +1957,7 @@
                     email: email,
                     phone: phone,
                     amount: 19.9,
+                    screenshot: screenshotBase64,
                     timestamp: new Date().toISOString()
                 })
             }).then(response => response.json())
@@ -1895,6 +1967,10 @@
                     showToast('提交成功！我们会在24小时内将激活码发送到您的' + (email ? '邮箱' : '手机') + '：' + contact);
                     document.getElementById('payment-email').value = '';
                     document.getElementById('payment-phone').value = '';
+                    document.getElementById('payment-screenshot-input').value = '';
+                    document.getElementById('screenshot-preview').style.display = 'none';
+                    document.getElementById('screenshot-text').textContent = '上传付款截图（必填）';
+                    screenshotBase64 = '';
                 } else {
                     showToast('提交失败，请稍后重试');
                 }

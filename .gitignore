@@ -14,3 +14,6 @@ test-update.*
 update-server.js
 find-asar.py
 generate-icon.js
+license-data.json
+test-device-binding.js
+test-server-validation.js
