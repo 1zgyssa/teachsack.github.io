@@ -905,6 +905,174 @@
             color: var(--text-muted);
         }
 
+        .pricing {
+            padding: 60px 20px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 50%, rgba(236, 72, 153, 0.1) 100%);
+        }
+
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 2px solid rgba(99, 102, 241, 0.3);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            color: white;
+            padding: 8px 24px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transform: rotate(20deg);
+        }
+
+        .pricing-icon {
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .pricing-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .pricing-price {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .pricing-currency {
+            font-size: 2rem;
+            color: #6366f1;
+            font-weight: bold;
+        }
+
+        .pricing-amount {
+            font-size: 4rem;
+            color: white;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .pricing-features ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .pricing-features li {
+            padding: 10px 0;
+            font-size: 1rem;
+            color: var(--text-muted);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+
+        .payment-section {
+            margin-top: 32px;
+            display: flex;
+            gap: 32px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-code-container {
+            text-align: center;
+        }
+
+        .qr-code {
+            width: 180px;
+            height: 180px;
+            border-radius: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: white;
+            padding: 8px;
+        }
+
+        .qr-hint {
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .payment-form {
+            flex: 1;
+            text-align: center;
+        }
+
+        .payment-form h4 {
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .payment-input {
+            width: 100%;
+            padding: 14px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+        }
+
+        .payment-input:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        .payment-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .payment-btn {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .payment-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        .pricing-note {
+            text-align: center;
+            margin-top: 24px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .payment-section {
+                flex-direction: column;
+            }
+        }
+
         .faq {
             padding: 6rem 2rem;
             position: relative;
@@ -1200,6 +1368,7 @@
                 <li><a href="#product-features">产品特色</a></li>
                 <li><a href="#showcase">产品展示</a></li>
                 <li><a href="#download">下载中心</a></li>
+                <li><a href="#pricing">购买授权</a></li>
                 <li><a href="#faq">常见问题</a></li>
             </ul>
             <a href="#download" class="download-btn">立即下载</a>
@@ -1390,6 +1559,49 @@
                         <img src="images/smartscreen-warning.png" alt="SmartScreen警告截图" />
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-subtitle">购买授权</span>
+                <h2 class="section-title">永久授权，一次购买终身使用</h2>
+                <p class="section-description">¥19.9 买断制，享受所有功能和后续更新</p>
+            </div>
+            <div class="pricing-card">
+                <div class="pricing-badge">🔥 限时特惠</div>
+                <div class="pricing-icon">🎓</div>
+                <h3 class="pricing-title">永久授权版</h3>
+                <div class="pricing-price">
+                    <span class="pricing-currency">¥</span>
+                    <span class="pricing-amount">19.9</span>
+                </div>
+                <div class="pricing-features">
+                    <ul>
+                        <li>✅ 全部功能无限制使用</li>
+                        <li>✅ 终身免费更新</li>
+                        <li>✅ 支持多设备激活</li>
+                        <li>✅ 优先技术支持</li>
+                        <li>✅ 专属激活码</li>
+                    </ul>
+                </div>
+                <div class="payment-section">
+                    <div class="qr-code-container">
+                        <img src="images/alipay-qr.png" alt="支付宝收款码" class="qr-code" />
+                        <p class="qr-hint">使用支付宝扫码支付</p>
+                    </div>
+                    <div class="payment-form">
+                        <h4>付款后请填写您的邮箱</h4>
+                        <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 1rem;">我们会在24小时内将激活码发送到您的邮箱</p>
+                        <input type="email" id="payment-email" placeholder="请输入您的邮箱地址" class="payment-input" />
+                        <button onclick="submitPayment()" class="payment-btn">提交付款信息</button>
+                    </div>
+                </div>
+            </div>
+            <div class="pricing-note">
+                <p>💡 <strong>提示</strong>：付款后请务必填写邮箱，以便我们发送激活码。如有疑问，请联系：zayugu@zohomail.com</p>
             </div>
         </div>
     </section>
@@ -1644,6 +1856,36 @@
                 <p>使用本软件即表示您同意以上条款。</p>
             `;
             showModal('用户协议', termsContent);
+        }
+
+        function submitPayment() {
+            const email = document.getElementById('payment-email').value;
+            if (!email || !email.includes('@')) {
+                alert('请输入有效的邮箱地址');
+                return;
+            }
+            
+            fetch('https://master.teachsack-api.pages.dev/api/payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    amount: 19.9,
+                    timestamp: new Date().toISOString()
+                })
+            }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('提交成功！我们会在24小时内将激活码发送到您的邮箱：' + email);
+                    document.getElementById('payment-email').value = '';
+                } else {
+                    alert('提交失败，请稍后重试');
+                }
+            }).catch(error => {
+                alert('网络错误，请稍后重试');
+            });
         }
 
         function showChangelog() {
