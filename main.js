@@ -399,7 +399,7 @@ function setupAutoUpdater() {
         console.log('🔧 更新模式: 生产环境 (Gitee)');
         autoUpdater.setFeedURL({
             provider: 'generic',
-            url: 'https://gitee.com/qwezasxf/teaching-toolbox/releases/download/v1.2.6/'
+            url: 'https://gitee.com/qwezasxf/teaching-toolbox/releases/download/latest/'
         });
         autoUpdater.autoDownload = false;
     }
