@@ -1541,7 +1541,7 @@
     <section class="hero" id="home">
         <div class="hero-content">
             <div class="hero-text">
-                <span class="hero-subtitle">v1.2.6 全新版本</span>
+                <span class="hero-subtitle">v1.2.7 全新版本</span>
                 <h1 class="hero-title">让课堂更有趣<br>让教学更高效</h1>
                 <p class="hero-description">TeachSack是一款专为教师打造的智能化教学辅助工具，集成卡牌点名、成绩管理、课堂互动等多种功能，让您的课堂焕发新活力。</p>
                 <div class="hero-buttons">
@@ -1678,9 +1678,9 @@
                         <div class="platform-icon">🪟</div>
                         <div class="platform-info">
                             <div class="platform-name">Windows</div>
-                            <div class="platform-version">v1.2.6</div>
+                            <div class="platform-version">v1.2.7</div>
                         </div>
-                        <a href="https://gitee.com/qwezasxf/teaching-toolbox/releases/download/v1.2.6/Teach-Sack-Setup-1.2.6.exe" class="download-link-btn" target="_blank" rel="noopener">立即下载</a>
+                        <a href="https://gitee.com/qwezasxf/teaching-toolbox/releases/download/v1.2.7/Teach-Sack-Setup-1.2.7.exe" class="download-link-btn" target="_blank" rel="noopener">立即下载</a>
                     </div>
                     <div class="download-card-item coming-soon">
                         <div class="platform-icon">🍎</div>
@@ -1702,7 +1702,7 @@
                 
                 <div class="direct-download-link">
                     <p>直接下载链接：</p>
-                    <input type="text" value="https://gitee.com/qwezasxf/teaching-toolbox/releases/download/v1.2.6/Teach-Sack-Setup-1.2.6.exe" readonly id="download-url-input">
+                    <input type="text" value="https://gitee.com/qwezasxf/teaching-toolbox/releases/download/v1.2.7/Teach-Sack-Setup-1.2.7.exe" readonly id="download-url-input">
                     <button onclick="copyDownloadUrl()">复制链接</button>
                 </div>
                 
@@ -1855,7 +1855,7 @@
         </div>
         <div class="footer-bottom">
             <div class="footer-copyright">© 2026 TeachSack. 保留所有权利.</div>
-            <div>版本 v1.2.6</div>
+            <div>版本 v1.2.7</div>
         </div>
     </footer>
 
@@ -1981,7 +1981,7 @@
                 <p><strong>愿景</strong>：成为最受教师喜爱的教学辅助工具</p>
                 <p><strong>使命</strong>：用技术赋能教育，让每一堂课都精彩</p>
                 <p><strong>价值观</strong>：创新、专注、用户至上</p>
-                <p style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8;">版本：v1.2.6</p>
+                <p style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8;">版本：v1.2.7</p>
             `;
             showModal('关于我们', aboutContent);
         }
@@ -2021,12 +2021,12 @@
             const changelogContent = `
                 <h3>📝 更新日志</h3>
                 <div style="text-align: left; margin: 1rem 0;">
-                    <p><strong>v1.2.6</strong> (2026-07-11)</p>
+                    <p><strong>v1.2.7</strong> (2026-07-11)</p>
                     <ul style="margin-left: 1.5rem;">
+                        <li>🔄 自动更新统一为固定 latest 目录：已装的 1.2.4/1.2.5/1.2.6 用户均可无缝自动升级到最新版</li>
                         <li>🔒 根治激活码逻辑：彻底修复同设备可重复激活漏洞</li>
                         <li>🔒 新增「一设备一码」绑定，防止激活码被多机盗用</li>
                         <li>🔑 激活码双密钥兼容：历史已发激活码（含多生成器产出的码）均可正常激活</li>
-                        <li>🔧 优化自动更新元数据，更新下载更可靠</li>
                     </ul>
                     <p><strong>v1.2.4</strong> (2026-07-03)</p>
                     <ul style="margin-left: 1.5rem;">
@@ -2129,7 +2129,7 @@
             btn.style.cursor = 'wait';
             
             setTimeout(() => {
-                window.open('https://gitee.com/qwezasxf/teaching-toolbox/releases/download/v1.2.6/Teach-Sack-Setup-1.2.6.exe', '_blank');
+                window.open('https://gitee.com/qwezasxf/teaching-toolbox/releases/download/v1.2.7/Teach-Sack-Setup-1.2.7.exe', '_blank');
                 btn.innerHTML = `<div class="platform-icon">✅</div><div class="platform-info"><div class="platform-name">下载已开始</div><div class="platform-version">Windows</div></div>`;
                 setTimeout(() => {
                     btn.innerHTML = originalHTML;
