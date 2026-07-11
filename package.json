@@ -1,6 +1,6 @@
 {
   "name": "teaching-toolbox",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "让课堂更有趣·让教学更高效 - 教学工具箱",
   "main": "main.js",
   "author": "Teaching Toolbox",
@@ -57,7 +57,13 @@
       ]
     },
     "nsis": {
-      "artifactName": "Teach-Sack-Setup-${version}.${ext}"
+      "artifactName": "Teach-Sack-Setup-${version}.${ext}",
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "runAfterFinish": true
     },
     "mac": {
       "target": [
