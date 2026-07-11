@@ -4031,7 +4031,7 @@
                     <div class="settings-section-title">ℹ️ 关于</div>
                     <div class="settings-item">
                         <label class="settings-label">版本号</label>
-                        <span class="settings-value">1.2.4</span>
+                        <span class="settings-value">1.2.8</span>
                     </div>
                     <div class="settings-item">
                         <label class="settings-label">开发者</label>
@@ -5475,7 +5475,7 @@
                 content: content,
                 contact: contact,
                 timestamp: new Date().toISOString(),
-                version: '1.2.4'
+                version: '1.2.8'
             };
 
             try {
@@ -5592,7 +5592,7 @@
                         showCustomModal({
                             icon: '✅',
                             title: '检查更新',
-                            message: '当前已是最新版本\n您正在使用的是最新版本 ' + (status.currentVersion || '1.2.4'),
+                            message: '当前已是最新版本\n您正在使用的是最新版本 ' + (status.currentVersion || '1.2.8'),
                             confirmText: '确定',
                             showCancel: false
                         });
@@ -5718,7 +5718,7 @@
                 if (isLoadingData) return;
 
                 const backupData = {
-                    version: '1.2.4',
+                    version: '1.2.8',
                     exportTime: new Date().toISOString(),
                     data: {}
                 };
@@ -5793,7 +5793,7 @@
 
             function exportData() {
                 const backupData = {
-                    version: '1.2.4',
+                    version: '1.2.8',
                     exportTime: new Date().toISOString(),
                     data: {}
                 };
@@ -5911,7 +5911,7 @@
                         
                         if (window.electronAPI) {
                                 const resetBackupData = {
-                                    version: '1.2.4',
+                                    version: '1.2.8',
                                     exportTime: new Date().toISOString(),
                                     data: {}
                                 };
@@ -6057,7 +6057,7 @@
             
             if (window.electronAPI) {
                 const backupData = {
-                    version: '1.2.4',
+                    version: '1.2.8',
                     exportTime: new Date().toISOString(),
                     data: {}
                 };
