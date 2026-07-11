@@ -5496,9 +5496,9 @@
             } catch (e) {
                 hideCustomFeedback();
                 showCustomModal({
-                    icon: '✅',
-                    title: '提交成功',
-                    message: '感谢您的反馈！反馈已保存，稍后会自动同步到服务器。',
+                    icon: '❌',
+                    title: '提交失败',
+                    message: '反馈未能实时推送到服务器（' + (e && e.message ? e.message : '网络或服务器异常') + '）。反馈内容已保存在本地，请检查网络后重试。',
                     confirmText: '确定',
                     showCancel: false
                 });
@@ -5507,15 +5507,27 @@
 
         async function sendFeedbackToServer(feedbackData) {
             try {
-                await fetch('https://teachsack-api.pages.dev/api/feedback', {
+                const response = await fetch('https://teachsack-api.pages.dev/api/feedback', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json; charset=utf-8'
                     },
                     body: JSON.stringify(feedbackData)
                 });
+
+                // 只有服务端明确返回 200 才视为成功，且包含飞书推送结果
+                if (!response.ok) {
+                    throw new Error('服务器响应异常：' + response.status);
+                }
+
+                const result = await response.json().catch(() => ({}));
+                if (!result.success) {
+                    throw new Error(result.message || '反馈提交失败');
+                }
+                return result;
             } catch (e) {
-                console.log('服务器不可用，反馈已保存到本地');
+                console.log('反馈发送失败:', e);
+                throw e; // 交给 submitFeedback 统一处理
             }
         }
 
