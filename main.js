@@ -588,6 +588,170 @@ ipcMain.handle('delete-app-data', async () => {
     }
 });
 
+// ============================================================
+// 授权管理（根治重复激活 / 一设备一码）
+// 原逻辑依赖 localhost:3000 后端，但生产环境从未启动该服务，
+// 导致校验失败时被前端兜底 return true，任意格式合法的码都能激活。
+// 现改为：主进程拥有持久化授权存储（userData/licenses.json），
+// 由主进程做最终裁决（格式 + 校验和 + 设备绑定）。
+// ============================================================
+const LICENSE_KEYS = ['TEST', 'TEACHINGTOOLBOX', 'CLASSBOX2024'];
+const SECRET_KEY = 'T3@chS@ck!2024#K3y';
+const CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+function getLicenseStorePath() {
+    return path.join(app.getPath('userData'), 'licenses.json');
+}
+
+function loadLicenseStore() {
+    try {
+        const p = getLicenseStorePath();
+        if (fs.existsSync(p)) {
+            const data = JSON.parse(fs.readFileSync(p, 'utf-8'));
+            if (data && typeof data === 'object') {
+                return {
+                    bindings: data.bindings || {},        // code -> deviceId
+                    deviceToCode: data.deviceToCode || {}  // deviceId -> code
+                };
+            }
+        }
+    } catch (e) {
+        console.error('读取授权存储失败，使用空存储:', e);
+    }
+    return { bindings: {}, deviceToCode: {} };
+}
+
+function saveLicenseStore(store) {
+    try {
+        fs.writeFileSync(getLicenseStorePath(), JSON.stringify(store, null, 2), 'utf-8');
+        return true;
+    } catch (e) {
+        console.error('保存授权存储失败:', e);
+        return false;
+    }
+}
+
+let licenseStore = null;
+function getLicenseStore() {
+    if (!licenseStore) licenseStore = loadLicenseStore();
+    return licenseStore;
+}
+
+function normalizeKey(key) {
+    return (key || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+}
+
+function computeLicenseChecksum(body) {
+    let hash = 0;
+    for (let i = 0; i < body.length; i++) {
+        hash = ((hash << 5) - hash) + body.charCodeAt(i);
+        hash |= 0;
+    }
+    for (let i = 0; i < SECRET_KEY.length; i++) {
+        hash = ((hash << 5) - hash) + SECRET_KEY.charCodeAt(i);
+        hash |= 0;
+    }
+    hash = Math.abs(hash);
+    let result = '';
+    for (let i = 0; i < 4; i++) {
+        result += CHARS[hash % CHARS.length];
+        hash = Math.floor(hash / CHARS.length);
+    }
+    return result;
+}
+
+function isLicenseFormatValid(key) {
+    const upperKey = normalizeKey(key);
+    if (LICENSE_KEYS.includes(upperKey)) return true; // 内置测试/主密钥
+    if (upperKey.length !== 16) return false;
+    const body = upperKey.slice(0, 12);
+    const checksum = upperKey.slice(12);
+    return checksum === computeLicenseChecksum(body);
+}
+
+// 返回 { valid, reason }
+// reason: 'format' | 'boundToOtherDevice' | 'deviceAlreadyActivated' | 'alreadyBoundSameDevice' | 'master' | 'ok'
+function evaluateLicense(key, deviceId) {
+    const upperKey = normalizeKey(key);
+    if (!isLicenseFormatValid(upperKey)) {
+        return { valid: false, reason: 'format' };
+    }
+    if (LICENSE_KEYS.includes(upperKey)) {
+        return { valid: true, reason: 'master' };
+    }
+    const store = getLicenseStore();
+    const boundDevice = store.bindings[upperKey];
+    if (boundDevice) {
+        if (boundDevice === deviceId) {
+            return { valid: true, reason: 'alreadyBoundSameDevice' };
+        }
+        return { valid: false, reason: 'boundToOtherDevice' };
+    }
+    const existingCode = store.deviceToCode[deviceId];
+    if (existingCode && existingCode !== upperKey) {
+        return { valid: false, reason: 'deviceAlreadyActivated' };
+    }
+    return { valid: true, reason: 'ok' };
+}
+
+ipcMain.handle('get-license-status', async (event, { deviceId }) => {
+    return {
+        activated: !!getLicenseStore().deviceToCode[deviceId],
+        code: getLicenseStore().deviceToCode[deviceId] || null
+    };
+});
+
+ipcMain.handle('validate-license', async (event, { code, deviceId }) => {
+    return evaluateLicense(code, deviceId);
+});
+
+ipcMain.handle('activate-license', async (event, { code, deviceId }) => {
+    const upperKey = normalizeKey(code);
+    const ev = evaluateLicense(upperKey, deviceId);
+    if (!ev.valid) {
+        const messages = {
+            format: '激活码格式无效',
+            boundToOtherDevice: '该激活码已在其他设备激活，无法重复使用',
+            deviceAlreadyActivated: '本设备已激活其他激活码，无需重复激活'
+        };
+        return { success: false, message: messages[ev.reason] || '激活失败' };
+    }
+    const store = getLicenseStore();
+    if (ev.reason === 'master') {
+        store.deviceToCode[deviceId] = upperKey;
+        saveLicenseStore(store);
+        return { success: true, message: '激活成功' };
+    }
+    store.bindings[upperKey] = deviceId;
+    store.deviceToCode[deviceId] = upperKey;
+    saveLicenseStore(store);
+    return { success: true, message: '激活成功' };
+});
+
+ipcMain.handle('seed-license', async (event, { code, deviceId }) => {
+    const upperKey = normalizeKey(code);
+    if (!isLicenseFormatValid(upperKey)) return { success: false };
+    if (LICENSE_KEYS.includes(upperKey)) return { success: true };
+    const store = getLicenseStore();
+    const bound = store.bindings[upperKey];
+    if (bound && bound !== deviceId) return { success: false, reason: 'boundToOtherDevice' };
+    store.bindings[upperKey] = deviceId;
+    store.deviceToCode[deviceId] = upperKey;
+    saveLicenseStore(store);
+    return { success: true };
+});
+
+ipcMain.handle('reset-license', async (event, { deviceId }) => {
+    const store = getLicenseStore();
+    const existing = store.deviceToCode[deviceId];
+    if (existing) {
+        delete store.bindings[existing];
+        delete store.deviceToCode[deviceId];
+        saveLicenseStore(store);
+    }
+    return { success: true };
+});
+
 // IPC通信 - 保存文件
 ipcMain.handle('save-file', async (event, { content, defaultPath, filters }) => {
     try {

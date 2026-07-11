@@ -87,6 +87,32 @@ contextBridge.exposeInMainWorld('electronAPI', {
     // 删除应用目录下的数据文件
     deleteAppData: () => {
         return ipcRenderer.invoke('delete-app-data');
+    },
+
+    // ===== 授权管理（根治重复激活 / 一设备一码）=====
+    // 查询本设备是否已激活
+    getLicenseStatus: (deviceId) => {
+        return ipcRenderer.invoke('get-license-status', { deviceId });
+    },
+
+    // 校验激活码（主进程做最终裁决：格式 + 校验和 + 设备绑定）
+    validateLicense: (code, deviceId) => {
+        return ipcRenderer.invoke('validate-license', { code, deviceId });
+    },
+
+    // 激活（写入主进程持久化存储，强制一设备一码）
+    activateLicense: (code, deviceId) => {
+        return ipcRenderer.invoke('activate-license', { code, deviceId });
+    },
+
+    // 迁移：把本地已有的授权同步进主进程存储（仅限本机曾绑定的码）
+    seedLicense: (code, deviceId) => {
+        return ipcRenderer.invoke('seed-license', { code, deviceId });
+    },
+
+    // 重置本设备授权（清空主进程存储中的绑定，彻底停用本机）
+    resetLicense: (deviceId) => {
+        return ipcRenderer.invoke('reset-license', { deviceId });
     }
 });
 

@@ -4633,44 +4633,51 @@
             const SECRET_KEY = 'T3@chS@ck!2024#K3y';
             const CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
+            // 方案B：校验交由主进程裁决（持久化存储 + 设备绑定）。
+            // 不再依赖 localhost:3000（生产环境从未启动），彻底消除“兜底 return true”漏洞。
             async function validateLicense(key) {
                 if (!key) return false;
-                
+
                 const upperKey = key.toUpperCase().replace(/[^A-Z0-9]/g, '');
-                
+
                 if (LICENSE_KEYS.includes(upperKey)) return true;
-                
+
                 if (upperKey.length !== 16) return false;
-                
+
                 const body = upperKey.slice(0, 12);
                 const checksum = upperKey.slice(12);
                 const computed = computeChecksum(body);
-                
+
                 if (checksum !== computed) return false;
-                
+
                 const deviceId = await getDeviceId();
-                
-                try {
-                    const response = await fetch('http://localhost:3000/api/validate', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ key: upperKey, deviceId })
-                    });
-                    const result = await response.json();
-                    if (result.success) {
-                        return true;
+
+                // 交给主进程做最终裁决（格式+校验和已在本地完成，主进程负责设备绑定/一码一机）
+                if (window.electronAPI && window.electronAPI.validateLicense) {
+                    try {
+                        const result = await window.electronAPI.validateLicense(upperKey, deviceId);
+                        return !!result.valid;
+                    } catch (e) {
+                        console.warn('主进程校验不可用，回退本地判断:', e);
                     }
-                    console.log('Server validation failed:', result.message);
-                    return false;
-                } catch (e) {
-                    console.log('Server unreachable, falling back to local validation:', e);
-                    
-                    const boundDevice = localStorage.getItem('license_device_' + upperKey);
-                    if (boundDevice) {
-                        return boundDevice === deviceId;
+                }
+
+                // 兜底（非 Electron 环境 / IPC 异常）：仅当本机曾绑定该码才放行，绝不盲目通过
+                const boundDevice = localStorage.getItem('license_device_' + upperKey);
+                if (boundDevice) {
+                    return boundDevice === deviceId;
+                }
+                return false;
+            }
+
+            // 把激活结果写入主进程持久化存储（方案B/C：强制一设备一码）
+            async function persistActivation(code, deviceId) {
+                if (window.electronAPI && window.electronAPI.activateLicense) {
+                    try {
+                        await window.electronAPI.activateLicense(code, deviceId);
+                    } catch (e) {
+                        console.warn('写入主进程授权失败（本地仍可用）:', e);
                     }
-                    
-                    return true;
                 }
             }
 
@@ -4745,8 +4752,17 @@
                 if (license) {
                     const isValid = await validateLicense(license);
                     if (isValid) {
+                        // 迁移：把本机曾绑定的已有授权同步进主进程存储（仅首次/无记录时生效）
+                        const deviceId = await getDeviceId();
+                        const normKey = license.toUpperCase().replace(/[^A-Z0-9]/g, '');
+                        const boundDevice = localStorage.getItem('license_device_' + normKey);
+                        if (boundDevice === deviceId && window.electronAPI && window.electronAPI.seedLicense) {
+                            try { await window.electronAPI.seedLicense(license.toUpperCase(), deviceId); } catch (e) { /* 忽略 */ }
+                        }
                         showTrialInfo('已激活');
                         return true;
+                    } else {
+                        localStorage.removeItem('trial_license');
                     }
                 }
 
@@ -4813,16 +4829,37 @@
                     });
                     return;
                 }
+
+                // 方案A：本设备已激活则直接拦截，避免重复吃码
+                const deviceId = await getDeviceId();
+                if (window.electronAPI && window.electronAPI.getLicenseStatus) {
+                    try {
+                        const status = await window.electronAPI.getLicenseStatus(deviceId);
+                        if (status && status.activated) {
+                            showCustomModal({
+                                icon: '✅',
+                                title: '已激活',
+                                message: '本设备已处于激活状态，无需重复激活。如需更换激活码请联系客服。',
+                                confirmText: '确定',
+                                showCancel: false,
+                                onConfirm: function() { input.value = ''; }
+                            });
+                            return;
+                        }
+                    } catch (e) { /* 忽略，继续走校验 */ }
+                }
+
                 const isValid = await validateLicense(key);
                 if (isValid) {
                     localStorage.setItem('trial_license', key.toUpperCase());
                     await bindLicenseToDevice(key);
+                    await persistActivation(key.toUpperCase(), deviceId);
                     location.reload();
                 } else {
                     showCustomModal({
                         icon: '❌',
                         title: '激活失败',
-                        message: '激活码无效或已在其他设备激活，请联系客服',
+                        message: '激活码无效、格式错误，或已在其他设备激活，请联系客服',
                         confirmText: '确定',
                         showCancel: false,
                         onConfirm: function() {
@@ -4836,6 +4873,12 @@
             function resetTrial() {
                 localStorage.removeItem('trial_count');
                 localStorage.removeItem('trial_license');
+                // 同时清除主进程存储中的本机绑定（彻底停用本设备）
+                getDeviceId().then(function(deviceId) {
+                    if (window.electronAPI && window.electronAPI.resetLicense) {
+                        window.electronAPI.resetLicense(deviceId).catch(function() {});
+                    }
+                });
                 location.reload();
             }
 
@@ -4853,10 +4896,31 @@
                     });
                     return;
                 }
+
+                // 方案A：本设备已激活则直接拦截，避免重复吃码
+                const deviceId = await getDeviceId();
+                if (window.electronAPI && window.electronAPI.getLicenseStatus) {
+                    try {
+                        const status = await window.electronAPI.getLicenseStatus(deviceId);
+                        if (status && status.activated) {
+                            showCustomModal({
+                                icon: '✅',
+                                title: '已激活',
+                                message: '本设备已处于激活状态，无需重复激活。如需更换激活码请联系客服。',
+                                confirmText: '确定',
+                                showCancel: false,
+                                onConfirm: function() { input.value = ''; }
+                            });
+                            return;
+                        }
+                    } catch (e) { /* 忽略，继续走校验 */ }
+                }
+
                 const isValid = await validateLicense(key);
                 if (isValid) {
                     localStorage.setItem('trial_license', key.toUpperCase());
                     await bindLicenseToDevice(key);
+                    await persistActivation(key.toUpperCase(), deviceId);
                     showCustomModal({
                         icon: '✅',
                         title: '激活成功',
@@ -4872,7 +4936,7 @@
                     showCustomModal({
                         icon: '❌',
                         title: '激活失败',
-                        message: '激活码无效或已在其他设备激活，请联系客服',
+                        message: '激活码无效、格式错误，或已在其他设备激活，请联系客服',
                         confirmText: '确定',
                         showCancel: false,
                         onConfirm: function() {
