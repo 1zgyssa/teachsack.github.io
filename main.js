@@ -399,7 +399,7 @@ function setupAutoUpdater() {
         console.log('🔧 更新模式: 生产环境 (Gitee)');
         autoUpdater.setFeedURL({
             provider: 'generic',
-            url: 'https://gitee.com/qwezasxf/teaching-toolbox/releases/download/v1.2.5/'
+            url: 'https://gitee.com/qwezasxf/teaching-toolbox/releases/download/v1.2.6/'
         });
         autoUpdater.autoDownload = false;
     }
@@ -596,7 +596,9 @@ ipcMain.handle('delete-app-data', async () => {
 // 由主进程做最终裁决（格式 + 校验和 + 设备绑定）。
 // ============================================================
 const LICENSE_KEYS = ['TEST', 'TEACHINGTOOLBOX', 'CLASSBOX2024'];
-const SECRET_KEY = 'T3@chS@ck!2024#K3y';
+// 双密钥兼容：同时接受 app 内置密钥 与 独立生成工具 generator.html 的密钥，
+// 确保历史已发出的激活码（无论用哪个工具生成）在新版中都能通过校验。
+const VALID_SECRET_KEYS = ['T3@chS@ck!2024#K3y', 'K3yG3n3r@t0r!2024'];
 const CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
 function getLicenseStorePath() {
@@ -641,14 +643,14 @@ function normalizeKey(key) {
     return (key || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
 }
 
-function computeLicenseChecksum(body) {
+function computeLicenseChecksum(body, secretKey) {
     let hash = 0;
     for (let i = 0; i < body.length; i++) {
         hash = ((hash << 5) - hash) + body.charCodeAt(i);
         hash |= 0;
     }
-    for (let i = 0; i < SECRET_KEY.length; i++) {
-        hash = ((hash << 5) - hash) + SECRET_KEY.charCodeAt(i);
+    for (let i = 0; i < secretKey.length; i++) {
+        hash = ((hash << 5) - hash) + secretKey.charCodeAt(i);
         hash |= 0;
     }
     hash = Math.abs(hash);
@@ -666,7 +668,8 @@ function isLicenseFormatValid(key) {
     if (upperKey.length !== 16) return false;
     const body = upperKey.slice(0, 12);
     const checksum = upperKey.slice(12);
-    return checksum === computeLicenseChecksum(body);
+    // 双密钥：任一密钥算出的校验位匹配即通过（兼容历史激活码）
+    return VALID_SECRET_KEYS.some(k => checksum === computeLicenseChecksum(body, k));
 }
 
 // 返回 { valid, reason }

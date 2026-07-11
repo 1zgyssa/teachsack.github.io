@@ -4630,7 +4630,8 @@
                 'CLASSBOX2024'
             ];
 
-            const SECRET_KEY = 'T3@chS@ck!2024#K3y';
+            // 双密钥兼容：同时接受 app 内置密钥 与 独立生成工具 generator.html 的密钥
+            const SECRET_KEYS = ['T3@chS@ck!2024#K3y', 'K3yG3n3r@t0r!2024'];
             const CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
             // 方案B：校验交由主进程裁决（持久化存储 + 设备绑定）。
@@ -4646,9 +4647,10 @@
 
                 const body = upperKey.slice(0, 12);
                 const checksum = upperKey.slice(12);
-                const computed = computeChecksum(body);
 
-                if (checksum !== computed) return false;
+                // 本地预检：任一密钥通过即格式有效（与主进程裁决保持一致）
+                const checksumValid = SECRET_KEYS.some(k => checksum === computeChecksum(body, k));
+                if (!checksumValid) return false;
 
                 const deviceId = await getDeviceId();
 
@@ -4704,18 +4706,18 @@
                 }
             }
 
-            function computeChecksum(body) {
+            function computeChecksum(body, secretKey) {
                 let hash = 0;
                 for (let i = 0; i < body.length; i++) {
                     hash = ((hash << 5) - hash) + body.charCodeAt(i);
                     hash |= 0;
                 }
-                for (let i = 0; i < SECRET_KEY.length; i++) {
-                    hash = ((hash << 5) - hash) + SECRET_KEY.charCodeAt(i);
+                for (let i = 0; i < secretKey.length; i++) {
+                    hash = ((hash << 5) - hash) + secretKey.charCodeAt(i);
                     hash |= 0;
                 }
                 hash = Math.abs(hash);
-                
+
                 let result = '';
                 for (let i = 0; i < 4; i++) {
                     result += CHARS[hash % CHARS.length];
@@ -4729,8 +4731,9 @@
                 for (let i = 0; i < 12; i++) {
                     code += CHARS[Math.floor(Math.random() * CHARS.length)];
                 }
-                code += computeChecksum(code);
-                
+                // 新生成的码统一用 app 内置密钥，保证与软件自身校验一致
+                code += computeChecksum(code, 'T3@chS@ck!2024#K3y');
+
                 return code.slice(0, 4) + '-' + code.slice(4, 8) + '-' + code.slice(8, 12) + '-' + code.slice(12);
             }
 
