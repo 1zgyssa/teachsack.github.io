@@ -40,6 +40,8 @@
             --scrollbar-track: rgba(0, 0, 0, 0.03);
             --scrollbar-thumb: rgba(0, 0, 0, 0.12);
             --scrollbar-thumb-hover: rgba(0, 0, 0, 0.25);
+            --bloom-1: rgba(224, 138, 46, 0.14);
+            --bloom-2: rgba(99, 102, 241, 0.08);
         }
 
         [data-theme="dark"] {
@@ -67,6 +69,8 @@
             --scrollbar-track: rgba(255, 255, 255, 0.05);
             --scrollbar-thumb: rgba(255, 255, 255, 0.15);
             --scrollbar-thumb-hover: rgba(255, 255, 255, 0.3);
+            --bloom-1: rgba(255, 215, 0, 0.09);
+            --bloom-2: rgba(99, 102, 241, 0.13);
         }
 
         /* 动画速度级别 */
@@ -111,7 +115,11 @@
         body {
             min-height: 100vh;
             min-height: 100dvh;
-            background: radial-gradient(ellipse at center, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            background:
+                radial-gradient(circle at 18% 20%, var(--bloom-1) 0%, transparent 42%),
+                radial-gradient(circle at 82% 26%, var(--bloom-2) 0%, transparent 46%),
+                radial-gradient(ellipse at center, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            background-attachment: fixed;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -131,7 +139,10 @@
             width: 100%;
             height: 100%;
             height: 100dvh;
-            background: radial-gradient(ellipse at center, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            background:
+                radial-gradient(circle at 18% 20%, var(--bloom-1) 0%, transparent 42%),
+                radial-gradient(circle at 82% 26%, var(--bloom-2) 0%, transparent 46%),
+                radial-gradient(ellipse at center, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -270,7 +281,7 @@
             background: rgba(255, 80, 80, 0.15);
             border-color: rgba(255, 80, 80, 0.3);
         }
-        .theme-btn:hover, .fullscreen-btn:hover { transform: scale(1.08); border-color: var(--accent-text); }
+        .theme-btn:hover, .fullscreen-btn:hover { transform: scale(1.08); border-color: var(--accent-text); box-shadow: 0 0 20px var(--accent-light); }
         .exit-btn:hover { background: var(--danger-bg); border-color: var(--danger-color); transform: scale(1.08); }
 
         /* ========== 自定义滚动条（与背景融合） ========== */
@@ -793,6 +804,7 @@
         .toolbox-header {
             text-align: center;
             margin-bottom: 40px;
+            animation: cardRise 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards;
         }
         .toolbox-title {
             font-size: 48px;
@@ -972,6 +984,7 @@
         }
         .tool-card {
             --tool-color: var(--accent-primary);
+            --tool-rgb: 224, 138, 46;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 24px;
@@ -981,13 +994,24 @@
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
+            animation: cardRise 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
         }
-        .tool-card:nth-child(1) { --tool-color: #a855f7; }
-        .tool-card:nth-child(2) { --tool-color: #f59e0b; }
-        .tool-card:nth-child(3) { --tool-color: #06b6d4; }
-        .tool-card:nth-child(4) { --tool-color: #ef4444; }
-        .tool-card:nth-child(5) { --tool-color: #22c55e; }
-        .tool-card:nth-child(6) { --tool-color: #3b82f6; }
+        .tool-card:nth-child(1) { --tool-color: #b08cf0; --tool-rgb: 176, 140, 240; }
+        .tool-card:nth-child(2) { --tool-color: #e0a458; --tool-rgb: 224, 164, 88; }
+        .tool-card:nth-child(3) { --tool-color: #5bc4d6; --tool-rgb: 91, 196, 214; }
+        .tool-card:nth-child(4) { --tool-color: #e0828a; --tool-rgb: 224, 130, 138; }
+        .tool-card:nth-child(5) { --tool-color: #7cc48a; --tool-rgb: 124, 196, 138; }
+        .tool-card:nth-child(6) { --tool-color: #6ba3e8; --tool-rgb: 107, 163, 232; }
+        .tool-card:nth-child(1) { animation-delay: 0.04s; }
+        .tool-card:nth-child(2) { animation-delay: 0.10s; }
+        .tool-card:nth-child(3) { animation-delay: 0.16s; }
+        .tool-card:nth-child(4) { animation-delay: 0.22s; }
+        .tool-card:nth-child(5) { animation-delay: 0.28s; }
+        .tool-card:nth-child(6) { animation-delay: 0.34s; }
+        @keyframes cardRise {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
         .tool-card::before {
             content: '';
             position: absolute;
@@ -995,7 +1019,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, var(--tool-color), transparent);
+            background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
             opacity: 0;
             transition: left 0.5s, opacity 0.3s;
         }
@@ -1005,8 +1029,8 @@
         }
         .tool-card:hover {
             transform: translateY(-8px);
-            border-color: var(--tool-color);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.35), 0 0 24px var(--accent-light);
         }
         .tool-card.disabled {
             opacity: 0.4;
@@ -1021,19 +1045,13 @@
             position: absolute;
             top: 14px;
             right: 14px;
-            background: rgba(168, 85, 247, 0.12);
-            color: #a855f7;
+            background: rgba(var(--tool-rgb), 0.14);
+            color: var(--tool-color);
             font-size: 12px;
             padding: 2px 10px;
             border-radius: 10px;
             font-weight: 500;
         }
-        .tool-card:nth-child(1) .tool-badge { background: rgba(168,85,247,0.12); color: #a855f7; }
-        .tool-card:nth-child(2) .tool-badge { background: rgba(245,158,11,0.12); color: #f59e0b; }
-        .tool-card:nth-child(3) .tool-badge { background: rgba(6,182,212,0.12); color: #06b6d4; }
-        .tool-card:nth-child(4) .tool-badge { background: rgba(239,68,68,0.12); color: #ef4444; }
-        .tool-card:nth-child(5) .tool-badge { background: rgba(34,197,94,0.12); color: #22c55e; }
-        .tool-card:nth-child(6) .tool-badge { background: rgba(59,130,246,0.12); color: #3b82f6; }
         .tool-icon {
             font-size: 40px;
             width: 72px;
@@ -1043,14 +1061,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(168, 85, 247, 0.15);
+            background: linear-gradient(135deg, rgba(var(--tool-rgb), 0.28), rgba(var(--tool-rgb), 0.08));
         }
-        .tool-card:nth-child(1) .tool-icon { background: linear-gradient(135deg, rgba(168,85,247,0.25), rgba(168,85,247,0.08)); }
-        .tool-card:nth-child(2) .tool-icon { background: linear-gradient(135deg, rgba(245,158,11,0.25), rgba(245,158,11,0.08)); }
-        .tool-card:nth-child(3) .tool-icon { background: linear-gradient(135deg, rgba(6,182,212,0.25), rgba(6,182,212,0.08)); }
-        .tool-card:nth-child(4) .tool-icon { background: linear-gradient(135deg, rgba(239,68,68,0.25), rgba(239,68,68,0.08)); }
-        .tool-card:nth-child(5) .tool-icon { background: linear-gradient(135deg, rgba(34,197,94,0.25), rgba(34,197,94,0.08)); }
-        .tool-card:nth-child(6) .tool-icon { background: linear-gradient(135deg, rgba(59,130,246,0.25), rgba(59,130,246,0.08)); }
         .tool-name {
             font-size: 22px;
             color: var(--text-primary);
@@ -3836,6 +3848,10 @@
         .app.low-effects .exit-btn {
             transition: none !important;
         }
+        .app.low-effects .tool-card,
+        .app.low-effects .toolbox-header {
+            animation: none !important;
+        }
         .app.low-effects .tool-card:hover {
             border-color: var(--border-color) !important;
         }
@@ -4072,7 +4088,7 @@
                     <div class="settings-section-title">ℹ️ 关于</div>
                     <div class="settings-item">
                         <label class="settings-label">版本号</label>
-                        <span class="settings-value">1.2.13</span>
+                        <span class="settings-value">1.2.14</span>
                     </div>
                     <div class="settings-item">
                         <label class="settings-label">产品负责人</label>
@@ -5064,11 +5080,21 @@
         let focusInterval = null;
 
         // ========== 更新日志 ==========
-        const APP_VERSION = '1.2.13';
+        const APP_VERSION = '1.2.14';
         const LAST_SEEN_VERSION_KEY = 'app_last_seen_version';
 
         // 应用内更新日志（最新版本置顶）。每次发版在此追加一条即可。
         const CHANGELOG = [
+            {
+                version: '1.2.14',
+                date: '2026-07-12',
+                items: [
+                    '🎨 主页背景新增品牌色氛围光晕，玻璃质感更通透',
+                    '✨ 工具卡片错峰入场动画，启动更有节奏感',
+                    '🌟 交互光晕统一为金色贯穿线（标题/按钮/卡片 hover）',
+                    '🎨 工具卡片配色收敛为低饱和和谐色系，视觉更高级'
+                ]
+            },
             {
                 version: '1.2.13',
                 date: '2026-07-12',
@@ -5648,7 +5674,7 @@
                 content: content,
                 contact: contact,
                 timestamp: new Date().toISOString(),
-                version: '1.2.13'
+                version: '1.2.14'
             };
 
             try {
@@ -5777,7 +5803,7 @@
                         showCustomModal({
                             icon: '✅',
                             title: '检查更新',
-                            message: '当前已是最新版本\n您正在使用的是最新版本 ' + (status.currentVersion || '1.2.13'),
+                            message: '当前已是最新版本\n您正在使用的是最新版本 ' + (status.currentVersion || '1.2.14'),
                             confirmText: '确定',
                             showCancel: false
                         });
@@ -5904,7 +5930,7 @@
                 if (isLoadingData) return;
 
                 const backupData = {
-                    version: '1.2.13',
+                    version: '1.2.14',
                     exportTime: new Date().toISOString(),
                     data: {}
                 };
@@ -5979,7 +6005,7 @@
 
             function exportData() {
                 const backupData = {
-                    version: '1.2.13',
+                    version: '1.2.14',
                     exportTime: new Date().toISOString(),
                     data: {}
                 };
@@ -6097,7 +6123,7 @@
                         
                         if (window.electronAPI) {
                                 const resetBackupData = {
-                                    version: '1.2.13',
+                                    version: '1.2.14',
                                     exportTime: new Date().toISOString(),
                                     data: {}
                                 };
@@ -6243,7 +6269,7 @@
             
             if (window.electronAPI) {
                 const backupData = {
-                    version: '1.2.13',
+                    version: '1.2.14',
                     exportTime: new Date().toISOString(),
                     data: {}
                 };
