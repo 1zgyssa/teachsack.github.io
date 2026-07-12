@@ -17,3 +17,37 @@ generate-icon.js
 license-data.json
 test-device-binding.js
 test-server-validation.js
+
+# ===== 清理补充（2026-07-10）=====
+# 其他构建产物变体
+dist2/
+dist-new/
+dist-new-2/
+dist_final/
+dist_new/
+
+# 一次性工具脚本（产物已存在，源码无需入库）
+set-icon.js
+generate-screenshot.js
+
+# 调试/测试脚本（补充）
+test-update-debug.js
+test-update-simple.ps1
+
+# 测试用资源
+simple-icon.png
+simple-circle.png
+test-icon.png
+
+# 冗余发布包 / 工具（不应入库）
+backup/
+downloads/
+gh.zip
+gh-cli/
+
+# IDE / CI 残留
+.trae/
+.github/
+
+# 统一后端本地回退数据（feedback/payment 的本地文件，云端走 KV）
+data/
