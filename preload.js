@@ -11,7 +11,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
     getAppInfo: () => {
         return ipcRenderer.invoke('get-app-info');
     },
-    
+
+    // 打开外部链接（购买激活码、官网等）
+    openExternal: (url) => {
+        return ipcRenderer.invoke('open-external', url);
+    },
+
     // 保存数据到应用目录
     saveDataFile: (data) => {
         return ipcRenderer.invoke('save-data-file', data);

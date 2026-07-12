@@ -485,6 +485,20 @@ ipcMain.handle('get-app-info', async () => {
     };
 });
 
+// IPC通信 - 打开外部链接（购买激活码、官网等）
+ipcMain.handle('open-external', async (event, url) => {
+    if (!url || typeof url !== 'string') {
+        return { success: false, error: 'URL is required' };
+    }
+    try {
+        await shell.openExternal(url);
+        return { success: true };
+    } catch (error) {
+        console.error('打开外部链接失败:', error);
+        return { success: false, error: error.message };
+    }
+});
+
 // IPC通信 - 保存数据到应用目录
 ipcMain.handle('save-data-file', async (event, data) => {
     try {

@@ -3740,7 +3740,17 @@
         .license-input-group {
             display: flex;
             gap: 10px;
-            margin: 15px 0;
+            margin: 15px 0 10px;
+        }
+        .license-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+        .license-actions .settings-backup-btn {
+            flex: 1;
+            padding: 12px 15px;
+            font-size: 14px;
         }
         .license-input {
             flex: 1;
@@ -4056,6 +4066,10 @@
                     <div class="license-input-group">
                         <input type="text" class="license-input" id="settingsLicenseInput" placeholder="请输入激活码" maxlength="20">
                         <button class="settings-backup-btn primary" onclick="TrialManager.submitLicenseFromSettings()">🎯 激活</button>
+                    </div>
+                    <div class="license-actions">
+                        <button class="settings-backup-btn" onclick="openPurchaseLink()">🛒 获取激活码</button>
+                        <button class="settings-backup-btn secondary" onclick="showHowToGetLicense()">❓ 如何获取</button>
                     </div>
                 </div>
 
@@ -5026,6 +5040,31 @@
                 generateLicense
             };
         })();
+
+        // 购买激活码链接（与官网一致）
+        const PURCHASE_URL = 'https://www.kufaka.com/item/cvg1lg';
+
+        async function openPurchaseLink() {
+            if (window.electronAPI && window.electronAPI.openExternal) {
+                const result = await window.electronAPI.openExternal(PURCHASE_URL);
+                if (!result || !result.success) {
+                    window.open(PURCHASE_URL, '_blank');
+                }
+            } else {
+                window.open(PURCHASE_URL, '_blank');
+            }
+        }
+
+        function showHowToGetLicense() {
+            showCustomModal({
+                icon: '🛒',
+                title: '如何获取激活码',
+                message: '1. 点击「🛒 获取激活码」按钮，跳转发卡网购买页面。\n2. 选择支付方式（微信 / 支付宝等），完成 ¥19.9 支付。\n3. 支付后请务必填写邮箱或手机号，系统会自动将激活码发送给您。\n4. 复制收到的激活码，回到本页面输入框，点击「🎯 激活」按钮完成授权。\n5. 激活成功后即可无限制使用全部功能，并支持多设备激活。\n\n如未收到激活码，请联系：zayugu@zohomail.com',
+                confirmText: '去购买',
+                showCancel: false,
+                onConfirm: openPurchaseLink
+            });
+        }
 
         let focusInterval = null;
 
