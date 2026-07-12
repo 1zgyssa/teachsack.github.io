@@ -51,3 +51,8 @@ gh-cli/
 
 # 统一后端本地回退数据（feedback/payment 的本地文件，云端走 KV）
 data/
+
+# 环境变量文件（含密钥，绝不入库；仅 .env.example 作为模板参考）
+.env
+.env.local
+.env.*.local
