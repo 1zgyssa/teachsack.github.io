@@ -2129,14 +2129,12 @@
         }
 
         .timer-display-wrapper {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            background: var(--card-bg);
             border-radius: 24px;
             padding: 40px;
             margin-bottom: 30px;
-            border: 2px solid rgba(255, 215, 0, 0.2);
-            box-shadow: 
-                0 0 30px rgba(255, 215, 0, 0.1),
-                inset 0 0 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 6px 24px var(--shadow-color), inset 0 1px 0 rgba(255, 255, 255, 0.06);
             position: relative;
         }
 
@@ -2172,7 +2170,7 @@
             transform: rotate(-90deg);
             transform-origin: center;
             transition: stroke-dashoffset 0.1s linear;
-            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
+            filter: drop-shadow(0 0 8px var(--accent-light));
         }
 
         .timer-display {
@@ -2180,14 +2178,11 @@
             z-index: 1;
             font-size: 100px;
             font-weight: 900;
-            color: #ffd700;
+            color: var(--accent-text);
             margin-bottom: 0;
             font-family: 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
             letter-spacing: 10px;
-            text-shadow: 
-                0 0 10px rgba(255, 215, 0, 0.5),
-                0 0 20px rgba(255, 215, 0, 0.3),
-                0 0 40px rgba(255, 215, 0, 0.2);
+            text-shadow: 0 0 16px var(--accent-light);
         }
 
         .timer-display.warning {
