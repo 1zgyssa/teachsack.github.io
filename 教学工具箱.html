@@ -2720,6 +2720,21 @@
             margin-top: 8px;
             padding-right: 6px;
         }
+        /* 自定义滚动条（暗色主题，金色滑块，呼应标题色） */
+        .changelog-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .changelog-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 4px;
+        }
+        .changelog-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 215, 0, 0.35);
+            border-radius: 4px;
+        }
+        .changelog-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 215, 0, 0.55);
+        }
         .changelog-entry { margin-bottom: 16px; }
         .changelog-entry:last-child { margin-bottom: 0; }
         .changelog-version {
