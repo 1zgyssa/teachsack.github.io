@@ -257,9 +257,9 @@
         /* ========== 顶栏图标按钮（统一玻璃拟态组件） ========== */
         .theme-btn, .fullscreen-btn, .exit-btn {
             position: fixed;
-            top: 20px;
-            width: 56px;
-            height: 56px;
+            top: 16px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
             background: var(--glass-bg);
             border: 1px solid var(--border-color);
@@ -274,10 +274,15 @@
             align-items: center;
             justify-content: center;
         }
-        .theme-btn { right: 90px; }
+        .theme-btn svg, .fullscreen-btn svg, .exit-btn svg {
+            width: 28px;
+            height: 28px;
+            stroke-width: 2.5;
+        }
+        .theme-btn { right: 100px; }
         .fullscreen-btn { right: 20px; }
         .exit-btn {
-            right: 160px;
+            right: 180px;
             background: rgba(255, 80, 80, 0.15);
             border-color: rgba(255, 80, 80, 0.3);
         }
@@ -954,10 +959,10 @@
         }
         .settings-btn {
             position: absolute;
-            top: 20px;
+            top: 16px;
             left: 20px;
-            width: 56px;
-            height: 56px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
             background: var(--glass-bg);
             border: 1px solid var(--border-color);
@@ -972,6 +977,11 @@
             box-shadow: 0 4px 16px var(--shadow-color);
             z-index: 100;
         }
+        .settings-btn svg {
+            width: 28px;
+            height: 28px;
+            stroke-width: 2.5;
+        }
         .settings-btn:hover {
             transform: rotate(90deg) scale(1.08);
             border-color: var(--accent-text);
@@ -985,7 +995,9 @@
         .tool-card {
             --tool-color: var(--accent-primary);
             --tool-rgb: 224, 138, 46;
-            background: var(--card-bg);
+            background:
+                radial-gradient(circle at 50% 0%, rgba(var(--tool-rgb), 0.18) 0%, transparent 55%),
+                linear-gradient(165deg, rgba(var(--tool-rgb), 0.10) 0%, var(--card-bg) 48%, var(--card-bg) 100%);
             border: 1px solid var(--border-color);
             border-radius: 24px;
             padding: 32px 20px;
@@ -995,6 +1007,9 @@
             position: relative;
             overflow: hidden;
             animation: cardRise 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.08),
+                0 4px 20px var(--shadow-color);
         }
         .tool-card:nth-child(1) { --tool-color: #b08cf0; --tool-rgb: 176, 140, 240; }
         .tool-card:nth-child(2) { --tool-color: #e0a458; --tool-rgb: 224, 164, 88; }
@@ -1030,7 +1045,13 @@
         .tool-card:hover {
             transform: translateY(-8px);
             border-color: var(--accent-primary);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.35), 0 0 24px var(--accent-light);
+            background:
+                radial-gradient(circle at 50% 0%, rgba(var(--tool-rgb), 0.28) 0%, transparent 60%),
+                linear-gradient(165deg, rgba(var(--tool-rgb), 0.16) 0%, var(--card-bg) 50%, var(--card-bg) 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.12),
+                0 20px 40px rgba(0,0,0,0.35),
+                0 0 28px var(--accent-light);
         }
         .tool-card.disabled {
             opacity: 0.4;
@@ -1045,12 +1066,13 @@
             position: absolute;
             top: 14px;
             right: 14px;
-            background: rgba(var(--tool-rgb), 0.14);
+            background: rgba(var(--tool-rgb), 0.18);
             color: var(--tool-color);
             font-size: 12px;
             padding: 2px 10px;
             border-radius: 10px;
             font-weight: 500;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
         }
         .tool-icon {
             font-size: 40px;
@@ -1061,7 +1083,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, rgba(var(--tool-rgb), 0.28), rgba(var(--tool-rgb), 0.08));
+            background: linear-gradient(135deg, rgba(var(--tool-rgb), 0.34), rgba(var(--tool-rgb), 0.10));
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.16),
+                0 6px 16px rgba(var(--tool-rgb), 0.22);
         }
         .tool-name {
             font-size: 22px;
@@ -3927,7 +3952,7 @@
     <div class="app">
         <!-- ========== 主题切换按钮（绳子拉环） ========== -->
         <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="切换主题">
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="4"/>
                 <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
             </svg>
@@ -3935,14 +3960,14 @@
 
         <!-- ========== 大屏模式按钮 ========== -->
         <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()" title="大屏模式">
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/>
             </svg>
         </button>
         
         <!-- ========== 退出按钮 ========== -->
         <button class="exit-btn" id="exitBtn" onclick="exitApp()" title="退出应用">
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
                 <polyline points="16 17 21 12 16 7"/>
                 <line x1="21" y1="12" x2="9" y2="12"/>
@@ -3953,7 +3978,7 @@
         <div id="toolboxPage">
             <div class="toolbox-header">
                 <button class="settings-btn" id="settingsBtn" onclick="showPage('settings')" title="设置">
-                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 0 0-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 0 0-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 0 0-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
                         <circle cx="12" cy="12" r="3"/>
                     </svg>
@@ -5092,7 +5117,9 @@
                     '🎨 主页背景新增品牌色氛围光晕，玻璃质感更通透',
                     '✨ 工具卡片错峰入场动画，启动更有节奏感',
                     '🌟 交互光晕统一为金色贯穿线（标题/按钮/卡片 hover）',
-                    '🎨 工具卡片配色收敛为低饱和和谐色系，视觉更高级'
+                    '🎨 工具卡片配色收敛为低饱和和谐色系，视觉更高级',
+                    '🔍 顶部功能按钮放大至 64px，图标加粗，暗色下更清晰易辨',
+                    '🃏 工具卡片背景升级为渐变光晕 + 内高光，质感更立体'
                 ]
             },
             {
