@@ -5091,7 +5091,7 @@
                 title: '如何获取激活码',
                 message: '1. 点击「🛒 获取激活码」按钮，跳转发卡网购买页面。\n2. 选择支付方式（微信 / 支付宝等），完成 ¥19.9 支付。\n3. 支付后请务必填写邮箱或手机号，系统会自动将激活码发送给您。\n4. 复制收到的激活码，回到本页面输入框，点击「🎯 激活」按钮完成授权。\n5. 激活成功后即可无限制使用全部功能，并支持多设备激活。\n\n如未收到激活码，请联系：zayugu@zohomail.com',
                 confirmText: '去购买',
-                showCancel: false,
+                cancelText: '关闭',
                 onConfirm: openPurchaseLink
             });
         }
@@ -5463,10 +5463,10 @@
             app.classList.toggle('fullscreen-mode');
             
             if (app.classList.contains('fullscreen-mode')) {
-                fullscreenBtn.innerHTML = '📱';
+                fullscreenBtn.innerHTML = '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V4m0 0h4M4 4l5 5M20 8V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5M20 16v4m0 0h-4m4 0l-5-5"/></svg>';
                 fullscreenBtn.title = '退出大屏模式';
             } else {
-                fullscreenBtn.innerHTML = '🎯';
+                fullscreenBtn.innerHTML = '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
                 fullscreenBtn.title = '大屏模式';
             }
         }
@@ -5511,7 +5511,12 @@
             const cancelBtn = document.getElementById('customModalCancel');
             const overlay = modal.querySelector('.custom-modal-overlay');
             
-            icon.textContent = options.icon || '📋';
+            if (options.icon === 'none') {
+                icon.style.display = 'none';
+            } else {
+                icon.style.display = '';
+                icon.textContent = options.icon || '📋';
+            }
             title.textContent = options.title || '提示';
             message.textContent = options.message || '';
             confirmBtn.textContent = options.confirmText || '确定';
@@ -5548,7 +5553,7 @@
 
         function exitApp() {
             showCustomModal({
-                icon: '🚪',
+                icon: 'none',
                 title: '退出确认',
                 message: '确定要退出 Teach Sack 吗？',
                 confirmText: '确定',
