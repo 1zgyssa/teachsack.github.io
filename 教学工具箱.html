@@ -5726,7 +5726,8 @@
                 'animationSpeed',
                 'license_list',
                 'trial_license',
-                'trial_count'
+                'trial_count',
+                'trial_exhausted'
             ];
             
             const LICENSE_KEYS_PATTERN = /^license_device_/;
@@ -5790,7 +5791,7 @@
                         const allKeys = Object.keys(localStorage);
                         allKeys.forEach(key => {
                             if (!LICENSE_KEYS_PATTERN.test(key) && 
-                                key !== 'trial_license' && key !== 'trial_count' && key !== 'license_list') {
+                                key !== 'trial_license' && key !== 'trial_count' && key !== 'trial_exhausted' && key !== 'license_list') {
                                 localStorage.removeItem(key);
                             }
                         });
@@ -5894,7 +5895,7 @@
                     onConfirm: async function() {
                         const licenseData = {};
                         DATA_KEYS.forEach(key => {
-                            if (key === 'trial_license' || key === 'trial_count' || key === 'license_list') {
+                            if (key === 'trial_license' || key === 'trial_count' || key === 'trial_exhausted' || key === 'license_list') {
                                 const value = localStorage.getItem(key);
                                 if (value !== null) {
                                     licenseData[key] = value;
@@ -6092,7 +6093,7 @@
                     }
                 }
                 
-                const keysToSave = ['statsScores', 'punishmentList', 'settings', 'quizCustomQuestions', 'calledStudents', 'theme', 'animationSpeed', 'license_list', 'trial_license', 'trial_count'];
+                const keysToSave = ['statsScores', 'punishmentList', 'settings', 'quizCustomQuestions', 'calledStudents', 'theme', 'animationSpeed', 'license_list', 'trial_license', 'trial_count', 'trial_exhausted'];
                 keysToSave.forEach(key => {
                     const value = localStorage.getItem(key);
                     if (value !== null) {
