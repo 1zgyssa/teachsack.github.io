@@ -4017,7 +4017,7 @@
                     <div class="settings-section-title">ℹ️ 关于</div>
                     <div class="settings-item">
                         <label class="settings-label">版本号</label>
-                        <span class="settings-value">1.2.12</span>
+                        <span class="settings-value">1.2.13</span>
                     </div>
                     <div class="settings-item">
                         <label class="settings-label">产品负责人</label>
@@ -5009,11 +5009,22 @@
         let focusInterval = null;
 
         // ========== 更新日志 ==========
-        const APP_VERSION = '1.2.12';
+        const APP_VERSION = '1.2.13';
         const LAST_SEEN_VERSION_KEY = 'app_last_seen_version';
 
         // 应用内更新日志（最新版本置顶）。每次发版在此追加一条即可。
         const CHANGELOG = [
+            {
+                version: '1.2.13',
+                date: '2026-07-12',
+                items: [
+                    '🛒 授权管理新增「获取激活码」入口，一键跳转购买页',
+                    '❓ 授权管理新增「如何获取激活码」引导弹窗，手把手教用户购买与激活',
+                    '🎨 更新日志容器改用暗色自定义滚动条',
+                    '♿ 晴色主题金色文字对比度修复，达到 WCAG AA 无障碍标准',
+                    '🎨 明暗主题品牌色统一对齐，按钮组件收口减少样式重复'
+                ]
+            },
             {
                 version: '1.2.12',
                 date: '2026-07-12',
@@ -5582,7 +5593,7 @@
                 content: content,
                 contact: contact,
                 timestamp: new Date().toISOString(),
-                version: '1.2.12'
+                version: '1.2.13'
             };
 
             try {
@@ -5711,7 +5722,7 @@
                         showCustomModal({
                             icon: '✅',
                             title: '检查更新',
-                            message: '当前已是最新版本\n您正在使用的是最新版本 ' + (status.currentVersion || '1.2.12'),
+                            message: '当前已是最新版本\n您正在使用的是最新版本 ' + (status.currentVersion || '1.2.13'),
                             confirmText: '确定',
                             showCancel: false
                         });
@@ -5838,7 +5849,7 @@
                 if (isLoadingData) return;
 
                 const backupData = {
-                    version: '1.2.12',
+                    version: '1.2.13',
                     exportTime: new Date().toISOString(),
                     data: {}
                 };
@@ -5913,7 +5924,7 @@
 
             function exportData() {
                 const backupData = {
-                    version: '1.2.12',
+                    version: '1.2.13',
                     exportTime: new Date().toISOString(),
                     data: {}
                 };
@@ -6031,7 +6042,7 @@
                         
                         if (window.electronAPI) {
                                 const resetBackupData = {
-                                    version: '1.2.12',
+                                    version: '1.2.13',
                                     exportTime: new Date().toISOString(),
                                     data: {}
                                 };
@@ -6177,7 +6188,7 @@
             
             if (window.electronAPI) {
                 const backupData = {
-                    version: '1.2.12',
+                    version: '1.2.13',
                     exportTime: new Date().toISOString(),
                     data: {}
                 };

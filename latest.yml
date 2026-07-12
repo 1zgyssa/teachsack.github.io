@@ -1,11 +1,8 @@
-version: 1.2.12
+version: 1.2.13
 files:
-  - url: Teach-Sack-Setup-1.2.12.exe
-    sha512: 952abf6d16b0955a59439ee8de6d7f81331e9c07b935dde8e13b7403f756217b483f28ba3bae3eef4410db90ef7ffa65ef1212526706e1b3ee33f0f151819d2a
-    size: 71068133
-  - url: teaching-toolbox-1.2.12-x64.nsis.7z
-    sha512: 8451a5667afcdb0a8139721c28956825cb9fde12cd0797bc01f6ba51446f5348e8018543d3f2d3ef03ca95a86c301f81a53780f9fa518fcd5308b58bff723abb
-    size: 70510599
-path: Teach-Sack-Setup-1.2.12.exe
-sha512: 952abf6d16b0955a59439ee8de6d7f81331e9c07b935dde8e13b7403f756217b483f28ba3bae3eef4410db90ef7ffa65ef1212526706e1b3ee33f0f151819d2a
-releaseDate: '2026-07-12T08:47:00.000Z'
+  - url: Teach-Sack-Setup-1.2.13.exe
+    sha512: gUnlvE/vQ7XwPDnET7lz8Ala46/I5qUd+7XkjRIdej7YMAvWjjtbwswSghlhOSA0VIBZAeqeQOpz0h3NyxFYIQ==
+    size: 71069004
+path: Teach-Sack-Setup-1.2.13.exe
+sha512: gUnlvE/vQ7XwPDnET7lz8Ala46/I5qUd+7XkjRIdej7YMAvWjjtbwswSghlhOSA0VIBZAeqeQOpz0h3NyxFYIQ==
+releaseDate: '2026-07-12T04:56:56.855Z'
