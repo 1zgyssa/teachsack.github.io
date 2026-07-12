@@ -277,7 +277,12 @@
             height: 28px;
             stroke-width: 2.5;
         }
-        .theme-btn { right: 100px; }
+        .theme-btn .sun-icon {
+            width: 32px;
+            height: 32px;
+            stroke-width: 3;
+        }
+        .theme-btn { right: 100px; color: var(--accent-text); }
         .fullscreen-btn { right: 20px; }
         .exit-btn {
             right: 180px;
@@ -285,10 +290,16 @@
             background: rgba(255, 80, 80, 0.08);
             border-color: rgba(255, 80, 80, 0.25);
         }
-        .theme-btn:hover, .fullscreen-btn:hover { transform: translateY(-2px); border-color: var(--accent-text); box-shadow: 0 4px 14px rgba(0,0,0,0.12); }
-        .exit-btn:hover { transform: translateY(-2px); background: rgba(255, 80, 80, 0.14); border-color: var(--danger-color); }
-        .theme-btn:hover, .fullscreen-btn:hover { transform: scale(1.08); border-color: var(--accent-text); box-shadow: 0 0 20px var(--accent-light); }
-        .exit-btn:hover { background: var(--danger-bg); border-color: var(--danger-color); transform: scale(1.08); }
+        .theme-btn:hover, .fullscreen-btn:hover {
+            transform: translateY(-2px) scale(1.03);
+            border-color: var(--accent-text);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+        }
+        .exit-btn:hover {
+            transform: translateY(-2px) scale(1.03);
+            background: rgba(255, 80, 80, 0.14);
+            border-color: var(--danger-color);
+        }
 
         /* ========== 自定义滚动条（与背景融合） ========== */
         .app::-webkit-scrollbar,
@@ -1053,25 +1064,17 @@
         }
         .tool-badge {
             position: absolute;
-            top: 14px;
-            right: 14px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--tool-color);
-            box-shadow: 0 0 0 2px var(--card-bg);
-        }
-        .tool-badge::after {
-            content: '已上线';
-            position: absolute;
-            top: 50%;
-            left: 14px;
-            transform: translateY(-50%);
-            color: var(--tool-color);
+            top: 12px;
+            right: 12px;
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 7px;
+            border-radius: 999px;
             font-size: 11px;
             font-weight: 500;
-            white-space: nowrap;
-            opacity: 0.85;
+            color: var(--tool-color);
+            background: rgba(var(--tool-rgb), 0.12);
+            border: 1px solid rgba(var(--tool-rgb), 0.20);
         }
         .tool-icon {
             font-size: 40px;
@@ -3948,9 +3951,9 @@
     <div class="app">
         <!-- ========== 主题切换按钮（绳子拉环） ========== -->
         <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="切换主题">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="5"/>
-                <path d="M12 1v2.5M12 20.5V23M3.34 3.34l1.77 1.77M18.89 18.89l1.77 1.77M1 12h2.5M20.5 12H23M3.34 20.66l1.77-1.77M18.89 5.11l1.77-1.77"/>
+            <svg class="sun-icon" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="6"/>
+                <path d="M12 3v3M12 18v3M5.12 5.12l2.12 2.12M16.76 16.76l2.12 2.12M3 12h3M18 12h3M5.12 18.88l2.12-2.12M16.76 5.24l2.12-2.12"/>
             </svg>
         </button>
 
