@@ -2445,14 +2445,12 @@
         }
 
         .quiz-card {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            background: var(--card-bg);
             border-radius: 28px;
             padding: 55px;
             margin-bottom: 35px;
-            border: 2px solid rgba(255, 215, 0, 0.2);
-            box-shadow: 
-                0 0 30px rgba(255, 215, 0, 0.1),
-                inset 0 0 60px rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--card-border);
+            box-shadow: 0 4px 20px var(--shadow-color);
             transition: all 0.3s;
         }
 
@@ -2748,27 +2746,27 @@
             width: 8px;
         }
         .changelog-container::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.06);
+            background: var(--scrollbar-track);
             border-radius: 4px;
         }
         .changelog-container::-webkit-scrollbar-thumb {
-            background: rgba(255, 215, 0, 0.35);
+            background: var(--scrollbar-thumb);
             border-radius: 4px;
         }
         .changelog-container::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 215, 0, 0.55);
+            background: var(--scrollbar-thumb-hover);
         }
         .changelog-entry { margin-bottom: 16px; }
         .changelog-entry:last-child { margin-bottom: 0; }
         .changelog-version {
             font-weight: 600;
-            color: #fff;
+            color: var(--text-primary);
             margin-bottom: 6px;
             font-size: 14px;
         }
         .changelog-date {
             font-size: 12px;
-            color: rgba(255, 255, 255, 0.45);
+            color: var(--text-muted);
             font-weight: 400;
             margin-left: 8px;
         }
@@ -2778,7 +2776,7 @@
         }
         .changelog-items li {
             font-size: 13px;
-            color: rgba(255, 255, 255, 0.82);
+            color: var(--text-secondary);
             line-height: 1.8;
         }
 
@@ -3080,9 +3078,9 @@
         .quiz-option-btn {
             padding: 22px 18px;
             border-radius: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.3);
-            color: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--card-border);
+            background: var(--card-bg);
+            color: var(--text-primary);
             font-size: 20px;
             font-weight: 600;
             cursor: pointer;
@@ -3094,27 +3092,27 @@
         }
 
         .quiz-option-btn:hover {
-            border-color: rgba(255, 215, 0, 0.5);
-            background: rgba(255, 215, 0, 0.1);
+            border-color: var(--accent-primary);
+            background: var(--accent-light);
             transform: translateY(-2px);
         }
 
         .quiz-option-btn.selected {
-            border-color: #ffd700;
-            background: rgba(255, 215, 0, 0.2);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            border-color: var(--accent-primary);
+            background: var(--accent-light);
+            box-shadow: 0 0 20px var(--highlight-glow);
         }
 
         .quiz-option-btn.correct {
-            border-color: #22c55e;
+            border-color: var(--success-color);
             background: rgba(34, 197, 94, 0.2);
-            color: #22c55e;
+            color: var(--success-color);
         }
 
         .quiz-option-btn.incorrect {
-            border-color: #ef4444;
+            border-color: var(--danger-color);
             background: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
+            color: var(--danger-color);
         }
 
         .quiz-option-btn.disabled {
@@ -3125,7 +3123,7 @@
         .quiz-question {
             font-size: 28px;
             font-weight: 700;
-            color: rgba(255, 255, 255, 0.95);
+            color: var(--text-primary);
             text-align: center;
             margin-bottom: 35px;
             line-height: 1.6;
@@ -3313,10 +3311,11 @@
 
         .quiz-custom-section {
             margin-top: 30px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+            background: var(--card-bg);
             border-radius: 20px;
             padding: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 4px 20px var(--shadow-color);
         }
 
         .quiz-custom-header {
@@ -3328,7 +3327,7 @@
 
         .quiz-custom-header h3 {
             margin: 0;
-            color: #ffd700;
+            color: var(--accent-text);
             font-size: 18px;
         }
 
@@ -3338,7 +3337,7 @@
         }
 
         .quiz-custom-count span {
-            color: #ffd700;
+            color: var(--accent-text);
             font-weight: 700;
         }
 
@@ -3355,9 +3354,9 @@
             min-width: 200px;
             padding: 12px 16px;
             border-radius: 10px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.3);
-            color: #fff;
+            border: 2px solid var(--card-border);
+            background: var(--input-bg);
+            color: var(--text-primary);
             font-size: 14px;
             outline: none;
             transition: all 0.3s;
@@ -3365,8 +3364,8 @@
 
         .quiz-custom-question-input:focus,
         .quiz-custom-answer-input:focus {
-            border-color: #ffd700;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 15px var(--highlight-glow);
         }
 
         .quiz-custom-add-btn {
@@ -3384,7 +3383,7 @@
 
         .quiz-custom-add-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 5px 15px var(--highlight-glow);
         }
 
         .quiz-custom-list {
@@ -3397,14 +3396,15 @@
             justify-content: space-between;
             align-items: center;
             padding: 12px 16px;
-            background: rgba(0, 0, 0, 0.2);
+            background: var(--glass-bg);
             border-radius: 10px;
             margin-bottom: 10px;
+            border: 1px solid var(--card-border);
             transition: all 0.3s;
         }
 
         .quiz-custom-item:hover {
-            background: rgba(0, 0, 0, 0.3);
+            background: var(--accent-light);
         }
 
         .quiz-custom-item-content {
@@ -3412,22 +3412,22 @@
         }
 
         .quiz-custom-item-question {
-            color: #fff;
+            color: var(--text-primary);
             font-weight: 600;
             margin-bottom: 4px;
         }
 
         .quiz-custom-item-answer {
-            color: #ffd700;
+            color: var(--accent-text);
             font-size: 14px;
         }
 
         .quiz-custom-item-delete {
             padding: 8px 12px;
             border-radius: 8px;
-            background: rgba(239, 68, 68, 0.2);
+            background: var(--danger-bg);
             border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #ef4444;
+            color: var(--danger-color);
             font-size: 12px;
             cursor: pointer;
             transition: all 0.3s;
@@ -3441,9 +3441,9 @@
         .quiz-import-section {
             margin-bottom: 24px;
             padding: 20px;
-            background: rgba(0, 0, 0, 0.2);
+            background: var(--glass-bg);
             border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--card-border);
         }
 
         .quiz-import-header {
@@ -3455,24 +3455,24 @@
 
         .quiz-import-header h4 {
             margin: 0;
-            color: #ffd700;
+            color: var(--accent-text);
             font-size: 16px;
         }
 
         .quiz-import-template-btn {
             padding: 8px 16px;
             border-radius: 8px;
-            background: rgba(255, 215, 0, 0.2);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            color: #ffd700;
+            background: var(--accent-light);
+            border: 1px solid var(--accent-primary);
+            color: var(--accent-text);
             font-size: 13px;
             cursor: pointer;
             transition: all 0.3s;
         }
 
         .quiz-import-template-btn:hover {
-            background: rgba(255, 215, 0, 0.3);
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+            background: var(--accent-light);
+            box-shadow: 0 0 10px var(--highlight-glow);
         }
 
         .quiz-import-methods {
@@ -3484,15 +3484,15 @@
 
         .quiz-import-method {
             padding: 16px;
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--card-bg);
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--card-border);
         }
 
         .quiz-import-method-title {
             font-size: 14px;
             font-weight: 600;
-            color: #fff;
+            color: var(--text-primary);
             margin-bottom: 12px;
         }
 
@@ -3500,15 +3500,15 @@
             width: 100%;
             padding: 12px;
             border-radius: 8px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.3);
-            color: #fff;
+            border: 2px solid var(--card-border);
+            background: var(--input-bg);
+            color: var(--text-primary);
             cursor: pointer;
             transition: all 0.3s;
         }
 
         .quiz-import-file-input:hover {
-            border-color: rgba(255, 215, 0, 0.5);
+            border-color: var(--accent-primary);
         }
 
         .quiz-import-hint {
@@ -3523,9 +3523,9 @@
             height: 100px;
             padding: 12px;
             border-radius: 8px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.3);
-            color: #fff;
+            border: 2px solid var(--card-border);
+            background: var(--input-bg);
+            color: var(--text-primary);
             font-size: 13px;
             resize: vertical;
             outline: none;
@@ -3534,8 +3534,8 @@
         }
 
         .quiz-import-textarea:focus {
-            border-color: #ffd700;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 15px var(--highlight-glow);
         }
 
         .quiz-import-paste-btn {
