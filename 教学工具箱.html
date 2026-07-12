@@ -23,7 +23,8 @@
             --text-secondary: #4d4d52;
             --text-muted: #6d6d72;
             --accent-primary: #c9a65b;
-            --accent-secondary: #d49540;
+            --accent-secondary: #e08a2e;
+            --accent-text: #8a6d2f;
             --accent-light: rgba(201, 166, 91, 0.12);
             --highlight-text: #2d2d32;
             --highlight-glow: rgba(201, 166, 91, 0.3);
@@ -50,6 +51,7 @@
             --text-muted: rgba(255, 255, 255, 0.55);
             --accent-primary: #ffd700;
             --accent-secondary: #ff8c00;
+            --accent-text: #ffd700;
             --accent-light: rgba(255, 215, 0, 0.15);
             --highlight-text: #ffd700;
             --highlight-glow: rgba(255, 215, 0, 0.5);
@@ -168,7 +170,7 @@
         .splash-title {
             font-size: clamp(28px, 6vw, 48px);
             font-weight: bold;
-            color: var(--accent-primary);
+            color: var(--accent-text);
             text-shadow: 0 0 30px var(--accent-light);
             margin-top: 30px;
             letter-spacing: clamp(6px, 1.5vw, 12px);
@@ -241,11 +243,10 @@
             border-radius: 2px;
             transition: width 1s ease-out;
         }
-        /* ========== 主题切换 ========== */
-        .theme-btn {
+        /* ========== 顶栏图标按钮（统一组件：公共样式群组） ========== */
+        .theme-btn, .fullscreen-btn, .exit-btn {
             position: fixed;
             top: 20px;
-            right: 90px;
             width: 60px;
             height: 60px;
             border-radius: 50%;
@@ -260,52 +261,17 @@
             align-items: center;
             justify-content: center;
         }
-        .theme-btn:hover {
-            transform: scale(1.1);
-            border-color: var(--accent-primary);
-        }
-
-        /* ========== 大屏模式 ========== */
-        .fullscreen-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--glass-bg);
-            border: 2px solid var(--border-color);
-            font-size: 30px;
-            cursor: pointer;
-            transition: all 0.3s;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-        }
-        .fullscreen-btn:hover {
-            background: var(--accent-light);
-            border-color: var(--accent-primary);
-            transform: scale(1.1);
-        }
+        .theme-btn { right: 90px; }
+        .fullscreen-btn { right: 20px; }
         .exit-btn {
-            position: fixed;
-            top: 20px;
             right: 160px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
             background: rgba(255, 80, 80, 0.15);
-            border: 2px solid rgba(255, 80, 80, 0.3);
+            border-color: rgba(255, 80, 80, 0.3);
             font-size: 28px;
-            cursor: pointer;
-            transition: all 0.3s;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
         }
-        .exit-btn:hover {
-            background: var(--danger-bg);
-            border-color: var(--danger-color);
-            transform: scale(1.1);
-        }
+        .theme-btn:hover { transform: scale(1.1); border-color: var(--accent-text); }
+        .fullscreen-btn:hover { background: var(--accent-light); border-color: var(--accent-text); transform: scale(1.1); }
+        .exit-btn:hover { background: var(--danger-bg); border-color: var(--danger-color); transform: scale(1.1); }
 
         /* ========== 自定义滚动条（与背景融合） ========== */
         .app::-webkit-scrollbar,
@@ -796,13 +762,13 @@
         .header-title {
             font-size: clamp(20px, 5vw, 36px);
             font-weight: bold;
-            color: var(--accent-primary);
+            color: var(--accent-text);
             text-shadow: 0 0 20px var(--accent-light);
         }
         .back-btn {
             background: linear-gradient(135deg, var(--accent-light), rgba(255, 140, 0, 0.2));
             border: 1px solid var(--accent-primary);
-            color: var(--accent-primary);
+            color: var(--accent-text);
             padding: 12px 24px;
             border-radius: 16px;
             font-size: 20px;
@@ -831,7 +797,7 @@
         .toolbox-title {
             font-size: 48px;
             font-weight: bold;
-            color: var(--accent-primary);
+            color: var(--accent-text);
             text-shadow: 0 0 30px var(--accent-light);
             margin-bottom: 10px;
         }
@@ -845,7 +811,7 @@
             border-radius: 20px;
             background: var(--accent-light);
             border: 1px solid var(--accent-primary);
-            color: var(--accent-primary);
+            color: var(--accent-text);
             font-size: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -863,7 +829,7 @@
             padding: 6px 16px;
             border-radius: 20px;
             background: rgba(255, 215, 0, 0.15);
-            color: #ffd700;
+            color: var(--accent-text);
             font-size: 14px;
             font-weight: 600;
             margin-top: 10px;
@@ -995,7 +961,7 @@
         }
         .settings-btn:hover {
             transform: rotate(90deg) scale(1.1);
-            border-color: var(--accent-primary);
+            border-color: var(--accent-text);
             box-shadow: 0 0 20px var(--accent-light);
         }
         .tools-grid {
@@ -1293,7 +1259,7 @@
         .stat-num {
             font-size: 1.8rem;
             font-weight: 700;
-            color: var(--accent-primary);
+            color: var(--accent-text);
         }
         .stat-text {
             font-size: 0.8rem;
@@ -1342,7 +1308,7 @@
         }
         .import-title {
             font-size: 22px;
-            color: var(--accent-primary);
+            color: var(--accent-text);
             margin-bottom: 10px;
         }
         .import-input {
@@ -1431,7 +1397,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             font-size: 24px;
-            color: var(--accent-primary);
+            color: var(--accent-text);
             text-shadow: 0 0 20px var(--accent-light);
             pointer-events: none;
             z-index: 3;
@@ -1459,7 +1425,7 @@
         .type-tab.active {
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             color: #1a1a2e;
-            border-color: var(--accent-primary);
+            border-color: var(--accent-text);
         }
 
         .punish-stats {
@@ -1477,7 +1443,7 @@
         }
         .history-title {
             font-size: 22px;
-            color: var(--accent-primary);
+            color: var(--accent-text);
             margin-bottom: 15px;
         }
         .history-list {
@@ -1546,7 +1512,7 @@
             padding: 4px 10px;
             border-radius: 8px;
             margin: 0 5px;
-            color: var(--accent-primary);
+            color: var(--accent-text);
         }
 
         @media (max-width: 768px) {
@@ -1600,7 +1566,7 @@
 
         .section-title {
             font-size: 22px;
-            color: var(--accent-primary);
+            color: var(--accent-text);
             margin-bottom: 16px;
             font-weight: 600;
         }
@@ -1695,7 +1661,7 @@
 
         .result-title {
             font-size: 30px;
-            color: var(--accent-primary);
+            color: var(--accent-text);
             text-align: center;
             margin-bottom: 30px;
             text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
@@ -1744,7 +1710,7 @@
 
         .group-number {
             font-size: 22px;
-            color: var(--accent-primary);
+            color: var(--accent-text);
             font-weight: bold;
         }
 
@@ -1927,7 +1893,7 @@
             padding: 15px;
             text-align: left;
             font-size: 16px;
-            color: var(--accent-primary);
+            color: var(--accent-text);
             font-weight: 600;
         }
 
@@ -3604,7 +3570,7 @@
         .settings-section-title {
             font-size: 24px;
             font-weight: bold;
-            color: var(--accent-primary);
+            color: var(--accent-text);
             margin-bottom: 20px;
             padding-bottom: 10px;
             border-bottom: 2px solid var(--accent-light);
@@ -3626,7 +3592,7 @@
         }
         .settings-value {
             font-size: 18px;
-            color: var(--accent-primary);
+            color: var(--accent-text);
             font-weight: bold;
         }
         .settings-hint {
@@ -3688,7 +3654,7 @@
             border-radius: 50%;
         }
         .settings-switch input:checked + .settings-switch-slider {
-            background-color: var(--accent-primary);
+            background-color: var(--accent-text);
         }
         .settings-switch input:checked + .settings-switch-slider:before {
             transform: translateX(26px);
@@ -3718,7 +3684,7 @@
             color: #2d2d32;
         }
         .settings-select:focus {
-            border-color: var(--accent-primary);
+            border-color: var(--accent-text);
         }
         .settings-textarea {
             width: 100%;
@@ -3734,7 +3700,7 @@
             font-family: inherit;
         }
         .settings-textarea:focus {
-            border-color: var(--accent-primary);
+            border-color: var(--accent-text);
         }
         .settings-textarea::placeholder {
             color: var(--text-muted);
@@ -3750,7 +3716,7 @@
             outline: none;
         }
         .settings-input:focus {
-            border-color: var(--accent-primary);
+            border-color: var(--accent-text);
         }
         .license-input-group {
             display: flex;
@@ -3779,75 +3745,34 @@
             font-family: monospace;
         }
         .license-input:focus {
-            border-color: var(--accent-primary);
+            border-color: var(--accent-text);
         }
         .license-input::placeholder {
             color: var(--text-muted);
         }
-        .settings-submit-btn {
+        /* ========== 设置页按钮（统一组件：公共样式群组） ========== */
+        .settings-submit-btn, .settings-feedback-btn, .settings-backup-btn {
             width: 100%;
             padding: 15px;
             border-radius: 12px;
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             border: none;
             color: white;
-            font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
-            margin-top: 15px;
         }
-        .settings-submit-btn:hover {
+        .settings-submit-btn { font-size: 18px; margin-top: 15px; }
+        .settings-feedback-btn { padding: 18px; font-size: 18px; margin-bottom: 15px; }
+        .settings-backup-btn { padding: 15px; font-size: 16px; text-align: center; border-radius: 10px; }
+        .settings-submit-btn:hover, .settings-feedback-btn:hover, .settings-backup-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 20px var(--accent-light);
         }
-        .settings-feedback-btn {
-            width: 100%;
-            padding: 18px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            border: none;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 15px;
-        }
-        .settings-feedback-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px var(--accent-light);
-        }
-        .settings-feedback-desc {
-            font-size: 14px;
-            color: var(--text-muted);
-            text-align: center;
-        }
-
-        .settings-backup-btn {
-            width: 100%;
-            padding: 15px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            border: none;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-
-        .settings-backup-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px var(--accent-light);
-        }
-
         .settings-backup-btn.secondary {
             background: linear-gradient(135deg, #4a5568, #2d3748);
             box-shadow: none;
         }
-
         .settings-backup-btn.secondary:hover {
             background: linear-gradient(135deg, #5a6578, #3d4758);
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
