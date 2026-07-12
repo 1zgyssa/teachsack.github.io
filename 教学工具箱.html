@@ -4770,12 +4770,25 @@
 
                 let count = parseInt(localStorage.getItem('trial_count') || '0', 10);
                 if (isNaN(count) || count < 0) count = 0;
-                
+
+                // 防重置锚点：试用一旦用尽即置位。用户仅清空 trial_count 无法绕过，
+                // 必须同时篡改此锚点才能“重置”，显著提高白嫖门槛。
+                if (localStorage.getItem('trial_exhausted') === '1') {
+                    showExpiredModal();
+                    return false;
+                }
+
                 if (count < TRIAL_COUNT) {
-                    localStorage.setItem('trial_count', (count + 1).toString());
-                    showTrialInfo(`试用剩余 ${TRIAL_COUNT - count - 1} 次`);
+                    const next = count + 1;
+                    localStorage.setItem('trial_count', next.toString());
+                    // 最后一次试用用尽后，立刻锚定“已用尽”，防止重启后靠清零续命
+                    if (next >= TRIAL_COUNT) {
+                        localStorage.setItem('trial_exhausted', '1');
+                    }
+                    showTrialInfo(`试用剩余 ${TRIAL_COUNT - next} 次`);
                     return true;
                 } else {
+                    localStorage.setItem('trial_exhausted', '1');
                     showExpiredModal();
                     return false;
                 }
@@ -4872,18 +4885,6 @@
                 }
             }
 
-            function resetTrial() {
-                localStorage.removeItem('trial_count');
-                localStorage.removeItem('trial_license');
-                // 同时清除主进程存储中的本机绑定（彻底停用本设备）
-                getDeviceId().then(function(deviceId) {
-                    if (window.electronAPI && window.electronAPI.resetLicense) {
-                        window.electronAPI.resetLicense(deviceId).catch(function() {});
-                    }
-                });
-                location.reload();
-            }
-
             async function submitLicenseFromSettings() {
                 const input = document.getElementById('settingsLicenseInput');
                 if (!input) return;
@@ -4971,12 +4972,18 @@
                 const remaining = Math.max(0, TRIAL_COUNT - count);
                 remainingEl.textContent = remaining + '次';
                 remainingEl.style.color = '';
+                // 防重置锚点：即使 trial_count 被清零，已用尽状态仍生效
+                if (localStorage.getItem('trial_exhausted') === '1') {
+                    statusEl.textContent = '试用已结束';
+                    statusEl.style.color = '#f44336';
+                    remainingEl.textContent = '0次';
+                    remainingEl.style.color = '#f44336';
+                }
             }
 
             return {
                 checkTrial,
                 submitLicense,
-                resetTrial,
                 submitLicenseFromSettings,
                 updateLicenseStatus,
                 generateLicense
