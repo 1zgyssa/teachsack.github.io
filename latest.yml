@@ -1,8 +1,8 @@
 version: 1.2.13
 files:
   - url: Teach-Sack-Setup-1.2.13.exe
-    sha512: gUnlvE/vQ7XwPDnET7lz8Ala46/I5qUd+7XkjRIdej7YMAvWjjtbwswSghlhOSA0VIBZAeqeQOpz0h3NyxFYIQ==
-    size: 71069004
+    sha512: cIQHf4tR5fsid2uvkmRs1dMXz2mbKp7pNfQj4yq0DC3zkve8UWnwptpPgOclXlsaTTgw63T1eFdd39bZC4Z5Fg==
+    size: 71069000
 path: Teach-Sack-Setup-1.2.13.exe
-sha512: gUnlvE/vQ7XwPDnET7lz8Ala46/I5qUd+7XkjRIdej7YMAvWjjtbwswSghlhOSA0VIBZAeqeQOpz0h3NyxFYIQ==
-releaseDate: '2026-07-12T04:56:56.855Z'
+sha512: cIQHf4tR5fsid2uvkmRs1dMXz2mbKp7pNfQj4yq0DC3zkve8UWnwptpPgOclXlsaTTgw63T1eFdd39bZC4Z5Fg==
+releaseDate: '2026-07-12T05:03:01.894Z'
