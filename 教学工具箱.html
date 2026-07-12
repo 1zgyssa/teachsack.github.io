@@ -2709,6 +2709,39 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            white-space: pre-line;
+            text-align: left;
+        }
+
+        /* 更新日志 */
+        .changelog-container {
+            max-height: 240px;
+            overflow-y: auto;
+            margin-top: 8px;
+            padding-right: 6px;
+        }
+        .changelog-entry { margin-bottom: 16px; }
+        .changelog-entry:last-child { margin-bottom: 0; }
+        .changelog-version {
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .changelog-date {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.45);
+            font-weight: 400;
+            margin-left: 8px;
+        }
+        .changelog-items {
+            margin: 0;
+            padding-left: 18px;
+        }
+        .changelog-items li {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.82);
+            line-height: 1.8;
         }
 
         .custom-modal-buttons {
@@ -4030,7 +4063,7 @@
                     <div class="settings-section-title">ℹ️ 关于</div>
                     <div class="settings-item">
                         <label class="settings-label">版本号</label>
-                        <span class="settings-value">1.2.11</span>
+                        <span class="settings-value">1.2.12</span>
                     </div>
                     <div class="settings-item">
                         <label class="settings-label">产品负责人</label>
@@ -4039,6 +4072,10 @@
                     <div class="settings-item">
                         <label class="settings-label">更新时间</label>
                         <span class="settings-value">2026年7月11日</span>
+                    </div>
+                    <div class="settings-item" style="display: block;">
+                        <label class="settings-label">更新日志</label>
+                        <div id="changelogList" class="changelog-container"></div>
                     </div>
                 </div>
             </div>
@@ -4992,6 +5029,88 @@
 
         let focusInterval = null;
 
+        // ========== 更新日志 ==========
+        const APP_VERSION = '1.2.12';
+        const LAST_SEEN_VERSION_KEY = 'app_last_seen_version';
+
+        // 应用内更新日志（最新版本置顶）。每次发版在此追加一条即可。
+        const CHANGELOG = [
+            {
+                version: '1.2.12',
+                date: '2026-07-12',
+                items: [
+                    '🛡️ 试用次数防重置加固：新增「用尽锚点」，重置所有数据也无法清零试用次数',
+                    '🐛 修复：移除可一键重置试用次数的隐藏后门接口',
+                    '📋 新增：每次版本更新首次启动自动弹出更新日志',
+                    '📋 设置「关于」页新增完整更新日志常驻展示'
+                ]
+            },
+            {
+                version: '1.2.11',
+                date: '2026-07-11',
+                items: [
+                    '💬 反馈体验优化：提交失败时显示真实错误原因',
+                    '🔧 修复反馈推送飞书时中文乱码问题',
+                    '🛡️ 反馈接口新增防刷（单 IP 限流 / 输入校验 / 垃圾内容拦截）'
+                ]
+            },
+            {
+                version: '1.2.10',
+                date: '2026-07-11',
+                items: [
+                    '🎨 设置页「关于」优化：新增产品负责人分工展示',
+                    '🧹 精简意见反馈入口，操作更聚焦'
+                ]
+            }
+        ];
+
+        function renderAboutChangelog() {
+            const container = document.getElementById('changelogList');
+            if (!container) return;
+            let html = '';
+            CHANGELOG.forEach(function(entry) {
+                html += '<div class="changelog-entry">';
+                html += '<div class="changelog-version">v' + entry.version +
+                        ' <span class="changelog-date">' + entry.date + '</span></div>';
+                html += '<ul class="changelog-items">';
+                entry.items.forEach(function(it) { html += '<li>' + it + '</li>'; });
+                html += '</ul></div>';
+            });
+            container.innerHTML = html;
+        }
+
+        // 版本变化后首次启动弹窗；全新安装或旧版升级（无记录）展示最新一条
+        function checkAndShowChangelog() {
+            const lastSeen = localStorage.getItem(LAST_SEEN_VERSION_KEY);
+            if (lastSeen === APP_VERSION) {
+                // 已看过，不弹
+            } else if (lastSeen) {
+                const idx = CHANGELOG.findIndex(function(e) { return e.version === lastSeen; });
+                const entries = idx === -1 ? CHANGELOG : CHANGELOG.slice(0, idx);
+                if (entries.length) showChangelogModal(entries);
+            } else {
+                showChangelogModal(CHANGELOG.slice(0, 1));
+            }
+            localStorage.setItem(LAST_SEEN_VERSION_KEY, APP_VERSION);
+        }
+
+        function showChangelogModal(entries) {
+            let msg = '📋 更新日志\n\n';
+            entries.forEach(function(e) {
+                msg += '【v' + e.version + ' · ' + e.date + '】\n';
+                e.items.forEach(function(it) { msg += '  ' + it + '\n'; });
+                msg += '\n';
+            });
+            msg += '完整更新历史可在「设置 → 关于」中查看。';
+            showCustomModal({
+                icon: '📋',
+                title: '更新成功',
+                message: msg,
+                confirmText: '知道了',
+                showCancel: false
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(async () => {
                 const trialResult = await TrialManager.checkTrial();
@@ -5000,6 +5119,7 @@
                 }
                 ThemeConfig.init();
                 initSettings();
+                checkAndShowChangelog();
 
                 focusInterval = setInterval(() => {
                     if (document.activeElement && document.activeElement.tagName === 'BODY') {
@@ -5377,6 +5497,8 @@
                 } catch (e) {}
             }
 
+            renderAboutChangelog();
+
             const volumeSlider = document.getElementById('volumeSlider');
             const volumeValue = document.getElementById('volumeValue');
             const lowEffectsToggle = document.getElementById('lowEffectsToggle');
@@ -5481,7 +5603,7 @@
                 content: content,
                 contact: contact,
                 timestamp: new Date().toISOString(),
-                version: '1.2.11'
+                version: '1.2.12'
             };
 
             try {
@@ -5610,7 +5732,7 @@
                         showCustomModal({
                             icon: '✅',
                             title: '检查更新',
-                            message: '当前已是最新版本\n您正在使用的是最新版本 ' + (status.currentVersion || '1.2.11'),
+                            message: '当前已是最新版本\n您正在使用的是最新版本 ' + (status.currentVersion || '1.2.12'),
                             confirmText: '确定',
                             showCancel: false
                         });
@@ -5737,7 +5859,7 @@
                 if (isLoadingData) return;
 
                 const backupData = {
-                    version: '1.2.11',
+                    version: '1.2.12',
                     exportTime: new Date().toISOString(),
                     data: {}
                 };
@@ -5812,7 +5934,7 @@
 
             function exportData() {
                 const backupData = {
-                    version: '1.2.11',
+                    version: '1.2.12',
                     exportTime: new Date().toISOString(),
                     data: {}
                 };
@@ -5930,7 +6052,7 @@
                         
                         if (window.electronAPI) {
                                 const resetBackupData = {
-                                    version: '1.2.11',
+                                    version: '1.2.12',
                                     exportTime: new Date().toISOString(),
                                     data: {}
                                 };
@@ -6076,7 +6198,7 @@
             
             if (window.electronAPI) {
                 const backupData = {
-                    version: '1.2.11',
+                    version: '1.2.12',
                     exportTime: new Date().toISOString(),
                     data: {}
                 };
