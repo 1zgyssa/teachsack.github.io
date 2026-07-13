@@ -9323,6 +9323,38 @@
                 display: none;
             }
         }
+    
+    /* ===== Uiverse 中心扩散高光 —— 软件主操作按钮（实底等效，零依赖） ===== */
+    .ctrl-btn.primary, .trial-expired-btn.primary, .timer-btn.primary,
+    .quiz-result-btn.primary, .custom-modal-btn.primary {
+        position: relative; overflow: hidden; z-index: 0;
+        background-image:
+            radial-gradient(circle at center, rgba(255,255,255,0.5), rgba(255,255,255,0) 62%),
+            linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+        background-size: 0% 0%, 100% 100%;
+        background-position: center; background-repeat: no-repeat;
+        transition: background-size 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+                    transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .ctrl-btn.primary:hover, .trial-expired-btn.primary:hover, .timer-btn.primary:hover,
+    .quiz-result-btn.primary:hover, .custom-modal-btn.primary:hover {
+        background-size: 260% 260%, 100% 100%;
+    }
+    /* 反馈按钮独立紫色系：仅高光层用白，渐变保持紫 */
+    .feedback-modal-btn.primary {
+        position: relative; overflow: hidden; z-index: 0;
+        background-image:
+            radial-gradient(circle at center, rgba(255,255,255,0.5), rgba(255,255,255,0) 62%),
+            linear-gradient(135deg, #6366f1, #8b5cf6);
+        background-size: 0% 0%, 100% 100%;
+        background-position: center; background-repeat: no-repeat;
+        transition: background-size 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+                    transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .feedback-modal-btn.primary:hover {
+        background-size: 260% 260%, 100% 100%;
+    }
+
     </style>
     <div class="toast" id="toast"></div>
     <script>
