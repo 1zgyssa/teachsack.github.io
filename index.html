@@ -118,21 +118,17 @@
             filter: blur(22px);
         }
 
-        /* 动态着色器背景：优先官方 Shader Gradient 组件（真 Three.js 3D 质感），2D 版作 fallback */
-        #shader-bg, #shader-bg-react {
+        /* 动态着色器背景：原生 WebGL 零依赖（sphere 球体光晕风格），无需外部 CDN */
+        #shader-bg {
             position: fixed;
             inset: 0;
             width: 100%;
             height: 100%;
             z-index: -2;
             pointer-events: none;
+            filter: blur(28px) saturate(115%);
+            opacity: 0.92;
         }
-        #shader-bg {
-            filter: blur(55px) saturate(120%);
-            opacity: 0.85;
-        }
-        /* React 组件真正渲染出 canvas 后，隐藏 2D fallback，避免双 GPU 负载 */
-        body.shader-react-loaded #shader-bg { display: none; }
 
         .icon {
             width: 1em;
@@ -1577,7 +1573,6 @@
 </head>
 <body>
     <canvas id="shader-bg"></canvas>
-    <div id="shader-bg-react"></div>
 
     <nav>
         <div class="nav-container">
@@ -2313,7 +2308,7 @@
             }
         });
 
-        /* ===== 动态着色器背景：Shader Gradient 风格的流动渐变（原生 WebGL，零依赖）===== */
+        /* ===== 动态着色器背景：sphere 球体光晕风格（原生 WebGL，零依赖，无外部 CDN）===== */
         (function initShaderBackground() {
             const canvas = document.getElementById('shader-bg');
             if (!canvas) return;
@@ -2340,22 +2335,49 @@
                     for (int i = 0; i < 5; i++) { v += a * noise(p); p *= 2.0; a *= 0.5; }
                     return v;
                 }
+                // 绘制一个带光照的发光球体：返回 (rgb, 覆盖强度)
+                vec4 ballShade(vec2 uv, vec2 center, float radius, float aspect, vec3 baseCol){
+                    vec2 d = (uv - center);
+                    d.x *= aspect;
+                    float dist = length(d) / radius;
+                    float edge = (fbm(uv * 3.0 + 13.0) - 0.5) * 0.22;
+                    float mask = smoothstep(1.0, 0.08, dist + edge);
+                    float r = clamp(dist, 0.0, 1.0);
+                    float z = sqrt(1.0 - r * r);
+                    vec2 nxy = d / max(dist, 0.0001);
+                    vec3 N = normalize(vec3(nxy * r, z));
+                    vec3 L = normalize(vec3(-0.4, 0.5, 0.75));
+                    float diff = max(dot(N, L), 0.0);
+                    vec3 V = vec3(0.0, 0.0, 1.0);
+                    vec3 H = normalize(L + V);
+                    float spec = pow(max(dot(N, H), 0.0), 22.0);
+                    vec3 shaded = baseCol * (0.42 + 0.7 * diff) + vec3(spec) * 0.22;
+                    return vec4(shaded, mask);
+                }
                 void main(){
                     vec2 uv = gl_FragCoord.xy / u_res;
-                    vec2 p = uv * 3.0;
-                    float t = u_time * 0.05;
-                    // 域扭曲（domain warping）产生流动感
-                    vec2 q = vec2(fbm(p + vec2(0.0, t)), fbm(p + vec2(5.2, -t)));
-                    vec2 r = vec2(fbm(p + 4.0 * q + vec2(1.7, 9.2) + 0.15 * t),
-                                  fbm(p + 4.0 * q + vec2(8.3, 2.8) - 0.12 * t));
-                    float f = fbm(p + 4.0 * r);
-                    // 调色：冷白基 + 珊瑚暖晕 + 板岩灰冷晕，整体保持浅色不喧宾夺主
+                    float aspect = u_res.x / u_res.y;
+                    float t = u_time * 0.25;
+                    // 主球：珊瑚，偏左下，缓慢呼吸移动
+                    vec2 c1 = vec2(0.30, 0.60);
+                    c1.x += 0.05 * sin(t * 0.6);
+                    c1.y += 0.04 * cos(t * 0.45);
+                    // 辅球：板岩灰冷晕，右上较小，平衡构图
+                    vec2 c2 = vec2(0.80, 0.32);
+                    c2.x += 0.04 * cos(t * 0.35);
+                    c2.y += 0.03 * sin(t * 0.5);
                     vec3 white = vec3(0.972, 0.976, 0.990);
                     vec3 coral = vec3(1.0, 0.46, 0.29);
                     vec3 slate = vec3(0.40, 0.43, 0.49);
-                    vec3 col = mix(white, coral, smoothstep(0.45, 0.95, f) * 0.55);
-                    col = mix(col, slate, smoothstep(0.35, 0.85, r.x) * 0.16);
-                    col = mix(white, col, 0.80);
+                    // 背景冷白 + 极淡板岩灰流动
+                    vec3 col = white;
+                    col = mix(col, slate, 0.05 * fbm(uv * 2.0 + t * 0.1));
+                    vec4 b1 = ballShade(uv, c1, 0.55, aspect, coral);
+                    vec4 b2 = ballShade(uv, c2, 0.34, aspect, slate);
+                    col = mix(col, b1.rgb, b1.a * 0.9);
+                    col = mix(col, b2.rgb, b2.a * 0.55);
+                    // 整体保持浅色，融于冷白主题
+                    col = mix(white, col, 0.92);
                     gl_FragColor = vec4(col, 1.0);
                 }
             `;
@@ -2424,51 +2446,6 @@
             });
             raf = requestAnimationFrame(render);
         })();
-    </script>
-
-    <!-- 官方 Shader Gradient 组件（真 Three.js 3D 渐变，原生质感）；CDN 不可用时不加载，2D 背景自动兜底 -->
-    <script type="importmap">
-    {
-      "imports": {
-        "react": "https://esm.sh/react@19.2.1",
-        "react/jsx-runtime": "https://esm.sh/react@19.2.1/jsx-runtime",
-        "react-dom": "https://esm.sh/react-dom@19.2.1",
-        "react-dom/client": "https://esm.sh/react-dom@19.2.1/client",
-        "three": "https://esm.sh/three@0.171.0",
-        "@react-three/fiber": "https://esm.sh/@react-three/fiber@9.2.0?external=react,react-dom,three",
-        "@shadergradient/react": "https://esm.sh/@shadergradient/react@2.4.20?external=react,react-dom,three,@react-three/fiber",
-        "htm": "https://esm.sh/htm@3.1.1"
-      }
-    }
-    </script>
-    <script type="module">
-      import React from 'react';
-      import { createRoot } from 'react-dom/client';
-      import { ShaderGradientCanvas, ShaderGradient } from '@shadergradient/react';
-      import htm from 'htm';
-      const html = htm.bind(React.createElement);
-      const mount = document.getElementById('shader-bg-react');
-      if (mount) {
-        try {
-          const root = createRoot(mount);
-          root.render(html`
-            <${ShaderGradientCanvas} style=${{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} pixelDensity=${1.2} fov=${45}>
-              <${ShaderGradient}
-                control="query"
-                urlString="https://www.shadergradient.co/customize?animate=on&cAzimuthAngle=180&cDistance=3.9&cameraZoom=1&color1=%23ff7a4d&color2=%23fafafb&color3=%235c6470&lightType=3d&shader=defaults&type=sphere&uDensity=1.3&uFrequency=5.5&uSpeed=0.35&uStrength=0.4&grain=on&reflection=0.1&positionX=-0.6&positionY=0.1&positionZ=0&rotationZ=235&fov=45"
-              />
-            <//>
-          `);
-          // 仅当 Three.js 真正渲染出 canvas 才隐藏 2D fallback，避免 CDN 失败导致无背景
-          setTimeout(() => {
-            if (mount.querySelector('canvas')) {
-              document.body.classList.add('shader-react-loaded');
-            }
-          }, 1800);
-        } catch (e) {
-          console.warn('ShaderGradient load failed, using 2D fallback:', e);
-        }
-      }
     </script>
 </body>
 </html>
