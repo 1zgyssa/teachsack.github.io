@@ -411,6 +411,62 @@
             margin-top: 0.35rem;
         }
 
+        /* ===== 方向 B：数字证据带（每屏一个焦点 + 可信锚点，统领下方功能段） ===== */
+        .evidence {
+            position: relative;
+            z-index: 2;
+            padding: 2rem 2rem 0;
+        }
+        .evidence-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            display: flex;
+            align-items: stretch;
+            border-radius: var(--radius-lg);
+            background: var(--panel);
+            -webkit-backdrop-filter: blur(18px) saturate(1.1);
+            backdrop-filter: blur(18px) saturate(1.1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+        }
+        .evidence-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 1.6rem 1rem;
+        }
+        .evidence-item + .evidence-item {
+            border-left: 1px solid rgba(255, 255, 255, 0.45);
+        }
+        .evidence-number {
+            font-family: 'Baloo 2', 'ZCOOL KuaiLe', sans-serif;
+            font-size: clamp(2rem, 4.2vw, 3.1rem);
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            background: linear-gradient(115deg, #2bc4e0 0%, #0a7ba6 52%, #0b3f74 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+        .evidence-label {
+            margin-top: 0.55rem;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            letter-spacing: 0.02em;
+        }
+        @media (max-width: 640px) {
+            .evidence { padding: 1.5rem 1rem 0; }
+            .evidence-inner { flex-wrap: wrap; }
+            .evidence-item { flex: 1 1 50%; padding: 1.1rem 0.6rem; }
+            .evidence-item + .evidence-item { border-left: none; }
+            .evidence-item:nth-child(3), .evidence-item:nth-child(4) { border-top: 1px solid rgba(255, 255, 255, 0.4); }
+        }
+
         .features {
             padding: 6rem 2rem;
             position: relative;
@@ -10902,6 +10958,27 @@ camera-controls/dist/camera-controls.module.js:
                         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
                     </a>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="evidence reveal" aria-label="核心数据">
+        <div class="evidence-inner">
+            <div class="evidence-item">
+                <span class="evidence-number">6</span>
+                <span class="evidence-label">大核心功能</span>
+            </div>
+            <div class="evidence-item">
+                <span class="evidence-number">¥19.9</span>
+                <span class="evidence-label">一次买断 · 永久使用</span>
+            </div>
+            <div class="evidence-item">
+                <span class="evidence-number">0</span>
+                <span class="evidence-label">广告打扰</span>
+            </div>
+            <div class="evidence-item">
+                <span class="evidence-number">永久</span>
+                <span class="evidence-label">免费更新</span>
             </div>
         </div>
     </section>
