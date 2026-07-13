@@ -51,7 +51,7 @@ export default function BlurText({
             display: 'inline-block',
             willChange: 'transform, filter, opacity',
             transform: inView ? 'translateY(0)' : `translateY(${offset * 16}px)`,
-            filter: inView ? 'blur(0px)' : 'blur(10px)',
+            filter: inView ? 'blur(0px)' : 'blur(6px)',
             opacity: inView ? 1 : 0,
             transition: reduce
               ? 'none'
