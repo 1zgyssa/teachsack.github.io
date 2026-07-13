@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { ShaderGradientCanvas, ShaderGradient } from '@shadergradient/react';
 import BlurText from './BlurText.jsx';
 import Magnet from './Magnet.jsx';
+import { initFeaturesFX } from './featuresFX.js';
 
 // 真·Shader Gradient 动态背景（官方组件；three.js / R3F / framer 已在构建时打包内联，运行时零 CDN）。
 // 配色走水感青蓝：浅水青 / 湖蓝 / 近白青（去颗粒、保留飘荡流动）。
@@ -86,9 +87,9 @@ function hideLoader() {
 }
 const loaderTimer = setInterval(() => {
   const c = document.querySelector('#shader-bg canvas');
-  if (c) { clearInterval(loaderTimer); hideLoader(); }
+  if (c) { clearInterval(loaderTimer); hideLoader(); initFeaturesFX(); }
 }, 80);
-setTimeout(() => { clearInterval(loaderTimer); hideLoader(); }, 3500);
+setTimeout(() => { clearInterval(loaderTimer); hideLoader(); initFeaturesFX(); }, 3500);
 
 // 下载页「立即下载」主 CTA：复用 Magnet 磁吸（与 Hero 一致手感）。
 const dlMount = document.getElementById('download-cta-mount');
