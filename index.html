@@ -17,6 +17,9 @@
     <meta name="twitter:image" content="https://teachsack.cn/images/teachsack-icon.png">
     <link rel="icon" href="images/teachsack-icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="images/teachsack-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -33,23 +36,34 @@
             --text-primary: #1f2330;
             --text-secondary: #5b6172;
             --text-muted: #8a8f9e;
-            --brand: #5b5bf0;
-            --brand-strong: #4441d6;
-            --brand-soft: rgba(91, 91, 240, 0.10);
-            --accent: #ff7a4d;
-            --accent-soft: rgba(255, 122, 77, 0.10);
+            /* 双撞色系统：靛蓝 × 珊瑚 */
+            --indigo: #5b5bf0;
+            --indigo-strong: #4441d6;
+            --indigo-soft: rgba(91, 91, 240, 0.10);
+            --coral: #ff7a4d;
+            --coral-strong: #f0643a;
+            --coral-soft: rgba(255, 122, 77, 0.12);
+            --brand: var(--indigo);
+            --brand-strong: var(--indigo-strong);
+            --brand-soft: var(--indigo-soft);
+            --accent: var(--coral);
+            --accent-soft: var(--coral-soft);
             --gold: #e0962f;
             --warn: #d98a2b;
             --warn-soft: rgba(217, 138, 43, 0.12);
             --warn-border: rgba(217, 138, 43, 0.35);
             --radius: 16px;
             --radius-lg: 22px;
+            --radius-pill: 999px;
             --maxw: 1160px;
             --shadow: 0 16px 44px rgba(60, 50, 30, 0.12);
             --shadow-card: 0 10px 28px rgba(60, 50, 30, 0.08);
             --shadow-card-hover: 0 22px 48px rgba(60, 50, 30, 0.16);
             --hairline-top: inset 0 1px 0 rgba(255, 255, 255, 0.7);
             --ease: cubic-bezier(0.22, 1, 0.36, 1);
+            /* 油漆 blob 形状（不规则圆角，模拟手绘撞色） */
+            --blob-a: 42% 58% 63% 37% / 45% 47% 53% 55%;
+            --blob-b: 60% 40% 38% 62% / 54% 60% 40% 46%;
         }
 
         @font-face {
@@ -62,7 +76,7 @@
         }
 
         body {
-            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-family: 'Baloo 2', 'PingFang SC', 'Microsoft YaHei', sans-serif;
             background: var(--bg);
             min-height: 100vh;
             color: var(--text-primary);
@@ -71,7 +85,12 @@
             line-height: 1.6;
         }
 
-        /* 柔和暖光氛围：左上品牌色 + 右下活力珊瑚，替代死黑底 */
+        h1, h2, h3 {
+            font-family: 'ZCOOL KuaiLe', 'Baloo 2', 'PingFang SC', sans-serif;
+            font-weight: 400;
+        }
+
+        /* 油漆撞色氛围：靛蓝 × 珊瑚 两个有机 blob 在暖白底上相撞 */
         body::before {
             content: '';
             position: fixed;
@@ -79,9 +98,24 @@
             z-index: -1;
             pointer-events: none;
             background:
-                radial-gradient(820px 560px at 8% -6%, rgba(91, 91, 240, 0.10), transparent 60%),
-                radial-gradient(760px 620px at 100% 4%, rgba(255, 122, 77, 0.08), transparent 58%),
-                radial-gradient(900px 700px at 50% 110%, rgba(224, 150, 47, 0.06), transparent 60%);
+                radial-gradient(closest-side at 12% 8%, rgba(91, 91, 240, 0.16), transparent 70%),
+                radial-gradient(closest-side at 88% 14%, rgba(255, 122, 77, 0.16), transparent 70%),
+                radial-gradient(closest-side at 78% 96%, rgba(224, 150, 47, 0.08), transparent 70%);
+            filter: blur(40px);
+        }
+
+        /* 手绘油漆 blob 装饰层（有机不规则形状，模拟撞色涂鸦） */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.5;
+            background:
+                radial-gradient(closest-side at 6% 22%, var(--indigo-soft), transparent 72%),
+                radial-gradient(closest-side at 94% 64%, var(--coral-soft), transparent 72%);
+            filter: blur(20px);
         }
 
         .icon {
@@ -125,14 +159,14 @@
         }
 
         .logo-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50% 48% 52% 50% / 50% 52% 48% 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--bg-elev);
-            border: 1px solid var(--panel-border);
+            background: conic-gradient(from 140deg, var(--indigo), var(--coral));
+            box-shadow: 0 4px 14px rgba(91, 91, 240, 0.30);
         }
 
         .nav-links {
@@ -160,8 +194,9 @@
             bottom: -6px;
             left: 0;
             width: 0;
-            height: 2px;
-            background: var(--brand);
+            height: 3px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--indigo), var(--coral));
             transition: width 0.25s ease;
         }
 
@@ -246,14 +281,14 @@
         }
 
         .primary-btn {
-            background: var(--brand);
+            background: var(--indigo);
             color: #fff;
             padding: 0.95rem 2rem;
-            border-radius: 12px;
+            border-radius: 14px 14px 16px 14px;
             text-decoration: none;
             font-weight: 600;
             font-size: 1.05rem;
-            box-shadow: 0 10px 24px rgba(91, 91, 240, 0.28);
+            box-shadow: 0 10px 24px rgba(91, 91, 240, 0.30);
             transition: background 0.25s ease, transform 0.25s var(--ease), box-shadow 0.25s ease;
             display: inline-flex;
             align-items: center;
@@ -261,29 +296,30 @@
         }
 
         .primary-btn:hover {
-            background: var(--brand-strong);
+            background: var(--indigo-strong);
             transform: translateY(-2px);
-            box-shadow: 0 16px 32px rgba(91, 91, 240, 0.36);
+            box-shadow: 0 16px 32px rgba(91, 91, 240, 0.40);
         }
 
         .secondary-btn {
             background: var(--panel);
             color: var(--text-primary);
             padding: 0.95rem 2rem;
-            border-radius: 12px;
+            border-radius: 14px 14px 16px 14px;
             text-decoration: none;
             font-weight: 600;
             font-size: 1.05rem;
-            transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s var(--ease);
-            border: 1px solid var(--panel-border);
+            transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s var(--ease), color 0.25s ease;
+            border: 1.5px solid var(--coral);
             display: inline-flex;
             align-items: center;
             gap: 0.55rem;
         }
 
         .secondary-btn:hover {
-            background: var(--panel-strong);
-            border-color: var(--brand);
+            background: var(--coral-soft);
+            border-color: var(--coral-strong);
+            color: var(--coral-strong);
             transform: translateY(-2px);
         }
 
@@ -369,25 +405,46 @@
             border-radius: var(--radius);
             padding: 2rem;
             box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
             transition: border-color 0.3s ease, transform 0.3s var(--ease), background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* 卡片顶部油漆撞色条：靛蓝/珊瑚交替 */
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--indigo);
+        }
+
+        .feature-card:nth-child(2)::before {
+            background: var(--coral);
+        }
+
+        .feature-card:nth-child(3)::before {
+            background: linear-gradient(90deg, var(--indigo), var(--coral));
         }
 
         .feature-card:hover {
             transform: translateY(-4px);
-            border-color: rgba(99, 102, 241, 0.4);
+            border-color: rgba(91, 91, 240, 0.40);
             background: var(--panel-strong);
-            box-shadow: 0 20px 46px rgba(0, 0, 0, 0.40);
+            box-shadow: var(--shadow-card-hover);
         }
 
         .feature-icon {
             width: 46px;
             height: 46px;
-            color: var(--brand);
-            border-radius: 12px;
+            color: var(--indigo);
+            border-radius: 13px 11px 14px 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--brand-soft);
+            background: var(--indigo-soft);
             margin-bottom: 1.4rem;
             font-size: 1.5rem;
         }
@@ -434,13 +491,13 @@
 
         .product-feature-card:hover {
             transform: translateY(-4px);
-            border-color: rgba(217, 164, 65, 0.4);
+            border-color: rgba(255, 122, 77, 0.45);
             background: var(--panel-strong);
-            box-shadow: 0 20px 46px rgba(0, 0, 0, 0.40);
+            box-shadow: var(--shadow-card-hover);
         }
 
         .product-feature-icon {
-            color: var(--gold);
+            color: var(--coral);
             margin-bottom: 1.3rem;
             display: flex;
             justify-content: center;
@@ -514,9 +571,9 @@
         .showcase-icon {
             width: 40px;
             height: 40px;
-            color: var(--brand);
-            background: var(--brand-soft);
-            border-radius: 10px;
+            color: var(--coral);
+            background: var(--coral-soft);
+            border-radius: 11px 9px 12px 10px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -561,9 +618,9 @@
         .download-icon {
             width: 72px;
             height: 72px;
-            color: var(--brand);
-            background: var(--brand-soft);
-            border-radius: 20px;
+            color: var(--indigo);
+            background: var(--indigo-soft);
+            border-radius: 22px 18px 22px 18px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -614,8 +671,9 @@
 
         .platform-btn:hover {
             background: var(--panel-strong);
-            border-color: rgba(99, 102, 241, 0.4);
+            border-color: var(--coral);
             transform: translateY(-3px);
+            box-shadow: 0 14px 30px var(--coral-soft);
         }
 
         .download-card-item {
@@ -646,18 +704,20 @@
         }
 
         .download-link-btn {
-            background: var(--brand);
+            background: var(--indigo);
             color: #fff;
             padding: 0.7rem 1.4rem;
-            border-radius: 10px;
+            border-radius: 11px;
             text-decoration: none;
             font-weight: 600;
             font-size: 0.95rem;
-            transition: background 0.25s ease;
+            box-shadow: 0 8px 18px rgba(91, 91, 240, 0.28);
+            transition: background 0.25s ease, transform 0.25s var(--ease);
         }
 
         .download-link-btn:hover {
-            background: var(--brand-strong);
+            background: var(--indigo-strong);
+            transform: translateY(-1px);
         }
 
         .coming-soon-text {
@@ -693,18 +753,20 @@
         }
 
         .direct-download-link button {
-            background: var(--brand);
+            background: var(--indigo);
             color: #fff;
             padding: 0.7rem 2rem;
-            border-radius: 8px;
+            border-radius: 10px;
             border: none;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.25s ease;
+            box-shadow: 0 8px 18px rgba(91, 91, 240, 0.28);
+            transition: background 0.25s ease, transform 0.25s var(--ease);
         }
 
         .direct-download-link button:hover {
-            background: var(--brand-strong);
+            background: var(--indigo-strong);
+            transform: translateY(-1px);
         }
 
         .download-warning {
@@ -801,8 +863,8 @@
             padding: 6rem 2rem;
             position: relative;
             background:
-                linear-gradient(180deg, rgba(91, 91, 240, 0.06), transparent 50%),
-                radial-gradient(600px 400px at 90% 10%, rgba(255, 122, 77, 0.06), transparent 60%),
+                radial-gradient(620px 420px at 8% 12%, rgba(91, 91, 240, 0.10), transparent 60%),
+                radial-gradient(560px 460px at 95% 88%, rgba(255, 122, 77, 0.10), transparent 60%),
                 var(--bg-elev);
             box-shadow: var(--hairline-top);
             border-bottom: 1px solid var(--panel-border);
@@ -810,31 +872,45 @@
 
         .pricing-card {
             background: var(--panel);
-            border: 1px solid rgba(99, 102, 241, 0.30);
+            border: 1.5px solid var(--coral);
             border-radius: var(--radius-lg);
             padding: 28px 32px;
             max-width: 520px;
             margin: 0 auto;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(99, 102, 241, 0.06);
+            box-shadow: 0 22px 54px rgba(255, 122, 77, 0.18), 0 0 0 1px rgba(91, 91, 240, 0.06);
+        }
+
+        /* 卡片右上角油漆 blob，强化撞色涂鸦感 */
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: -70px;
+            right: -60px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle at 30% 30%, var(--coral-soft), transparent 70%);
+            border-radius: var(--blob-b);
+            pointer-events: none;
         }
 
         .pricing-badge {
             position: absolute;
             top: 14px;
             right: -34px;
-            background: var(--gold);
-            color: #1a1205;
+            background: linear-gradient(135deg, var(--indigo), var(--coral));
+            color: #fff;
             padding: 5px 40px;
             font-size: 0.78rem;
             font-weight: 700;
             transform: rotate(28deg);
             letter-spacing: 0.03em;
+            box-shadow: 0 6px 16px rgba(255, 122, 77, 0.35);
         }
 
         .pricing-icon {
-            color: var(--gold);
+            color: var(--coral);
             text-align: center;
             margin-bottom: 12px;
             display: flex;
@@ -861,7 +937,7 @@
 
         .pricing-currency {
             font-size: 1.5rem;
-            color: var(--brand);
+            color: var(--indigo);
             font-weight: 700;
         }
 
@@ -895,7 +971,7 @@
             width: 7px;
             height: 7px;
             border-radius: 50%;
-            background: var(--brand);
+            background: linear-gradient(135deg, var(--indigo), var(--coral));
         }
 
         .pricing-features li:last-child {
@@ -917,12 +993,12 @@
             margin: 0 auto;
             padding: 22px 20px;
             background: var(--panel-strong);
-            border: 1px solid rgba(99, 102, 241, 0.25);
+            border: 1.5px solid var(--coral);
             border-radius: 18px;
         }
 
         .buy-icon {
-            color: var(--brand);
+            color: var(--coral);
             margin-bottom: 8px;
             display: flex;
             justify-content: center;
@@ -954,18 +1030,19 @@
 
         .buy-btn {
             display: inline-block;
-            background: var(--brand);
+            background: var(--coral);
             color: #fff;
             text-decoration: none;
             padding: 15px 40px;
-            border-radius: 14px;
+            border-radius: 14px 14px 16px 14px;
+            box-shadow: 0 12px 26px rgba(255, 122, 77, 0.34);
             font-size: 1.05rem;
             font-weight: 700;
             transition: background 0.25s ease, transform 0.25s var(--ease);
         }
 
         .buy-btn:hover {
-            background: var(--brand-strong);
+            background: var(--coral-strong);
             transform: translateY(-2px);
         }
 
@@ -1012,7 +1089,7 @@
             border: 1px solid var(--panel-border);
             border-radius: 12px;
             background: var(--bg-elev);
-            color: #fff;
+            color: var(--text-primary);
             font-size: 1rem;
             margin-bottom: 16px;
             transition: border-color 0.25s ease;
@@ -1020,7 +1097,7 @@
 
         .payment-input:focus {
             outline: none;
-            border-color: var(--brand);
+            border-color: var(--indigo);
         }
 
         .payment-input::placeholder {
@@ -1028,20 +1105,22 @@
         }
 
         .payment-btn {
-            background: var(--brand);
+            background: var(--indigo);
             color: #fff;
             border: none;
             padding: 14px 32px;
-            border-radius: 12px;
+            border-radius: 14px 14px 16px 14px;
             font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
-            transition: background 0.25s ease;
+            box-shadow: 0 10px 22px rgba(91, 91, 240, 0.30);
+            transition: background 0.25s ease, transform 0.25s var(--ease);
             width: 100%;
         }
 
         .payment-btn:hover {
-            background: var(--brand-strong);
+            background: var(--indigo-strong);
+            transform: translateY(-2px);
         }
 
         .payment-note {
@@ -1088,9 +1167,9 @@
         }
 
         .screenshot-label:hover {
-            border-color: var(--brand);
-            color: var(--brand-strong);
-            background: var(--brand-soft);
+            border-color: var(--coral);
+            color: var(--coral-strong);
+            background: var(--coral-soft);
         }
 
         .screenshot-input {
@@ -1410,8 +1489,8 @@
         .activation-steps {
             margin-top: 1.25rem;
             padding: 1rem 1.25rem;
-            background: var(--brand-soft);
-            border: 1px solid rgba(99, 102, 241, 0.25);
+            background: var(--indigo-soft);
+            border: 1px solid rgba(91, 91, 240, 0.22);
             border-radius: 14px;
             text-align: left;
         }
@@ -1878,7 +1957,7 @@
 
         function showToast(message) {
             const toast = document.createElement('div');
-            toast.style.cssText = 'position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #4f46e5; color: white; padding: 1rem 2rem; border-radius: 12px; font-weight: 600; box-shadow: 0 10px 40px rgba(0,0,0,0.4); z-index: 10000; animation: slideUp 0.3s ease, fadeOut 0.3s ease 2.5s forwards; text-align: center;';
+            toast.style.cssText = 'position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #ff7a4d; color: #fff; padding: 1rem 2rem; border-radius: 14px; font-weight: 600; box-shadow: 0 12px 36px rgba(255, 122, 77, 0.40); z-index: 10000; animation: slideUp 0.3s ease, fadeOut 0.3s ease 2.5s forwards; text-align: center;';
             toast.innerHTML = message;
             document.body.appendChild(toast);
             
@@ -2071,15 +2150,15 @@
         function showModal(title, content) {
             const modal = document.createElement('div');
             modal.className = 'modal-overlay';
-            modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.72); display: flex; align-items: center; justify-content: center; z-index: 10000; animation: fadeIn 0.3s ease;';
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(31, 35, 48, 0.45); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; z-index: 10000; animation: fadeIn 0.3s ease;';
             
             const modalContent = document.createElement('div');
             modalContent.className = 'modal-content';
-            modalContent.style.cssText = 'background: #111726; border: 1px solid rgba(255,255,255,0.09); border-radius: 20px; padding: 2.5rem; max-width: 500px; width: 90%; text-align: center; color: white; animation: scaleIn 0.3s ease;';
+            modalContent.style.cssText = 'background: #ffffff; border: 1.5px solid #ff7a4d; border-radius: 22px; padding: 2.5rem; max-width: 500px; width: 90%; text-align: center; color: #1f2330; box-shadow: 0 24px 60px rgba(60,50,30,0.22); animation: scaleIn 0.3s ease;';
             
             const closeBtn = document.createElement('button');
             closeBtn.textContent = '关闭';
-            closeBtn.style.cssText = 'margin-top: 2rem; padding: 0.75rem 2rem; border-radius: 10px; border: none; background: #4f46e5; color: white; font-weight: 600; cursor: pointer; transition: background 0.3s ease;';
+            closeBtn.style.cssText = 'margin-top: 2rem; padding: 0.75rem 2rem; border-radius: 14px; border: none; background: #5b5bf0; color: #fff; font-weight: 600; cursor: pointer; transition: background 0.3s ease;';
             closeBtn.onclick = function() {
                 modal.remove();
             };
