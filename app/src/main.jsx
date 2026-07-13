@@ -22,21 +22,21 @@ function DynamicBackground() {
         color1="#ff7a4d"
         color2="#5c6470"
         color3="#fafafb"
-        type="sphere"
+        type="waterPlane"
         grain="on"
         animate="on"
-        uSpeed={0.4}
-        uDensity={1.2}
-        uStrength={3.0}
+        uSpeed={0.55}
+        uDensity={1.4}
+        uStrength={2.8}
         cAzimuthAngle={180}
-        cDistance={3.4}
-        cPolarAngle={95}
+        cDistance={4.2}
+        cPolarAngle={90}
         lightType="3d"
-        positionX={-0.4}
-        positionY={0.1}
-        rotationZ={20}
-        fov={42}
-        reflection={0.1}
+        positionX={0}
+        positionY={0}
+        rotationZ={0}
+        fov={50}
+        reflection={0.3}
       />
     </ShaderGradientCanvas>
   );
