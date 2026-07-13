@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { ShaderGradientCanvas, ShaderGradient } from '@shadergradient/react';
 
 // 真·Shader Gradient 动态背景（官方组件；three.js / R3F / framer 已在构建时打包内联，运行时零 CDN）。
-// 配色沿用 TeachSack 调性：珊瑚 / 板岩灰 / 冷白。
+// 配色走水感海洋层次：浅水蓝 / 深湖蓝 / 浅青白。
 function DynamicBackground() {
   return (
     <ShaderGradientCanvas
@@ -19,9 +19,9 @@ function DynamicBackground() {
     >
       <ShaderGradient
         control="props"
-        color1="#ff7a4d"
-        color2="#5c6470"
-        color3="#fafafb"
+        color1="#48cae4"
+        color2="#0077b6"
+        color3="#caf0f8"
         type="waterPlane"
         grain="on"
         animate="on"
