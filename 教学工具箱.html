@@ -4117,7 +4117,7 @@
                     <div class="settings-section-title">ℹ️ 关于</div>
                     <div class="settings-item">
                         <label class="settings-label">版本号</label>
-                        <span class="settings-value">1.2.14</span>
+                        <span class="settings-value">1.2.15</span>
                     </div>
                     <div class="settings-item">
                         <label class="settings-label">产品负责人</label>
@@ -5112,11 +5112,21 @@
         let focusInterval = null;
 
         // ========== 更新日志 ==========
-        const APP_VERSION = '1.2.14';
+        const APP_VERSION = '1.2.15';
         const LAST_SEEN_VERSION_KEY = 'app_last_seen_version';
 
         // 应用内更新日志（最新版本置顶）。每次发版在此追加一条即可。
         const CHANGELOG = [
+            {
+                version: '1.2.15',
+                date: '2026-07-13',
+                items: [
+                    '🐛 修复：点名器页手动输入名单框中文/空格输入法被吞，导致偶尔输不进',
+                    '💾 修复：重置数据无法持久化，新增退出同步落盘与运行时防抖自动保存（三层持久化防线，防崩溃/强杀/断电）',
+                    '🎨 主按钮新增 Uiverse 风格中心扩散高光，交互更丝滑',
+                    '📝 关于页更新产品负责人分工与版本时间'
+                ]
+            },
             {
                 version: '1.2.14',
                 date: '2026-07-12',
@@ -5726,7 +5736,7 @@
                 content: content,
                 contact: contact,
                 timestamp: new Date().toISOString(),
-                version: '1.2.14'
+                version: '1.2.15'
             };
 
             try {
@@ -5855,7 +5865,7 @@
                         showCustomModal({
                             icon: '✅',
                             title: '检查更新',
-                            message: '当前已是最新版本\n您正在使用的是最新版本 ' + (status.currentVersion || '1.2.14'),
+                            message: '当前已是最新版本\n您正在使用的是最新版本 ' + (status.currentVersion || APP_VERSION),
                             confirmText: '确定',
                             showCancel: false
                         });
@@ -5979,7 +5989,7 @@
         // 收集当前需要持久化的数据为统一结构（函数声明，全局可调用，供退出时同步落盘）
         function gatherBackupData() {
             const backupData = {
-                version: '1.2.14',
+                version: '1.2.15',
                 exportTime: new Date().toISOString(),
                 data: {}
             };
@@ -6087,7 +6097,7 @@
 
             function exportData() {
                 const backupData = {
-                    version: '1.2.14',
+                    version: '1.2.15',
                     exportTime: new Date().toISOString(),
                     data: {}
                 };
@@ -6205,7 +6215,7 @@
                         
                         if (window.electronAPI) {
                                 const resetBackupData = {
-                                    version: '1.2.14',
+                                    version: '1.2.15',
                                     exportTime: new Date().toISOString(),
                                     data: {}
                                 };
@@ -6364,7 +6374,7 @@
             
             if (window.electronAPI) {
                 const backupData = {
-                    version: '1.2.14',
+                    version: '1.2.15',
                     exportTime: new Date().toISOString(),
                     data: {}
                 };
