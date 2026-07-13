@@ -6166,7 +6166,20 @@
                                 Object.keys(licenseData).forEach(key => {
                                     resetBackupData.data[key] = licenseData[key];
                                 });
-                                await window.electronAPI.saveDataFile(resetBackupData);
+                                // 把重置标记也持久化到文件，防止下次启动时再次加载默认示例数据
+                                resetBackupData.data['reset_flag'] = 'true';
+                                const saveResult = await window.electronAPI.saveDataFile(resetBackupData);
+                                if (!saveResult || !saveResult.success) {
+                                    console.error('重置数据保存失败:', saveResult && saveResult.error);
+                                    showCustomModal({
+                                        icon: '❌',
+                                        title: '重置失败',
+                                        message: '重置后的数据文件保存失败，请检查应用权限或磁盘空间。\n\n' + (saveResult && saveResult.error ? '错误：' + saveResult.error : ''),
+                                        confirmText: '确定',
+                                        showCancel: false
+                                    });
+                                    return;
+                                }
                             }
                         
                         showCustomModal({
