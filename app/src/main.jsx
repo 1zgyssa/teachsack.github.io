@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { ShaderGradientCanvas, ShaderGradient } from '@shadergradient/react';
 
 // 真·Shader Gradient 动态背景（官方组件；three.js / R3F / framer 已在构建时打包内联，运行时零 CDN）。
-// 配色走清新透明水感：浅青白 / 清澈青蓝 / 纯白（去颗粒、降密度、柔和流动）。
+// 配色走水感青蓝：浅水青 / 湖蓝 / 近白青（去颗粒、保留飘荡流动）。
 function DynamicBackground() {
   return (
     <ShaderGradientCanvas
@@ -19,15 +19,15 @@ function DynamicBackground() {
     >
       <ShaderGradient
         control="props"
-        color1="#e0f7fa"
-        color2="#26c6da"
-        color3="#ffffff"
+        color1="#80d4e6"
+        color2="#0092b3"
+        color3="#effbff"
         type="waterPlane"
         grain="off"
         animate="on"
-        uSpeed={0.25}
-        uDensity={0.8}
-        uStrength={2.0}
+        uSpeed={0.4}
+        uDensity={1.2}
+        uStrength={3.0}
         uAmplitude={0}
         cAzimuthAngle={180}
         cDistance={4.4}
@@ -37,7 +37,7 @@ function DynamicBackground() {
         positionY={0.7}
         rotationZ={0}
         fov={45}
-        reflection={0.05}
+        reflection={0.08}
       />
     </ShaderGradientCanvas>
   );
