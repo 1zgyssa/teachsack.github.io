@@ -26,7 +26,7 @@ export function initFeaturesFX() {
       { width: '0%' },
       {
         width: '100%', ease: 'none',
-        scrollTrigger: { trigger: section, start: 'top top+=90', end: 'bottom top', scrub: true },
+        scrollTrigger: { trigger: section, start: 'top 80%', end: 'bottom top', scrub: true },
       });
   }
 

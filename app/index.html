@@ -1596,22 +1596,7 @@
         }
 
         /* ===== 试点：GSAP ScrollTrigger 驱动的「功能亮点」叙事段（背景/配色不动） ===== */
-        /* 钉住：标题在导航栏下方吸顶，玻璃质感复用站点 --panel 配色 */
-        .features .section-header {
-            position: sticky;
-            top: 90px;
-            z-index: 5;
-            max-width: 680px;
-            margin: 0 auto;
-            padding: 22px 26px;
-            border-radius: 18px;
-            background: var(--panel);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            -webkit-backdrop-filter: blur(16px) saturate(1.1);
-            backdrop-filter: blur(16px) saturate(1.1);
-            box-shadow: 0 10px 34px rgba(8, 52, 80, 0.14);
-        }
-        /* 进度联动：滚动穿过功能段时填充 0->100% */
+        /* 进度联动：滚动穿过功能段时填充 0->100%（标题正常平铺，不吸顶） */
         .fx-progress {
             height: 3px;
             width: 100%;
@@ -1627,9 +1612,6 @@
             width: 0%;
             background: linear-gradient(90deg, #2bc4e0, #0a7ba6);
             border-radius: 3px;
-        }
-        @media (prefers-reduced-motion: reduce) {
-            .features .section-header { position: static; }
         }
 
     /* ===== 视觉增强：首屏加载占位（水波就绪前的水蓝过渡层，零运行时成本） ===== */
@@ -1718,7 +1700,7 @@
 
     <section class="features" id="features">
         <div class="section-container">
-            <div class="section-header">
+            <div class="section-header reveal">
                 <span class="section-subtitle">核心功能</span>
                 <h2 class="section-title">强大的教学辅助工具</h2>
                 <p class="section-description">TeachSack 提供全方位的教学辅助功能，帮助教师轻松管理课堂，提升教学效率。</p>
