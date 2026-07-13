@@ -132,10 +132,18 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            background: rgba(252, 251, 247, 0.72);
+            background: rgba(255, 255, 255, 0.82);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--panel-border);
             transition: background 0.3s ease, border-color 0.3s ease;
+            box-shadow: 0 2px 0 rgba(91, 91, 240, 0.12), 0 6px 24px rgba(0, 0, 0, 0.04);
+        }
+
+        /* 滚动后导航栏更实，确保文字可读 */
+        nav.scrolled {
+            background: rgba(255, 255, 255, 0.96);
+            border-bottom-color: rgba(91, 91, 240, 0.22);
+            box-shadow: 0 2px 0 rgba(255, 122, 77, 0.28), 0 10px 30px rgba(0, 0, 0, 0.06);
         }
 
         .nav-container {
@@ -166,7 +174,13 @@
             align-items: center;
             justify-content: center;
             background: conic-gradient(from 140deg, var(--indigo), var(--coral));
+            color: #fff;
             box-shadow: 0 4px 14px rgba(91, 91, 240, 0.30);
+        }
+
+        .logo-icon svg {
+            width: 22px;
+            height: 22px;
         }
 
         .nav-links {
@@ -176,16 +190,16 @@
         }
 
         .nav-links a {
-            color: var(--text-secondary);
+            color: var(--text-primary);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 0.95rem;
             transition: color 0.25s ease;
             position: relative;
         }
 
         .nav-links a:hover {
-            color: var(--text-primary);
+            color: var(--coral);
         }
 
         .nav-links a::after {
@@ -1522,7 +1536,12 @@
     <nav>
         <div class="nav-container">
             <a href="#home" class="logo">
-                <img src="images/teachsack-icon.svg" alt="TeachSack" class="logo-icon" style="width: 36px; height: 36px; border-radius: 10px;">
+                <div class="logo-icon">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                        <path d="M6 12v5c0 1.66 3.58 3 8 3s8-1.34 8-3v-5"/>
+                    </svg>
+                </div>
                 <span>TeachSack</span>
             </a>
             <ul class="nav-links">
@@ -2247,11 +2266,9 @@
         window.addEventListener('scroll', () => {
             const nav = document.querySelector('nav');
             if (window.scrollY > 50) {
-                nav.style.background = 'rgba(11, 15, 23, 0.92)';
-                nav.style.backdropFilter = 'blur(14px)';
+                nav.classList.add('scrolled');
             } else {
-                nav.style.background = 'rgba(11, 15, 23, 0.62)';
-                nav.style.backdropFilter = 'blur(10px)';
+                nav.classList.remove('scrolled');
             }
         });
     </script>
