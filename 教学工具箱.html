@@ -6764,6 +6764,12 @@
         document.addEventListener('keydown', handleKeydown);
 
         function handleKeydown(e) {
+            // 焦点在输入框/文本域/可编辑元素，或正处于中文输入法组字时，不拦截任何按键，
+            // 否则会吞掉空格、打断拼音候选确认，导致名单框"输入不了"
+            const t = e.target;
+            if ((t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) || e.isComposing) {
+                return;
+            }
             switch (currentPage) {
                 case 'card':
                     if (e.code === 'Space') {
