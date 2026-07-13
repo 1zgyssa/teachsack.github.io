@@ -25,27 +25,30 @@
         }
 
         :root {
-            --bg: #0b0f17;
-            --bg-elev: #131b2c;
-            --panel: rgba(255, 255, 255, 0.05);
-            --panel-strong: rgba(255, 255, 255, 0.085);
-            --panel-border: rgba(255, 255, 255, 0.10);
-            --text-primary: #f2f5fa;
-            --text-secondary: #9aa4b8;
-            --text-muted: #646e82;
-            --brand: #6366f1;
-            --brand-strong: #4f46e5;
-            --brand-soft: rgba(99, 102, 241, 0.12);
-            --gold: #d9a441;
-            --warn: #e0a93c;
-            --warn-soft: rgba(224, 169, 60, 0.10);
-            --warn-border: rgba(224, 169, 60, 0.28);
+            --bg: #fcfbf7;
+            --bg-elev: #f5f1e8;
+            --panel: rgba(255, 255, 255, 0.72);
+            --panel-strong: rgba(255, 255, 255, 0.95);
+            --panel-border: rgba(43, 39, 64, 0.10);
+            --text-primary: #1f2330;
+            --text-secondary: #5b6172;
+            --text-muted: #8a8f9e;
+            --brand: #5b5bf0;
+            --brand-strong: #4441d6;
+            --brand-soft: rgba(91, 91, 240, 0.10);
+            --accent: #ff7a4d;
+            --accent-soft: rgba(255, 122, 77, 0.10);
+            --gold: #e0962f;
+            --warn: #d98a2b;
+            --warn-soft: rgba(217, 138, 43, 0.12);
+            --warn-border: rgba(217, 138, 43, 0.35);
             --radius: 16px;
             --radius-lg: 22px;
             --maxw: 1160px;
-            --shadow: 0 14px 40px rgba(0, 0, 0, 0.40);
-            --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.28);
-            --hairline-top: inset 0 1px 0 rgba(255, 255, 255, 0.045);
+            --shadow: 0 16px 44px rgba(60, 50, 30, 0.12);
+            --shadow-card: 0 10px 28px rgba(60, 50, 30, 0.08);
+            --shadow-card-hover: 0 22px 48px rgba(60, 50, 30, 0.16);
+            --hairline-top: inset 0 1px 0 rgba(255, 255, 255, 0.7);
             --ease: cubic-bezier(0.22, 1, 0.36, 1);
         }
 
@@ -68,7 +71,7 @@
             line-height: 1.6;
         }
 
-        /* 单一、克制的品牌光晕，替代原本三色发光光斑 */
+        /* 柔和暖光氛围：左上品牌色 + 右下活力珊瑚，替代死黑底 */
         body::before {
             content: '';
             position: fixed;
@@ -76,9 +79,9 @@
             z-index: -1;
             pointer-events: none;
             background:
-                radial-gradient(820px 520px at 12% -8%, rgba(99, 102, 241, 0.12), transparent 62%),
-                radial-gradient(680px 480px at 100% 2%, rgba(99, 102, 241, 0.06), transparent 55%),
-                radial-gradient(720px 600px at 88% 78%, rgba(217, 164, 65, 0.045), transparent 60%);
+                radial-gradient(820px 560px at 8% -6%, rgba(91, 91, 240, 0.10), transparent 60%),
+                radial-gradient(760px 620px at 100% 4%, rgba(255, 122, 77, 0.08), transparent 58%),
+                radial-gradient(900px 700px at 50% 110%, rgba(224, 150, 47, 0.06), transparent 60%);
         }
 
         .icon {
@@ -95,8 +98,8 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            background: rgba(11, 15, 23, 0.62);
-            backdrop-filter: blur(10px);
+            background: rgba(252, 251, 247, 0.72);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--panel-border);
             transition: background 0.3s ease, border-color 0.3s ease;
         }
@@ -167,19 +170,21 @@
         }
 
         .download-btn {
-            background: var(--brand);
+            background: var(--accent);
             color: #fff;
             padding: 0.7rem 1.4rem;
             border-radius: 10px;
             text-decoration: none;
             font-weight: 600;
             font-size: 0.95rem;
-            transition: background 0.25s ease, transform 0.25s var(--ease);
+            box-shadow: 0 8px 18px rgba(255, 122, 77, 0.30);
+            transition: background 0.25s ease, transform 0.25s var(--ease), box-shadow 0.25s ease;
         }
 
         .download-btn:hover {
-            background: var(--brand-strong);
+            background: #f0643a;
             transform: translateY(-1px);
+            box-shadow: 0 12px 24px rgba(255, 122, 77, 0.40);
         }
 
         .hero {
@@ -204,13 +209,13 @@
         .hero-subtitle {
             display: inline-block;
             background: var(--brand-soft);
-            color: #a5b4fc;
+            color: var(--brand-strong);
             padding: 0.45rem 1rem;
             border-radius: 999px;
             font-size: 0.82rem;
-            font-weight: 500;
+            font-weight: 600;
             margin-bottom: 1.6rem;
-            border: 1px solid rgba(99, 102, 241, 0.25);
+            border: 1px solid rgba(91, 91, 240, 0.22);
             letter-spacing: 0.02em;
         }
 
@@ -248,7 +253,8 @@
             text-decoration: none;
             font-weight: 600;
             font-size: 1.05rem;
-            transition: background 0.25s ease, transform 0.25s var(--ease);
+            box-shadow: 0 10px 24px rgba(91, 91, 240, 0.28);
+            transition: background 0.25s ease, transform 0.25s var(--ease), box-shadow 0.25s ease;
             display: inline-flex;
             align-items: center;
             gap: 0.55rem;
@@ -257,17 +263,18 @@
         .primary-btn:hover {
             background: var(--brand-strong);
             transform: translateY(-2px);
+            box-shadow: 0 16px 32px rgba(91, 91, 240, 0.36);
         }
 
         .secondary-btn {
-            background: transparent;
+            background: var(--panel);
             color: var(--text-primary);
             padding: 0.95rem 2rem;
             border-radius: 12px;
             text-decoration: none;
             font-weight: 600;
             font-size: 1.05rem;
-            transition: background 0.25s ease, border-color 0.25s ease;
+            transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s var(--ease);
             border: 1px solid var(--panel-border);
             display: inline-flex;
             align-items: center;
@@ -275,8 +282,9 @@
         }
 
         .secondary-btn:hover {
-            background: var(--panel);
-            border-color: var(--text-secondary);
+            background: var(--panel-strong);
+            border-color: var(--brand);
+            transform: translateY(-2px);
         }
 
         .hero-stats {
@@ -293,7 +301,7 @@
         .stat-number {
             font-size: 2.4rem;
             font-weight: 800;
-            color: var(--text-primary);
+            color: var(--accent);
             letter-spacing: -0.02em;
         }
 
@@ -308,6 +316,7 @@
             position: relative;
             background: var(--bg-elev);
             box-shadow: var(--hairline-top);
+            border-bottom: 1px solid var(--panel-border);
         }
 
         .section-container {
@@ -323,13 +332,13 @@
         .section-subtitle {
             display: inline-block;
             background: var(--brand-soft);
-            color: #a5b4fc;
+            color: var(--brand-strong);
             padding: 0.45rem 1rem;
             border-radius: 999px;
             font-size: 0.82rem;
-            font-weight: 500;
+            font-weight: 600;
             margin-bottom: 1rem;
-            border: 1px solid rgba(99, 102, 241, 0.25);
+            border: 1px solid rgba(91, 91, 240, 0.22);
             letter-spacing: 0.02em;
         }
 
@@ -460,6 +469,7 @@
             position: relative;
             background: var(--bg-elev);
             box-shadow: var(--hairline-top);
+            border-bottom: 1px solid var(--panel-border);
         }
 
         .showcase-grid {
@@ -477,7 +487,7 @@
             width: 100%;
             border-radius: 18px;
             border: 1px solid var(--panel-border);
-            box-shadow: var(--shadow);
+            box-shadow: 0 24px 60px rgba(60, 50, 30, 0.16);
             display: block;
         }
 
@@ -791,9 +801,11 @@
             padding: 6rem 2rem;
             position: relative;
             background:
-                linear-gradient(180deg, rgba(99, 102, 241, 0.08), transparent 55%),
+                linear-gradient(180deg, rgba(91, 91, 240, 0.06), transparent 50%),
+                radial-gradient(600px 400px at 90% 10%, rgba(255, 122, 77, 0.06), transparent 60%),
                 var(--bg-elev);
             box-shadow: var(--hairline-top);
+            border-bottom: 1px solid var(--panel-border);
         }
 
         .pricing-card {
@@ -1077,7 +1089,7 @@
 
         .screenshot-label:hover {
             border-color: var(--brand);
-            color: #a5b4fc;
+            color: var(--brand-strong);
             background: var(--brand-soft);
         }
 
@@ -1186,6 +1198,7 @@
             padding: 4rem 2rem 2rem;
             background: var(--bg-elev);
             box-shadow: var(--hairline-top);
+            border-top: 1px solid var(--panel-border);
         }
 
         .footer-grid {
@@ -1933,7 +1946,7 @@
                 <p><strong>愿景</strong>：成为最受教师喜爱的教学辅助工具</p>
                 <p><strong>使命</strong>：用技术赋能教育，让每一堂课都精彩</p>
                 <p><strong>价值观</strong>：创新、专注、用户至上</p>
-                <p style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8;">版本：v1.2.14</p>
+                <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">版本：v1.2.14</p>
             `;
             showModal('关于我们', aboutContent);
         }
@@ -2073,7 +2086,7 @@
             
             modalContent.innerHTML = `
                 <h2 style="margin-bottom: 1.5rem;">${title}</h2>
-                <div style="color: #e2e8f0; line-height: 1.8;">${content}</div>
+                <div style="color: var(--text-secondary); line-height: 1.8;">${content}</div>
             `;
             modalContent.appendChild(closeBtn);
             
