@@ -88,34 +88,8 @@
             font-weight: 400;
         }
 
-        /* 油漆撞色氛围（降温版）：克制珊瑚暖光 × 中性冷光，双调相撞但更冷静 */
-        /* 同时作为 WebGL 失败/不可见时的 CSS fallback，确保始终有可见色彩 */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            pointer-events: none;
-            background:
-                radial-gradient(closest-side at 18% 12%, rgba(255, 122, 77, 0.28), transparent 65%),
-                radial-gradient(closest-side at 82% 18%, rgba(92, 100, 112, 0.22), transparent 65%),
-                radial-gradient(closest-side at 50% 80%, rgba(255, 122, 77, 0.16), transparent 60%);
-            filter: blur(48px);
-        }
-
-        /* 手绘油漆 blob 装饰层（有机不规则形状，模拟撞色涂鸦，降温后更低调） */
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            pointer-events: none;
-            opacity: 0.38;
-            background:
-                radial-gradient(closest-side at 6% 22%, var(--indigo-soft), transparent 72%),
-                radial-gradient(closest-side at 94% 64%, var(--coral-soft), transparent 72%);
-            filter: blur(22px);
-        }
+        /* 动态背景由 #shader-bg（Shader Gradient 组件）全屏提供，已贯穿全站；不再叠加 CSS 光晕层以免干扰水波观感。
+           body 的 --bg 仅作为 shader 完全不可见时的纯白兜底。 */
 
         /* 动态着色器背景：Shader Gradient 官方组件（three.js 构建时内联，零运行时 CDN） */
         #shader-bg {
@@ -371,7 +345,7 @@
         .features {
             padding: 6rem 2rem;
             position: relative;
-            background: var(--bg-elev);
+            background: transparent;
             box-shadow: var(--hairline-top);
             border-bottom: 1px solid var(--panel-border);
         }
@@ -485,7 +459,7 @@
         .product-features {
             padding: 6rem 2rem;
             position: relative;
-            background: var(--bg);
+            background: transparent;
         }
 
         .product-banner {
@@ -549,7 +523,7 @@
         .showcase {
             padding: 6rem 2rem;
             position: relative;
-            background: var(--bg-elev);
+            background: transparent;
             box-shadow: var(--hairline-top);
             border-bottom: 1px solid var(--panel-border);
         }
@@ -1313,7 +1287,7 @@
 
         .footer {
             padding: 4rem 2rem 2rem;
-            background: var(--bg-elev);
+            background: transparent;
             box-shadow: var(--hairline-top);
             border-top: 1px solid var(--panel-border);
         }
