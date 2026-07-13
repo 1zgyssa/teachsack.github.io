@@ -118,17 +118,21 @@
             filter: blur(22px);
         }
 
-        /* 动态着色器背景：Shader Gradient 风格的流动渐变，原生 WebGL 零依赖 */
-        #shader-bg {
+        /* 动态着色器背景：优先官方 Shader Gradient 组件（真 Three.js 3D 质感），2D 版作 fallback */
+        #shader-bg, #shader-bg-react {
             position: fixed;
             inset: 0;
             width: 100%;
             height: 100%;
             z-index: -2;
             pointer-events: none;
+        }
+        #shader-bg {
             filter: blur(55px) saturate(120%);
             opacity: 0.85;
         }
+        /* React 组件真正渲染出 canvas 后，隐藏 2D fallback，避免双 GPU 负载 */
+        body.shader-react-loaded #shader-bg { display: none; }
 
         .icon {
             width: 1em;
@@ -1573,6 +1577,7 @@
 </head>
 <body>
     <canvas id="shader-bg"></canvas>
+    <div id="shader-bg-react"></div>
 
     <nav>
         <div class="nav-container">
@@ -2419,6 +2424,51 @@
             });
             raf = requestAnimationFrame(render);
         })();
+    </script>
+
+    <!-- 官方 Shader Gradient 组件（真 Three.js 3D 渐变，原生质感）；CDN 不可用时不加载，2D 背景自动兜底 -->
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@19.2.1",
+        "react/jsx-runtime": "https://esm.sh/react@19.2.1/jsx-runtime",
+        "react-dom": "https://esm.sh/react-dom@19.2.1",
+        "react-dom/client": "https://esm.sh/react-dom@19.2.1/client",
+        "three": "https://esm.sh/three@0.171.0",
+        "@react-three/fiber": "https://esm.sh/@react-three/fiber@9.2.0?external=react,react-dom,three",
+        "@shadergradient/react": "https://esm.sh/@shadergradient/react@2.4.20?external=react,react-dom,three,@react-three/fiber",
+        "htm": "https://esm.sh/htm@3.1.1"
+      }
+    }
+    </script>
+    <script type="module">
+      import React from 'react';
+      import { createRoot } from 'react-dom/client';
+      import { ShaderGradientCanvas, ShaderGradient } from '@shadergradient/react';
+      import htm from 'htm';
+      const html = htm.bind(React.createElement);
+      const mount = document.getElementById('shader-bg-react');
+      if (mount) {
+        try {
+          const root = createRoot(mount);
+          root.render(html`
+            <${ShaderGradientCanvas} style=${{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} pixelDensity=${1.2} fov=${45}>
+              <${ShaderGradient}
+                control="query"
+                urlString="https://www.shadergradient.co/customize?animate=on&cDistance=3.6&cPolarAngle=90&color1=%23ff7a4d&color2=%23fafafb&color3=%235c6470&lightType=3d&shader=defaults&type=plane&uFrequency=5.5&uSpeed=0.4&uStrength=4&grain=on"
+              />
+            <//>
+          `);
+          // 仅当 Three.js 真正渲染出 canvas 才隐藏 2D fallback，避免 CDN 失败导致无背景
+          setTimeout(() => {
+            if (mount.querySelector('canvas')) {
+              document.body.classList.add('shader-react-loaded');
+            }
+          }, 1800);
+        } catch (e) {
+          console.warn('ShaderGradient load failed, using 2D fallback:', e);
+        }
+      }
     </script>
 </body>
 </html>
