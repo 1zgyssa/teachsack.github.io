@@ -118,6 +118,18 @@
             filter: blur(22px);
         }
 
+        /* 动态着色器背景：Shader Gradient 风格的流动渐变，原生 WebGL 零依赖 */
+        #shader-bg {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+            filter: blur(55px) saturate(120%);
+            opacity: 0.85;
+        }
+
         .icon {
             width: 1em;
             height: 1em;
@@ -1560,6 +1572,7 @@
     </style>
 </head>
 <body>
+    <canvas id="shader-bg"></canvas>
 
     <nav>
         <div class="nav-container">
@@ -2294,6 +2307,118 @@
                 nav.classList.remove('scrolled');
             }
         });
+
+        /* ===== 动态着色器背景：Shader Gradient 风格的流动渐变（原生 WebGL，零依赖）===== */
+        (function initShaderBackground() {
+            const canvas = document.getElementById('shader-bg');
+            if (!canvas) return;
+            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            if (!gl) { canvas.style.display = 'none'; return; } // 不支持则回退到静态光斑
+
+            const vsSrc = `
+                attribute vec2 a_pos;
+                void main() { gl_Position = vec4(a_pos, 0.0, 1.0); }
+            `;
+            const fsSrc = `
+                precision highp float;
+                uniform float u_time;
+                uniform vec2 u_res;
+                float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+                float noise(vec2 p){
+                    vec2 i = floor(p), f = fract(p);
+                    vec2 u = f * f * (3.0 - 2.0 * f);
+                    return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x),
+                               mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
+                }
+                float fbm(vec2 p){
+                    float v = 0.0, a = 0.5;
+                    for (int i = 0; i < 5; i++) { v += a * noise(p); p *= 2.0; a *= 0.5; }
+                    return v;
+                }
+                void main(){
+                    vec2 uv = gl_FragCoord.xy / u_res;
+                    vec2 p = uv * 3.0;
+                    float t = u_time * 0.05;
+                    // 域扭曲（domain warping）产生流动感
+                    vec2 q = vec2(fbm(p + vec2(0.0, t)), fbm(p + vec2(5.2, -t)));
+                    vec2 r = vec2(fbm(p + 4.0 * q + vec2(1.7, 9.2) + 0.15 * t),
+                                  fbm(p + 4.0 * q + vec2(8.3, 2.8) - 0.12 * t));
+                    float f = fbm(p + 4.0 * r);
+                    // 调色：冷白基 + 珊瑚暖晕 + 板岩灰冷晕，整体保持浅色不喧宾夺主
+                    vec3 white = vec3(0.972, 0.976, 0.990);
+                    vec3 coral = vec3(1.0, 0.46, 0.29);
+                    vec3 slate = vec3(0.40, 0.43, 0.49);
+                    vec3 col = mix(white, coral, smoothstep(0.45, 0.95, f) * 0.55);
+                    col = mix(col, slate, smoothstep(0.35, 0.85, r.x) * 0.16);
+                    col = mix(white, col, 0.80);
+                    gl_FragColor = vec4(col, 1.0);
+                }
+            `;
+
+            function compile(type, src) {
+                const s = gl.createShader(type);
+                gl.shaderSource(s, src);
+                gl.compileShader(s);
+                if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+                    console.warn('Shader compile error:', gl.getShaderInfoLog(s));
+                    return null;
+                }
+                return s;
+            }
+            const vs = compile(gl.VERTEX_SHADER, vsSrc);
+            const fs = compile(gl.FRAGMENT_SHADER, fsSrc);
+            if (!vs || !fs) { canvas.style.display = 'none'; return; }
+            const prog = gl.createProgram();
+            gl.attachShader(prog, vs);
+            gl.attachShader(prog, fs);
+            gl.linkProgram(prog);
+            if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { canvas.style.display = 'none'; return; }
+            gl.useProgram(prog);
+
+            const buf = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+            const loc = gl.getAttribLocation(prog, 'a_pos');
+            gl.enableVertexAttribArray(loc);
+            gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+            const uTime = gl.getUniformLocation(prog, 'u_time');
+            const uRes = gl.getUniformLocation(prog, 'u_res');
+
+            function resize() {
+                // 降低内部分辨率保证性能，配合 CSS blur 仍显柔和
+                const q = 0.45;
+                const w = Math.max(1, Math.floor(window.innerWidth * q));
+                const h = Math.max(1, Math.floor(window.innerHeight * q));
+                canvas.width = w;
+                canvas.height = h;
+                gl.viewport(0, 0, w, h);
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            let raf = null, last = 0, elapsed = 0;
+            function render(now) {
+                if (!last) last = now;
+                elapsed += (now - last) / 1000;
+                last = now;
+                gl.uniform1f(uTime, elapsed);
+                gl.uniform2f(uRes, canvas.width, canvas.height);
+                gl.drawArrays(gl.TRIANGLES, 0, 3);
+                raf = requestAnimationFrame(render);
+            }
+            // 页面不可见时暂停，省电省 GPU
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    if (raf) cancelAnimationFrame(raf);
+                    raf = null;
+                } else if (!raf) {
+                    last = 0;
+                    raf = requestAnimationFrame(render);
+                }
+            });
+            raf = requestAnimationFrame(render);
+        })();
     </script>
 </body>
 </html>
