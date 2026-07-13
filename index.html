@@ -38,9 +38,9 @@
             --indigo-strong: #474e59;
             --indigo-soft: rgba(92, 100, 112, 0.10);
             /* 唯一彩色强调色：珊瑚 */
-            --coral: #ff7a4d;
-            --coral-strong: #f0643a;
-            --coral-soft: rgba(255, 122, 77, 0.12);
+            --coral: #ed8472;
+            --coral-strong: #d9694f;
+            --coral-soft: rgba(237, 132, 114, 0.12);
             --brand: var(--indigo);
             --brand-strong: var(--indigo-strong);
             --brand-soft: var(--indigo-soft);
@@ -578,19 +578,6 @@
 
         .showcase-image {
             position: relative;
-        }
-
-        /* 产品大图背后的撞色光晕，强化"油漆"中心感 */
-        .showcase-image::after {
-            content: '';
-            position: absolute;
-            z-index: -1;
-            inset: -8% -10% -12% -8%;
-            background:
-                radial-gradient(60% 60% at 25% 25%, rgba(92, 100, 112, 0.14), transparent 70%),
-                radial-gradient(60% 60% at 80% 80%, rgba(255, 122, 77, 0.14), transparent 70%);
-            filter: blur(28px);
-            border-radius: 30px;
         }
 
         .showcase-screenshot {
@@ -1689,18 +1676,18 @@
       #loader .loader-pulse span { animation: none; }
     }
     /* 体验动画 B：Hover 光晕扫过（卡片与实底按钮，水蓝高光掠过） */
-    .showcase-image, .download-card, .pricing-card,
+    .download-card, .pricing-card,
     .download-link-btn, .buy-btn {
         position: relative; overflow: hidden;
     }
-    .showcase-image::after, .download-card::after,
+    .download-card::after,
     .pricing-card::after, .download-link-btn::after, .buy-btn::after {
         content: ""; position: absolute; top: 0; left: -160%;
         width: 60%; height: 100%;
         background: linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%);
         transform: skewX(-18deg); pointer-events: none; opacity: 0;
     }
-    .showcase-image:hover::after, .download-card:hover::after,
+    .download-card:hover::after,
     .pricing-card:hover::after, .download-link-btn:hover::after, .buy-btn:hover::after {
         animation: shimmerSweep 0.85s ease forwards;
     }
@@ -1712,6 +1699,14 @@
         z-index: 1;
     }
     .feature-card:hover::after { opacity: 1; }
+    /* 产品展示卡：同样的聚光灯跟随鼠标，手感与功能卡统一 */
+    .showcase-image::after {
+        content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0;
+        background: radial-gradient(220px circle at var(--mx,50%) var(--my,40%), rgba(43,196,224,0.30), rgba(43,196,224,0.08) 38%, transparent 62%);
+        transition: opacity 0.35s ease;
+        z-index: 2;
+    }
+    .showcase-image:hover::after { opacity: 1; }
     @keyframes shimmerSweep {
         0% { left: -160%; opacity: 0; }
         20% { opacity: 1; }
@@ -1727,7 +1722,7 @@
         background: linear-gradient(90deg, #2bc4e0, #0a7ba6);
     }
     @media (prefers-reduced-motion: reduce) {
-        .showcase-image:hover::after, .download-card:hover::after,
+        .download-card:hover::after,
         .pricing-card:hover::after, .download-link-btn:hover::after, .buy-btn:hover::after {
             animation: none;
         }
@@ -11673,7 +11668,7 @@ camera-controls/dist/camera-controls.module.js:
 
         /* 功能卡片：聚光灯跟随鼠标（交互反馈） */
         (function () {
-            const cards = document.querySelectorAll('.feature-card');
+            const cards = document.querySelectorAll('.feature-card, .showcase-image');
             cards.forEach(function (card) {
                 card.addEventListener('mousemove', function (e) {
                     const r = card.getBoundingClientRect();
