@@ -344,27 +344,51 @@
             align-items: center;
         }
 
+        /* Hero 主 CTA：Uiverse 风格「中心扩散填充」交互（配色改品牌水蓝，零外部依赖） */
         .primary-btn {
-            background: transparent;
-            color: var(--accent);
-            padding: 0.6rem 0;
-            border-radius: 0;
-            text-decoration: underline;
-            text-underline-offset: 0.25em;
-            font-weight: 600;
-            font-size: 1.05rem;
-            box-shadow: none;
-            transition: color 0.25s ease, transform 0.25s var(--ease);
+            position: relative;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 0.55rem;
+            padding: 0.85rem 2.1rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #0a7ba6;
+            border: 2px solid #2bc4e0;
+            border-radius: 34px;
+            background-color: transparent;
+            text-decoration: none;
+            cursor: pointer;
+            overflow: hidden;
+            z-index: 0;
+            transition: color 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+                        transform 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+                        box-shadow 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .primary-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 90px;
+            height: 90px;
+            border-radius: inherit;
+            scale: 0;
+            z-index: -1;
+            background-color: #2bc4e0;
+            transition: all 0.55s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .primary-btn:hover {
-            background: transparent;
-            color: var(--coral-strong);
-            transform: translateY(-1px);
-            box-shadow: none;
+            color: #fff;
+            transform: scale(1.06);
+            box-shadow: 0 10px 26px rgba(43, 196, 224, 0.40);
+        }
+
+        .primary-btn:hover::before {
+            scale: 5;
         }
 
         .secondary-btn {
