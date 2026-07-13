@@ -25,18 +25,19 @@ function DynamicBackground() {
         type="waterPlane"
         grain="on"
         animate="on"
-        uSpeed={0.55}
-        uDensity={1.4}
-        uStrength={2.8}
+        uSpeed={0.3}
+        uDensity={1.2}
+        uStrength={3.4}
+        uAmplitude={0}
         cAzimuthAngle={180}
-        cDistance={4.2}
-        cPolarAngle={90}
+        cDistance={4.4}
+        cPolarAngle={70}
         lightType="3d"
         positionX={0}
-        positionY={0}
+        positionY={0.7}
         rotationZ={0}
-        fov={50}
-        reflection={0.3}
+        fov={45}
+        reflection={0.1}
       />
     </ShaderGradientCanvas>
   );
