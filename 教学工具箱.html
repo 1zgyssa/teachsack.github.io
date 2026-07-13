@@ -5240,6 +5240,17 @@
                 clearInterval(focusInterval);
                 focusInterval = null;
             }
+            // 退出前把当前会话数据同步落盘，确保本次运行新增/修改的数据在重启后依然保留
+            try {
+                if (window.electronAPI && window.electronAPI.saveDataFileSync && typeof gatherBackupData === 'function') {
+                    const data = gatherBackupData();
+                    if (data && data.data && Object.keys(data.data).length > 0) {
+                        window.electronAPI.saveDataFileSync(data);
+                    }
+                }
+            } catch (e) {
+                console.error('退出前保存数据失败:', e);
+            }
         });
 
         // ========== 音效系统 ========== */
@@ -5943,64 +5954,60 @@
         }
 
         // ========== 数据备份模块 ==========
+        // 需要持久化的数据键（外层作用域，供 beforeunload 同步保存与模块内复用）
+        const DATA_KEYS = [
+            'classRoster',
+            'statsScores',
+            'punishmentList',
+            'settings',
+            'quizCustomQuestions',
+            'calledStudents',
+            'theme',
+            'animationSpeed',
+            'license_list',
+            'trial_license',
+            'trial_count',
+            'trial_exhausted'
+        ];
+        const LICENSE_KEYS_PATTERN = /^license_device_/;
+
+        // 收集当前需要持久化的数据为统一结构（函数声明，全局可调用，供退出时同步落盘）
+        function gatherBackupData() {
+            const backupData = {
+                version: '1.2.14',
+                exportTime: new Date().toISOString(),
+                data: {}
+            };
+            DATA_KEYS.forEach(key => {
+                if (key === 'classRoster') {
+                    const classRosterValue = localStorage.getItem('classRoster');
+                    if (!classRosterValue) return;
+                    try {
+                        const parsed = JSON.parse(classRosterValue);
+                        if (parsed.length === 0) return;
+                    } catch { return; }
+                }
+                const value = localStorage.getItem(key);
+                if (value !== null) {
+                    backupData.data[key] = value;
+                }
+            });
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && LICENSE_KEYS_PATTERN.test(key)) {
+                    backupData.data[key] = localStorage.getItem(key);
+                }
+            }
+            return backupData;
+        }
+
         const DataBackupModule = (function() {
-            const DATA_KEYS = [
-                'classRoster',
-                'statsScores',
-                'punishmentList',
-                'settings',
-                'quizCustomQuestions',
-                'calledStudents',
-                'theme',
-                'animationSpeed',
-                'license_list',
-                'trial_license',
-                'trial_count',
-                'trial_exhausted'
-            ];
-            
-            const LICENSE_KEYS_PATTERN = /^license_device_/;
 
             async function autoSaveToAppDir() {
                 if (!window.electronAPI) return;
-                if (isLoadingData) return;
-
-                const backupData = {
-                    version: '1.2.14',
-                    exportTime: new Date().toISOString(),
-                    data: {}
-                };
-
-                DATA_KEYS.forEach(key => {
-                    if (key === 'classRoster') {
-                        const classRosterValue = localStorage.getItem('classRoster');
-                        if (!classRosterValue) {
-                            return;
-                        }
-                        try {
-                            const parsed = JSON.parse(classRosterValue);
-                            if (parsed.length === 0) {
-                                return;
-                            }
-                        } catch {
-                            return;
-                        }
-                    }
-                    const value = localStorage.getItem(key);
-                    if (value !== null) {
-                        backupData.data[key] = value;
-                    }
-                });
-                
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (key && LICENSE_KEYS_PATTERN.test(key)) {
-                        backupData.data[key] = localStorage.getItem(key);
-                    }
-                }
 
                 try {
-                    await window.electronAPI.saveDataFile(backupData);
+                    await window.electronAPI.saveDataFile(gatherBackupData());
                 } catch (e) {
                     console.log('自动保存到应用目录失败:', e);
                 }

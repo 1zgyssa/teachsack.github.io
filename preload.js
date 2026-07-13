@@ -17,9 +17,14 @@ contextBridge.exposeInMainWorld('electronAPI', {
         return ipcRenderer.invoke('open-external', url);
     },
 
-    // 保存数据到应用目录
+    // 保存数据到应用目录（异步）
     saveDataFile: (data) => {
         return ipcRenderer.invoke('save-data-file', data);
+    },
+
+    // 保存数据到应用目录（同步，供 beforeunload 期间阻塞式落盘，确保退出前写入完成）
+    saveDataFileSync: (data) => {
+        return ipcRenderer.sendSync('save-data-file-sync', data);
     },
     
     // 从应用目录读取数据

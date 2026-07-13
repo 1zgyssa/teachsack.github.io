@@ -514,6 +514,20 @@ ipcMain.handle('save-data-file', async (event, data) => {
     }
 });
 
+// IPC通信 - 同步保存数据到应用目录（供渲染进程 beforeunload 阻塞式调用，保证退出前落盘）
+ipcMain.on('save-data-file-sync', (event, data) => {
+    try {
+        const exePath = app.getPath('exe');
+        const appDir = path.dirname(exePath);
+        const dataPath = path.join(appDir, 'TeachSack数据.json');
+        fs.writeFileSync(dataPath, JSON.stringify(data, null, 2), 'utf-8');
+        event.returnValue = { success: true, path: dataPath };
+    } catch (error) {
+        console.error('同步保存数据文件失败:', error);
+        event.returnValue = { success: false, error: error.message };
+    }
+});
+
 // IPC通信 - 从应用目录读取数据
 ipcMain.handle('load-data-file', async () => {
     try {
