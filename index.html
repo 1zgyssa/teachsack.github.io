@@ -425,7 +425,7 @@
             transition: border-color 0.3s ease, transform 0.3s var(--ease), background 0.3s ease, box-shadow 0.3s ease;
         }
 
-        /* 卡片顶部油漆撞色条：靛蓝/珊瑚交替 */
+        /* 卡片顶部统一珊瑚色强调条 */
         .feature-card::before {
             content: '';
             position: absolute;
@@ -433,15 +433,7 @@
             left: 0;
             right: 0;
             height: 5px;
-            background: var(--indigo);
-        }
-
-        .feature-card:nth-child(2)::before {
             background: var(--coral);
-        }
-
-        .feature-card:nth-child(3)::before {
-            background: linear-gradient(90deg, var(--indigo), var(--coral));
         }
 
         .feature-card:hover {
