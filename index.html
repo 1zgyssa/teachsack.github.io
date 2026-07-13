@@ -1656,18 +1656,18 @@
       #loader .loader-pulse span { animation: none; }
     }
     /* 体验动画 B：Hover 光晕扫过（卡片与实底按钮，水蓝高光掠过） */
-    .feature-card, .showcase-image, .download-card, .pricing-card,
+    .showcase-image, .download-card, .pricing-card,
     .download-link-btn, .buy-btn {
         position: relative; overflow: hidden;
     }
-    .feature-card::after, .showcase-image::after, .download-card::after,
+    .showcase-image::after, .download-card::after,
     .pricing-card::after, .download-link-btn::after, .buy-btn::after {
         content: ""; position: absolute; top: 0; left: -160%;
         width: 60%; height: 100%;
         background: linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%);
         transform: skewX(-18deg); pointer-events: none; opacity: 0;
     }
-    .feature-card:hover::after, .showcase-image:hover::after, .download-card:hover::after,
+    .showcase-image:hover::after, .download-card:hover::after,
     .pricing-card:hover::after, .download-link-btn:hover::after, .buy-btn:hover::after {
         animation: shimmerSweep 0.85s ease forwards;
     }
@@ -1686,7 +1686,7 @@
         background: linear-gradient(90deg, #2bc4e0, #0a7ba6);
     }
     @media (prefers-reduced-motion: reduce) {
-        .feature-card:hover::after, .showcase-image:hover::after, .download-card:hover::after,
+        .showcase-image:hover::after, .download-card:hover::after,
         .pricing-card:hover::after, .download-link-btn:hover::after, .buy-btn:hover::after {
             animation: none;
         }
