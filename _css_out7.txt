@@ -1,0 +1,3 @@
+style_braces_open=648 close=648 balance_ok=True
+tool_icon_has_background=False
+tool_icon_block=font-size: 100px;

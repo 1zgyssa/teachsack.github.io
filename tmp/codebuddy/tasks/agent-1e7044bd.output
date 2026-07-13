@@ -1,0 +1,7 @@
+[Tool: Bash] {"arguments":"{\"command\": \"mkdir -p /d/tmp/agent_probe && printf 'agent-ok' > /d/tmp/agent_probe/test.txt && cat /d/tmp/agent_probe/test.txt && rm -rf /d/tmp/agent_probe && ls /d/tmp/agent_probe 2>/dev/null; echo \\\"cleanup_done\\\"\", \"description\": \"创建目录、写文件、读文件并清理\"}"}
+
+--- RESULT ---
+探针完成：
+- 目录创建：成功
+- 文件写入：成功（内容 "agent-ok" 已读取确认）
+- 清理：成功（目录已删除，D:\tmp 保持干净）

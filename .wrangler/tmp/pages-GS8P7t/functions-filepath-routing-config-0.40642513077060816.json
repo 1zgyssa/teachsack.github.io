@@ -1,0 +1,21 @@
+{
+  "routes": [
+    {
+      "routePath": "/api/feedback",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/feedback.js:onRequestPost"
+      ]
+    },
+    {
+      "routePath": "/api/feedbacks",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/feedbacks.js:onRequestGet"
+      ]
+    }
+  ],
+  "baseURL": "/"
+}

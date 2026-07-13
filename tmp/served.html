@@ -1,0 +1,2473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeachSack - 让课堂更有趣·让教学更高效</title>
+    <meta name="description" content="TeachSack 是一款专为教师打造的智能化教学辅助工具，集成卡牌点名、成绩管理、课堂互动、学生名单管理、激活码系统等功能。¥19.9 永久授权，支持 Windows（macOS / Linux 即将推出）。">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="TeachSack - 让课堂更有趣·让教学更高效">
+    <meta property="og:description" content="专为教师打造的智能化教学辅助工具，卡牌点名、成绩管理、课堂互动一应俱全。¥19.9 永久授权，支持 Windows。">
+    <meta property="og:url" content="https://teachsack.cn/">
+    <meta property="og:image" content="https://teachsack.cn/images/teachsack-icon.png">
+    <meta property="og:site_name" content="TeachSack">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="TeachSack - 让课堂更有趣·让教学更高效">
+    <meta name="twitter:description" content="专为教师打造的智能化教学辅助工具，¥19.9 永久授权，支持 Windows。">
+    <meta name="twitter:image" content="https://teachsack.cn/images/teachsack-icon.png">
+    <link rel="icon" href="images/teachsack-icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="images/teachsack-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #fafafb;
+            --bg-elev: #f1f2f6;
+            --panel: rgba(255, 255, 255, 0.74);
+            --panel-strong: rgba(255, 255, 255, 0.96);
+            --panel-border: rgba(43, 39, 64, 0.10);
+            --text-primary: #1f2330;
+            --text-secondary: #555c6b;
+            --text-muted: #8a8f9e;
+            /* 中性支持色（原靛蓝降级为板岩灰，仅作结构中性，不再作为强调色） */
+            --indigo: #5c6470;
+            --indigo-strong: #474e59;
+            --indigo-soft: rgba(92, 100, 112, 0.10);
+            /* 唯一彩色强调色：珊瑚 */
+            --coral: #ff7a4d;
+            --coral-strong: #f0643a;
+            --coral-soft: rgba(255, 122, 77, 0.12);
+            --brand: var(--indigo);
+            --brand-strong: var(--indigo-strong);
+            --brand-soft: var(--indigo-soft);
+            --accent: var(--coral);
+            --accent-soft: var(--coral-soft);
+            --gold: #c9a24a;
+            --warn: #c98a2b;
+            --warn-soft: rgba(201, 138, 43, 0.12);
+            --warn-border: rgba(201, 138, 43, 0.30);
+            --radius: 16px;
+            --radius-lg: 22px;
+            --radius-pill: 999px;
+            --maxw: 1160px;
+            --shadow: 0 16px 44px rgba(60, 50, 30, 0.12);
+            --shadow-card: 0 10px 28px rgba(60, 50, 30, 0.08);
+            --shadow-card-hover: 0 22px 48px rgba(60, 50, 30, 0.16);
+            --hairline-top: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+            --ease: cubic-bezier(0.22, 1, 0.36, 1);
+            /* 油漆 blob 形状（不规则圆角，模拟手绘撞色） */
+            --blob-a: 42% 58% 63% 37% / 45% 47% 53% 55%;
+            --blob-b: 60% 40% 38% 62% / 54% 60% 40% 46%;
+        }
+
+        @font-face {
+            font-family: 'PingFang SC';
+            src: local('PingFang SC'), local('Microsoft YaHei');
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Baloo 2', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            font-family: 'ZCOOL KuaiLe', 'Baloo 2', 'PingFang SC', sans-serif;
+            font-weight: 400;
+        }
+
+        /* 油漆撞色氛围（降温版）：克制珊瑚暖光 × 中性冷光，双调相撞但更冷静 */
+        /* 同时作为 WebGL 失败/不可见时的 CSS fallback，确保始终有可见色彩 */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background:
+                radial-gradient(closest-side at 18% 12%, rgba(255, 122, 77, 0.28), transparent 65%),
+                radial-gradient(closest-side at 82% 18%, rgba(92, 100, 112, 0.22), transparent 65%),
+                radial-gradient(closest-side at 50% 80%, rgba(255, 122, 77, 0.16), transparent 60%);
+            filter: blur(48px);
+        }
+
+        /* 手绘油漆 blob 装饰层（有机不规则形状，模拟撞色涂鸦，降温后更低调） */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.38;
+            background:
+                radial-gradient(closest-side at 6% 22%, var(--indigo-soft), transparent 72%),
+                radial-gradient(closest-side at 94% 64%, var(--coral-soft), transparent 72%);
+            filter: blur(22px);
+        }
+
+        /* 动态着色器背景：原生 WebGL 零依赖（sphere 球体光晕风格），无需外部 CDN */
+        #shader-bg {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+            filter: blur(13px) saturate(125%);
+            opacity: 0.95;
+        }
+
+        .icon {
+            width: 1em;
+            height: 1em;
+            display: inline-block;
+            vertical-align: -0.15em;
+            flex-shrink: 0;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--panel-border);
+            transition: background 0.3s ease, border-color 0.3s ease;
+            box-shadow: 0 2px 0 rgba(92, 100, 112, 0.12), 0 6px 24px rgba(0, 0, 0, 0.04);
+        }
+
+        /* 滚动后导航栏更实，确保文字可读 */
+        nav.scrolled {
+            background: rgba(255, 255, 255, 0.96);
+            border-bottom-color: rgba(92, 100, 112, 0.22);
+            box-shadow: 0 2px 0 rgba(255, 122, 77, 0.28), 0 10px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        .nav-container {
+            max-width: var(--maxw);
+            margin: 0 auto;
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50% 48% 52% 50% / 50% 52% 48% 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: conic-gradient(from 140deg, var(--indigo), var(--coral));
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(92, 100, 112, 0.22);
+        }
+
+        .logo-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.8rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.88rem;
+            transition: color 0.25s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--indigo), var(--coral));
+            transition: width 0.25s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .download-btn {
+            background: var(--text-primary);
+            color: #fff;
+            padding: 0.6rem 1.3rem;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.88rem;
+            transition: background 0.25s ease, transform 0.25s var(--ease);
+        }
+
+        .download-btn:hover {
+            background: var(--indigo);
+            transform: translateY(-1px);
+        }
+
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 9rem 2rem 6rem;
+        }
+
+        .hero-content {
+            max-width: 760px;
+            width: 100%;
+        }
+
+        .hero-text {
+            text-align: center;
+            width: 100%;
+        }
+
+        .hero-subtitle {
+            display: inline-block;
+            background: transparent;
+            color: var(--text-muted);
+            padding: 0;
+            border-radius: 0;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.4rem;
+            border: none;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .hero-title {
+            font-size: clamp(2.8rem, 7vw, 4.4rem);
+            font-weight: 800;
+            line-height: 1.12;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.8rem;
+            color: var(--text-primary);
+        }
+
+        .hero-description {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 2.6rem;
+            max-width: 520px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .primary-btn {
+            background: var(--accent);
+            color: #fff;
+            padding: 0.9rem 2.1rem;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            box-shadow: 0 10px 24px rgba(255, 122, 77, 0.32);
+            transition: background 0.25s ease, transform 0.25s var(--ease), box-shadow 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+
+        .primary-btn:hover {
+            background: var(--coral-strong);
+            transform: translateY(-2px);
+            box-shadow: 0 16px 32px rgba(255, 122, 77, 0.42);
+        }
+
+        .secondary-btn {
+            background: transparent;
+            color: var(--text-secondary);
+            padding: 0.9rem 0.4rem;
+            border-radius: 0;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: color 0.25s ease, gap 0.25s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .secondary-btn:hover {
+            color: var(--text-primary);
+            gap: 0.6rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 3.5rem;
+            margin-top: 3.5rem;
+            justify-content: center;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: var(--accent);
+            letter-spacing: -0.02em;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.35rem;
+        }
+
+        .features {
+            padding: 6rem 2rem;
+            position: relative;
+            background: var(--bg-elev);
+            box-shadow: var(--hairline-top);
+            border-bottom: 1px solid var(--panel-border);
+        }
+
+        .section-container {
+            max-width: var(--maxw);
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-subtitle {
+            display: inline-block;
+            background: var(--brand-soft);
+            color: var(--brand-strong);
+            padding: 0.45rem 1rem;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(92, 100, 112, 0.22);
+            letter-spacing: 0.02em;
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.01em;
+            color: var(--text-primary);
+        }
+
+        .section-description {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: var(--radius-lg);
+            padding: 2.6rem 2.2rem;
+            min-height: 218px;
+            box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.3s ease, transform 0.3s var(--ease), background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* 卡片顶部统一深色条，与冷白主题协调 */
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--text-primary);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(92, 100, 112, 0.40);
+            background: var(--panel-strong);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            color: var(--indigo);
+            border-radius: 18px 15px 19px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--indigo-soft);
+            margin-bottom: 1.7rem;
+        }
+
+        .feature-icon .icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        .feature-title {
+            font-size: 1.32rem;
+            font-weight: 700;
+            margin-bottom: 0.7rem;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            font-size: 0.96rem;
+            color: var(--text-secondary);
+            line-height: 1.72;
+        }
+
+        .product-features {
+            padding: 6rem 2rem;
+            position: relative;
+            background: var(--bg);
+        }
+
+        .product-banner {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+        }
+
+        .product-point {
+            padding: 3rem 2.2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .product-point:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 22%;
+            bottom: 22%;
+            width: 1px;
+            background: var(--panel-border);
+        }
+
+        .product-point-icon {
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 1.5rem;
+            color: var(--coral);
+            background: var(--coral-soft);
+            border-radius: 18px 15px 19px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-point-icon .icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        .product-point-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: var(--text-primary);
+        }
+
+        .product-point-description {
+            font-size: 0.96rem;
+            color: var(--text-secondary);
+            line-height: 1.72;
+            max-width: 240px;
+            margin: 0 auto;
+        }
+
+        .showcase {
+            padding: 6rem 2rem;
+            position: relative;
+            background: var(--bg-elev);
+            box-shadow: var(--hairline-top);
+            border-bottom: 1px solid var(--panel-border);
+        }
+
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .showcase-image {
+            position: relative;
+        }
+
+        /* 产品大图背后的撞色光晕，强化"油漆"中心感 */
+        .showcase-image::after {
+            content: '';
+            position: absolute;
+            z-index: -1;
+            inset: -8% -10% -12% -8%;
+            background:
+                radial-gradient(60% 60% at 25% 25%, rgba(92, 100, 112, 0.14), transparent 70%),
+                radial-gradient(60% 60% at 80% 80%, rgba(255, 122, 77, 0.14), transparent 70%);
+            filter: blur(28px);
+            border-radius: 30px;
+        }
+
+        .showcase-screenshot {
+            width: 100%;
+            border-radius: 20px;
+            border: 1px solid var(--panel-border);
+            box-shadow: 0 30px 70px rgba(60, 50, 30, 0.20);
+            display: block;
+        }
+
+        .showcase-list {
+            list-style: none;
+        }
+
+        .showcase-item {
+            display: flex;
+            gap: 1.4rem;
+            padding: 1.5rem 1.6rem;
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            margin-bottom: 1.1rem;
+            transition: border-color 0.3s ease, transform 0.3s var(--ease);
+        }
+
+        .showcase-item:hover {
+            border-color: rgba(255, 122, 77, 0.45);
+            transform: translateX(4px);
+        }
+
+        .showcase-icon {
+            width: 50px;
+            height: 50px;
+            color: var(--coral);
+            background: var(--coral-soft);
+            border-radius: 15px 12px 16px 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .showcase-icon .icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .showcase-content h3 {
+            font-size: 1.12rem;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+            color: var(--text-primary);
+        }
+
+        .showcase-content p {
+            font-size: 0.94rem;
+            color: var(--text-secondary);
+        }
+
+        .download {
+            padding: 6rem 2rem;
+            position: relative;
+            border-top: 1px solid var(--panel-border);
+        }
+
+        .download-card {
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: var(--radius-lg);
+            padding: 4rem 3rem;
+            text-align: center;
+            position: relative;
+            max-width: 880px;
+            margin: 0 auto;
+            box-shadow: var(--shadow);
+        }
+
+        .download-icon {
+            width: 72px;
+            height: 72px;
+            color: var(--indigo);
+            background: var(--indigo-soft);
+            border-radius: 22px 18px 22px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.8rem;
+        }
+
+        .download-icon .icon {
+            width: 34px;
+            height: 34px;
+        }
+
+        .download-title {
+            font-size: clamp(1.8rem, 4vw, 2.25rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.01em;
+            color: var(--text-primary);
+        }
+
+        .download-description {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.4rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .download-platforms {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .platform-btn {
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 1.4rem 2.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: border-color 0.3s ease, transform 0.3s var(--ease), background 0.3s ease;
+        }
+
+        .platform-btn:hover {
+            background: var(--panel-strong);
+            border-color: var(--coral);
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px var(--coral-soft);
+        }
+
+        .download-card-item {
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 1.4rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.9rem;
+            text-align: center;
+            box-shadow: var(--shadow-card);
+            transition: border-color 0.3s ease, transform 0.3s var(--ease), background 0.3s ease, box-shadow 0.3s ease;
+            min-width: 200px;
+        }
+
+        .download-card-item:hover {
+            background: var(--panel-strong);
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 20px 46px rgba(0, 0, 0, 0.40);
+        }
+
+        .download-card-item.coming-soon {
+            opacity: 0.55;
+            pointer-events: none;
+        }
+
+        .download-link-btn {
+            background: var(--indigo);
+            color: #fff;
+            padding: 0.7rem 1.4rem;
+            border-radius: 11px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            box-shadow: 0 8px 18px rgba(92, 100, 112, 0.28);
+            transition: background 0.25s ease, transform 0.25s var(--ease);
+        }
+
+        .download-link-btn:hover {
+            background: var(--indigo-strong);
+            transform: translateY(-1px);
+        }
+
+        .coming-soon-text {
+            color: var(--text-secondary);
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        .direct-download-link {
+            margin-top: 2rem;
+            text-align: center;
+            padding: 1.4rem;
+            background: var(--panel);
+            border-radius: 12px;
+            border: 1px solid var(--panel-border);
+        }
+
+        .direct-download-link p {
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .direct-download-link input {
+            width: 100%;
+            max-width: 420px;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid var(--panel-border);
+            background: var(--bg-elev);
+            color: var(--text-primary);
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            margin-bottom: 0.75rem;
+        }
+
+        .direct-download-link button {
+            background: var(--indigo);
+            color: #fff;
+            padding: 0.7rem 2rem;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 18px rgba(92, 100, 112, 0.28);
+            transition: background 0.25s ease, transform 0.25s var(--ease);
+        }
+
+        .direct-download-link button:hover {
+            background: var(--indigo-strong);
+            transform: translateY(-1px);
+        }
+
+        .download-warning {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1.25rem;
+            padding: 1.4rem;
+            background: var(--warn-soft);
+            border-radius: 12px;
+            border: 1px solid var(--warn-border);
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .warning-icon {
+            color: var(--warn);
+            flex-shrink: 0;
+        }
+
+        .warning-icon .icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        .warning-content {
+            flex: 1;
+            text-align: left;
+        }
+
+        .warning-content h4 {
+            color: var(--warn);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .warning-content p {
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .warning-content ol {
+            color: var(--text-secondary);
+            padding-left: 1.4rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .warning-content li {
+            margin-bottom: 0.25rem;
+        }
+
+        .warning-image {
+            flex-shrink: 0;
+            width: 200px;
+        }
+
+        .warning-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid var(--panel-border);
+        }
+
+        .platform-icon {
+            color: var(--brand);
+            display: flex;
+        }
+
+        .platform-icon .icon {
+            width: 34px;
+            height: 34px;
+        }
+
+        .platform-info {
+            text-align: left;
+        }
+
+        .platform-name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        .platform-version {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .pricing {
+            padding: 6rem 2rem;
+            position: relative;
+            background:
+                radial-gradient(620px 420px at 8% 12%, rgba(92, 100, 112, 0.08), transparent 60%),
+                radial-gradient(560px 460px at 95% 88%, rgba(255, 122, 77, 0.10), transparent 60%),
+                var(--bg-elev);
+            box-shadow: var(--hairline-top);
+            border-bottom: 1px solid var(--panel-border);
+        }
+
+        .pricing-card {
+            background: var(--panel);
+            border: 1.5px solid var(--coral);
+            border-radius: var(--radius-lg);
+            padding: 28px 32px;
+            max-width: 520px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 22px 54px rgba(255, 122, 77, 0.18), 0 0 0 1px rgba(92, 100, 112, 0.06);
+        }
+
+        /* 卡片右上角油漆 blob，强化撞色涂鸦感 */
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: -70px;
+            right: -60px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle at 30% 30%, var(--coral-soft), transparent 70%);
+            border-radius: var(--blob-b);
+            pointer-events: none;
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: 14px;
+            right: -34px;
+            background: linear-gradient(135deg, var(--indigo), var(--coral));
+            color: #fff;
+            padding: 5px 40px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            transform: rotate(28deg);
+            letter-spacing: 0.03em;
+            box-shadow: 0 6px 16px rgba(255, 122, 77, 0.35);
+        }
+
+        .pricing-icon {
+            color: var(--coral);
+            text-align: center;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .pricing-icon .icon {
+            width: 44px;
+            height: 44px;
+        }
+
+        .pricing-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .pricing-price {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .pricing-currency {
+            font-size: 1.5rem;
+            color: var(--indigo);
+            font-weight: 700;
+        }
+
+        .pricing-amount {
+            font-size: 3rem;
+            color: var(--text-primary);
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .pricing-features ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .pricing-features li {
+            padding: 9px 0 9px 1.8rem;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--panel-border);
+            position: relative;
+        }
+
+        .pricing-features li::before {
+            content: '';
+            position: absolute;
+            left: 0.2rem;
+            top: 1.05rem;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--indigo), var(--coral));
+        }
+
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+
+        .payment-section {
+            margin-top: 24px;
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .buy-card {
+            text-align: center;
+            max-width: 360px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 22px 20px;
+            background: var(--panel-strong);
+            border: 1.5px solid var(--coral);
+            border-radius: 18px;
+        }
+
+        .buy-icon {
+            color: var(--coral);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .buy-icon .icon {
+            width: 34px;
+            height: 34px;
+        }
+
+        .buy-title {
+            color: var(--text-primary);
+            font-size: 1.15rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .buy-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+
+        .buy-desc strong {
+            color: var(--coral);
+            font-weight: 600;
+        }
+
+        .buy-btn {
+            display: inline-block;
+            background: var(--coral);
+            color: #fff;
+            text-decoration: none;
+            padding: 15px 40px;
+            border-radius: 14px 14px 16px 14px;
+            box-shadow: 0 12px 26px rgba(255, 122, 77, 0.34);
+            font-size: 1.05rem;
+            font-weight: 700;
+            transition: background 0.25s ease, transform 0.25s var(--ease);
+        }
+
+        .buy-btn:hover {
+            background: var(--coral-strong);
+            transform: translateY(-2px);
+        }
+
+        .buy-hint {
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .qr-code-container {
+            text-align: center;
+        }
+
+        .qr-code {
+            width: 180px;
+            height: 180px;
+            border-radius: 16px;
+            border: 1px solid var(--panel-border);
+            background: #fff;
+            padding: 8px;
+        }
+
+        .qr-hint {
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .payment-form {
+            flex: 1;
+            text-align: center;
+        }
+
+        .payment-form h4 {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .payment-input {
+            width: 100%;
+            padding: 14px 20px;
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            background: var(--bg-elev);
+            color: var(--text-primary);
+            font-size: 1rem;
+            margin-bottom: 16px;
+            transition: border-color 0.25s ease;
+        }
+
+        .payment-input:focus {
+            outline: none;
+            border-color: var(--indigo);
+        }
+
+        .payment-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .payment-btn {
+            background: var(--indigo);
+            color: #fff;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 14px 14px 16px 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 22px rgba(92, 100, 112, 0.28);
+            transition: background 0.25s ease, transform 0.25s var(--ease);
+            width: 100%;
+        }
+
+        .payment-btn:hover {
+            background: var(--indigo-strong);
+            transform: translateY(-2px);
+        }
+
+        .payment-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--warn-soft);
+            border: 1px solid var(--warn-border);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .note-icon {
+            color: var(--warn);
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        .note-content p {
+            margin: 0;
+            color: var(--warn);
+            font-size: 0.9rem;
+        }
+
+        .payment-screenshot {
+            margin-bottom: 1rem;
+        }
+
+        .screenshot-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 24px;
+            background: var(--panel);
+            border: 1px dashed var(--panel-border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .screenshot-label:hover {
+            border-color: var(--coral);
+            color: var(--coral-strong);
+            background: var(--coral-soft);
+        }
+
+        .screenshot-input {
+            display: none;
+        }
+
+        .screenshot-icon {
+            font-size: 1.4rem;
+        }
+
+        .screenshot-preview {
+            width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-top: 12px;
+            border: 1px solid var(--panel-border);
+        }
+
+        .pricing-note {
+            text-align: center;
+            margin-top: 24px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .payment-section {
+                flex-direction: column;
+            }
+        }
+
+        .faq {
+            padding: 6rem 2rem;
+            position: relative;
+            border-top: 1px solid var(--panel-border);
+        }
+
+        .faq-grid {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: 14px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .faq-item.active {
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.34);
+        }
+
+        .faq-question {
+            padding: 1.4rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.02rem;
+            color: var(--text-primary);
+        }
+
+        .faq-question:hover {
+            background: var(--panel-strong);
+        }
+
+        .faq-arrow {
+            color: var(--text-secondary);
+            flex-shrink: 0;
+            transition: transform 0.3s var(--ease);
+        }
+
+        .faq-arrow .icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .faq-item.active .faq-arrow {
+            transform: rotate(180deg);
+            color: var(--brand);
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s var(--ease), padding 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 240px;
+        }
+
+        .footer {
+            padding: 4rem 2rem 2rem;
+            background: var(--bg-elev);
+            box-shadow: var(--hairline-top);
+            border-top: 1px solid var(--panel-border);
+        }
+
+        .footer-grid {
+            max-width: var(--maxw);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand {
+            grid-column: span 1;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-elev);
+            border: 1px solid var(--panel-border);
+        }
+
+        .footer-description {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.7rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.92rem;
+            transition: color 0.25s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .footer-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 0.98rem;
+        }
+
+        .footer-bottom {
+            max-width: var(--maxw);
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid var(--panel-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-copyright {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 36px;
+            height: 36px;
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+        }
+
+        .social-link:hover {
+            background: var(--brand);
+            color: #fff;
+            border-color: var(--brand);
+        }
+
+        @media (max-width: 1024px) {
+            .hero-text {
+                text-align: center;
+            }
+
+            .hero-title {
+                font-size: 2.75rem;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .showcase-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.25rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-banner {
+                grid-template-columns: 1fr;
+            }
+
+            .product-point {
+                padding: 2.4rem 2rem;
+            }
+
+            .product-point:not(:last-child)::after {
+                right: 18%;
+                left: 18%;
+                top: auto;
+                bottom: 0;
+                width: auto;
+                height: 1px;
+            }
+
+            .hero-stats {
+                gap: 2rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .download-card {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .download-title {
+                font-size: 1.75rem;
+            }
+
+            .platform-btn {
+                padding: 1rem 1.5rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.75rem;
+            }
+
+            .hero-description {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .primary-btn, .secondary-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .download-platforms {
+                flex-direction: column;
+            }
+
+            .platform-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        .activation-steps {
+            margin-top: 1.25rem;
+            padding: 1rem 1.25rem;
+            background: var(--indigo-soft);
+            border: 1px solid rgba(92, 100, 112, 0.22);
+            border-radius: 14px;
+            text-align: left;
+        }
+
+        .activation-steps-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .activation-steps ol {
+            margin: 0;
+            padding-left: 1.2rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .activation-steps ol strong {
+            color: var(--coral);
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+    <canvas id="shader-bg"></canvas>
+
+    <nav>
+        <div class="nav-container">
+            <a href="#home" class="logo">
+                <img src="images/teachsack-icon.svg" alt="TeachSack" class="logo-icon" style="width: 36px; height: 36px; border-radius: 10px;">
+                <span>TeachSack</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#features">功能特性</a></li>
+                <li><a href="#product-features">产品特色</a></li>
+                <li><a href="#showcase">产品展示</a></li>
+                <li><a href="#download">下载中心</a></li>
+                <li><a href="#pricing">购买授权</a></li>
+                <li><a href="#faq">常见问题</a></li>
+            </ul>
+            <a href="#download" class="download-btn">立即下载</a>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-text">
+                <span class="hero-subtitle">v1.2.14 全新版本</span>
+                <h1 class="hero-title">让课堂更有趣<br>让教学更高效</h1>
+                <p class="hero-description">专为教师打造的智能教学工具箱，让点名、出卷与课堂互动变得轻松有趣。</p>
+                <div class="hero-buttons">
+                    <a href="#download" class="primary-btn">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="M8 10l4 4 4-4"/><path d="M4 19h16"/></svg>
+                        免费下载
+                    </a>
+                    <a href="#features" class="secondary-btn">
+                        了解更多
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-subtitle">核心功能</span>
+                <h2 class="section-title">强大的教学辅助工具</h2>
+                <p class="section-description">TeachSack 提供全方位的教学辅助功能，帮助教师轻松管理课堂，提升教学效率。</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg>
+                    </div>
+                    <h3 class="feature-title">智能卡牌点名</h3>
+                    <p class="feature-description">完全随机的点名，配合精美卡牌动画效果，让课堂提问更加有趣。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M2 20h20"/></svg>
+                    </div>
+                    <h3 class="feature-title">成绩管理系统</h3>
+                    <p class="feature-description">支持成绩录入、统计分析、排名展示等功能，自动生成成绩报表，让成绩管理更加便捷。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.6" fill="currentColor"/></svg>
+                    </div>
+                    <h3 class="feature-title">课堂互动挑战</h3>
+                    <p class="feature-description">丰富的课堂挑战项目，包括体能挑战、脑力挑战等，激发学生的学习积极性。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M16 6.5a3 3 0 0 1 0 5.8"/><path d="M17 19a5.2 5.2 0 0 0-3-4.7"/></svg>
+                    </div>
+                    <h3 class="feature-title">学生名单管理</h3>
+                    <p class="feature-description">支持批量导入、导出学生名单，智能分组管理，轻松管理班级信息。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="4"/><path d="M11 11l9 9"/><path d="M16 16l2-2"/><path d="M19 19l2-2"/></svg>
+                    </div>
+                    <h3 class="feature-title">激活码系统</h3>
+                    <p class="feature-description">支持激活码验证、设备绑定、试用功能，保障软件版权安全。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+                    </div>
+                    <h3 class="feature-title">个性化主题</h3>
+                    <p class="feature-description">支持浅色和深色两种主题模式，切换界面风格，打造舒适的教学环境。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="product-features" id="product-features">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-subtitle">产品特色</span>
+                <h2 class="section-title">为什么选择 TeachSack</h2>
+                <p class="section-description">TeachSack 致力于为教师提供最优质的教学辅助体验。</p>
+            </div>
+            <div class="product-banner">
+                <div class="product-point">
+                    <div class="product-point-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M6 6l12 12"/></svg>
+                    </div>
+                    <h3 class="product-point-title">绝对无广告</h3>
+                    <p class="product-point-description">无需登陆，告别繁琐操作，专注教学本身。</p>
+                </div>
+                <div class="product-point">
+                    <div class="product-point-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9c-2 0-3 1.5-3 3s1 3 3 3c2 0 3-1.5 5-3s3-3 5-3 3 1.5 3 3-1 3-3 3c-2 0-3-1.5-5-3s-3-3-5-3z"/></svg>
+                    </div>
+                    <h3 class="product-point-title">买断制产品</h3>
+                    <p class="product-point-description">购买即享永久使用，后续产品更新迭代完全免费。</p>
+                </div>
+                <div class="product-point">
+                    <div class="product-point-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg>
+                    </div>
+                    <h3 class="product-point-title">精美动画效果</h3>
+                    <p class="product-point-description">获取独一份的体验，让教学更加生动有趣。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="showcase" id="showcase">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-subtitle">产品展示</span>
+                <h2 class="section-title">直观的操作体验</h2>
+                <p class="section-description">简洁美观的界面设计，流畅的操作体验，让教学工作更加轻松愉悦。</p>
+            </div>
+            <div class="showcase-grid">
+                <div class="showcase-image">
+                    <img src="images/屏幕截图 2026-07-04 184314.png" alt="TeachSack界面" class="showcase-screenshot">
+                </div>
+                <ul class="showcase-list">
+                    <li class="showcase-item">
+                        <div class="showcase-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg>
+                        </div>
+                        <div class="showcase-content">
+                            <h3>流畅动画效果</h3>
+                            <p>精美的卡牌翻转动画，让点名过程更加生动有趣</p>
+                        </div>
+                    </li>
+                    <li class="showcase-item">
+                        <div class="showcase-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="13" height="9" rx="1.5"/><path d="M16 9h3v6h-3"/><path d="M6 17h7"/></svg>
+                        </div>
+                        <div class="showcase-content">
+                            <h3>多平台计划</h3>
+                            <p>目前支持 Windows，macOS 与 Linux 版本即将推出</p>
+                        </div>
+                    </li>
+                    <li class="showcase-item">
+                        <div class="showcase-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.5-1.5A3.5 3.5 0 0 1 17 18"/><path d="M12 12v6"/><path d="M9.5 14.5L12 17l2.5-2.5"/></svg>
+                        </div>
+                        <div class="showcase-content">
+                            <h3>数据自动备份</h3>
+                            <p>自动保存数据到本地，确保数据安全不丢失</p>
+                        </div>
+                    </li>
+                    <li class="showcase-item">
+                        <div class="showcase-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2 5.3"/><path d="M20 5v6h-6"/></svg>
+                        </div>
+                        <div class="showcase-content">
+                            <h3>一键数据重置</h3>
+                            <p>支持一键清空所有数据，保留激活状态，方便重新开始</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="download" id="download">
+        <div class="section-container">
+            <div class="download-card">
+                <div class="download-icon">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="M8 10l4 4 4-4"/><path d="M4 19h16"/></svg>
+                </div>
+                <h2 class="download-title">立即下载 TeachSack</h2>
+                <p class="download-description">免费下载使用，目前支持 Windows，macOS 与 Linux 版本即将推出，无广告干扰。</p>
+                
+                <div class="download-platforms">
+                    <div class="download-card-item">
+                        <div class="platform-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M3 9h18"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+                        </div>
+                        <div class="platform-info">
+                            <div class="platform-name">Windows</div>
+                            <div class="platform-version">v1.2.14</div>
+                        </div>
+                        <a href="https://gitee.com/qwezasxf/teaching-toolbox/releases/download/v1.2.14/Teach-Sack-Setup-1.2.14.exe" class="download-link-btn" target="_blank" rel="noopener">立即下载</a>
+                    </div>
+                    <div class="download-card-item coming-soon">
+                        <div class="platform-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M3 9h18"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+                        </div>
+                        <div class="platform-info">
+                            <div class="platform-name">macOS</div>
+                            <div class="platform-version">即将发布</div>
+                        </div>
+                        <span class="coming-soon-text">敬请期待</span>
+                    </div>
+                    <div class="download-card-item coming-soon">
+                        <div class="platform-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M3 9h18"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+                        </div>
+                        <div class="platform-info">
+                            <div class="platform-name">Linux</div>
+                            <div class="platform-version">即将发布</div>
+                        </div>
+                        <span class="coming-soon-text">敬请期待</span>
+                    </div>
+                </div>
+                
+                <p style="margin: 1rem 0 0; font-size: 0.85rem; color: var(--text-muted); text-align: center;">这是安装包：双击下载的文件完成安装，之后从桌面「Teach Sack」图标打开即可，无需再次安装。</p>
+                
+                <div class="direct-download-link">
+                    <p>直接下载链接：</p>
+                    <input type="text" value="https://gitee.com/qwezasxf/teaching-toolbox/releases/download/v1.2.14/Teach-Sack-Setup-1.2.14.exe" readonly id="download-url-input">
+                    <button onclick="copyDownloadUrl()">复制链接</button>
+                </div>
+                
+                <div class="download-warning">
+                    <div class="warning-icon">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l9 16H3z"/><path d="M12 10v4"/><path d="M12 17h.01"/></svg>
+                    </div>
+                    <div class="warning-content">
+                        <h4>Windows 下载提示</h4>
+                        <p>Windows 可能会显示"未知发布者"安全警告，这是正常现象。</p>
+                        <ol>
+                            <li>下载完成后，右键点击安装包</li>
+                            <li>选择保留</li>
+                            <li>弹出的选项卡中选择右下角的仍然保留即可</li>
+                        </ol>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">如有疑问，请联系我们：zayugu@zohomail.com</p>
+                    </div>
+                    <div class="warning-image">
+                        <img src="images/smartscreen-warning.png" alt="SmartScreen警告截图" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-subtitle">购买授权</span>
+                <h2 class="section-title">永久授权，一次购买终身使用</h2>
+                <p class="section-description">¥19.9 买断制，享受所有功能和后续更新</p>
+            </div>
+            <div class="pricing-card">
+                <div class="pricing-badge">限时特惠</div>
+                <div class="pricing-icon">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-4 9 4-9 4z"/><path d="M7 11v4c0 1 2.5 2.5 5 2.5s5-1.5 5-2.5v-4"/><path d="M21 9v5"/></svg>
+                </div>
+                <h3 class="pricing-title">永久授权版</h3>
+                <div class="pricing-price">
+                    <span class="pricing-currency">¥</span>
+                    <span class="pricing-amount">19.9</span>
+                </div>
+                <div class="pricing-features">
+                    <ul>
+                        <li>全部功能无限制使用</li>
+                        <li>终身免费更新</li>
+                        <li>支持多设备激活</li>
+                        <li>优先技术支持</li>
+                        <li>专属激活码</li>
+                    </ul>
+                </div>
+                <!-- TODO: 将下方 href 替换为你的发卡网商品链接（例如 https://你的发卡网域名/buy/xxxx） -->
+                <div class="payment-section">
+                    <div class="buy-card">
+                        <div class="buy-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.2 11h11l1.8-8H6"/></svg>
+                        </div>
+                        <h4 class="buy-title">购买后自动发货</h4>
+                        <p class="buy-desc">支付成功后，激活码将<strong>立即自动发放</strong>，无需等待、无需人工审核。</p>
+                        <a href="https://www.kufaka.com/item/cvg1lg" target="_blank" rel="noopener" class="buy-btn">立即购买 ¥19.9</a>
+                        <p class="buy-hint">通过发卡网完成支付，支持微信 / 支付宝等多种方式</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq" id="faq">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-subtitle">常见问题</span>
+                <h2 class="section-title">您可能想了解的问题</h2>
+                <p class="section-description">我们整理了用户最常见的问题，希望能帮助您更好地使用 TeachSack。</p>
+            </div>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>TeachSack 是免费的吗？</span>
+                        <span class="faq-arrow"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+                    </div>
+                    <div class="faq-answer">TeachSack 提供免费试用，新用户可获得一定次数的试用机会。试用期间可体验完整功能，无广告干扰。激活后可享受持续使用和技术支持服务。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>数据会上传到服务器吗？</span>
+                        <span class="faq-arrow"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+                    </div>
+                    <div class="faq-answer">不会，所有数据都存储在您的本地设备上，我们不会上传任何用户数据到服务器，确保您的数据隐私安全。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>如何获取激活码？</span>
+                        <span class="faq-arrow"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+                    </div>
+                    <div class="faq-answer">在"购买授权"区点击「立即购买 ¥19.9」进入发卡网完成支付，支付成功后激活码将<strong>立即自动发放</strong>到页面，复制即可在软件中激活。激活码为单设备绑定，仅限一台电脑使用；新用户也可先免费试用，体验完整功能。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>支持导入学生名单吗？</span>
+                        <span class="faq-arrow"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+                    </div>
+                    <div class="faq-answer">支持！您可以通过文本文件批量导入学生名单，系统会自动处理并去重，方便快捷。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>遇到问题如何反馈？</span>
+                        <span class="faq-arrow"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+                    </div>
+                    <div class="faq-answer">您可以通过官方网站、邮箱或社交媒体联系我们，我们会尽快回复并帮助您解决问题。</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <img src="images/teachsack-icon.svg" alt="TeachSack" class="footer-logo-icon" style="width: 32px; height: 32px; border-radius: 8px;">
+                    <span>TeachSack</span>
+                </div>
+                <p class="footer-description">让课堂更有趣，让教学更高效。专为教师打造的智能化教学辅助工具。</p>
+
+            </div>
+            <div>
+                <h4 class="footer-title">产品</h4>
+                <ul class="footer-links">
+                    <li><a href="#features">功能特性</a></li>
+                    <li><a href="#product-features">产品特色</a></li>
+                    <li><a href="#showcase">产品展示</a></li>
+                    <li><a href="#download">下载中心</a></li>
+                    <li><a href="#" onclick="showChangelog(); return false;">更新日志</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-title">支持</h4>
+                <ul class="footer-links">
+                    <li><a href="#faq">常见问题</a></li>
+                    <li><a href="#" onclick="showGuide(); return false;">使用指南</a></li>
+                    <li><a href="#" onclick="showSupport(); return false;">技术支持</a></li>
+                    <li><a href="#" onclick="showFeedback(); return false;">反馈建议</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-title">关于</h4>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="showAbout(); return false;">关于我们</a></li>
+                    <li><a href="#" onclick="showPrivacy(); return false;">隐私政策</a></li>
+                    <li><a href="#" onclick="showTerms(); return false;">用户协议</a></li>
+                    <li><a href="#" onclick="showContact(); return false;">联系我们</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-copyright">© 2026 TeachSack. 保留所有权利.</div>
+            <div>版本 v1.2.14</div>
+        </div>
+    </footer>
+
+    <script>
+        function downloadFile(url, filename, btn) {
+            const originalHTML = btn.innerHTML;
+            
+            btn.innerHTML = '<div class="platform-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v4"/><path d="M10 9l2 2 2-2"/><path d="M6 18h12"/></svg></div><div class="platform-info"><div class="platform-name">下载中...</div><div class="platform-version">请稍候</div></div>';
+            btn.style.opacity = '0.7';
+            btn.style.cursor = 'wait';
+            
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.responseType = 'blob';
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    const blob = new Blob([xhr.response], { type: 'application/octet-stream' });
+                    const downloadUrl = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = downloadUrl;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(downloadUrl);
+                    
+                    btn.innerHTML = '<div class="platform-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></div><div class="platform-info"><div class="platform-name">下载已开始</div><div class="platform-version">Windows</div></div>';
+                    setTimeout(() => {
+                        btn.innerHTML = originalHTML;
+                        btn.style.opacity = '1';
+                        btn.style.cursor = 'pointer';
+                    }, 2000);
+                } else {
+                    btn.innerHTML = '<div class="platform-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></div><div class="platform-info"><div class="platform-name">下载失败</div><div class="platform-version">请重试</div></div>';
+                    setTimeout(() => {
+                        btn.innerHTML = originalHTML;
+                        btn.style.opacity = '1';
+                        btn.style.cursor = 'pointer';
+                    }, 3000);
+                }
+            };
+            
+            xhr.onerror = function() {
+                btn.innerHTML = '<div class="platform-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></div><div class="platform-info"><div class="platform-name">下载失败</div><div class="platform-version">网络错误</div></div>';
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'pointer';
+                }, 3000);
+            };
+            
+            xhr.send();
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = 'position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #ff7a4d; color: #fff; padding: 1rem 2rem; border-radius: 14px; font-weight: 600; box-shadow: 0 12px 36px rgba(255, 122, 77, 0.40); z-index: 10000; animation: slideUp 0.3s ease, fadeOut 0.3s ease 2.5s forwards; text-align: center;';
+            toast.innerHTML = message;
+            document.body.appendChild(toast);
+            
+            const style = document.createElement('style');
+            style.textContent = '@keyframes slideUp { from { transform: translateX(-50%) translateY(50px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } } @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }';
+            document.head.appendChild(style);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        function copyDownloadUrl() {
+            const input = document.getElementById('download-url-input');
+            input.select();
+            document.execCommand('copy');
+            showToast('下载链接已复制到剪贴板');
+        }
+
+        function showGuide() {
+            const guideContent = `
+                <h3>使用指南</h3>
+                <p>TeachSack 是一款专为教师打造的智能化教学辅助工具。</p>
+                <ul style="text-align: left; margin: 1rem 0;">
+                    <li><strong>智能卡牌点名</strong>：点击点名按钮，系统会随机抽取一名学生，配合精美的卡牌动画效果。</li>
+                    <li><strong>成绩管理系统</strong>：支持成绩录入、统计分析、排名展示等功能。</li>
+                    <li><strong>课堂互动挑战</strong>：丰富的课堂挑战项目，激发学生的学习积极性。</li>
+                    <li><strong>学生名单管理</strong>：支持批量导入、导出学生名单，智能分组管理。</li>
+                    <li><strong>激活码系统</strong>：支持激活码验证、设备绑定、试用功能。</li>
+                    <li><strong>个性化主题</strong>：支持浅色和深色两种主题模式。</li>
+                </ul>
+                <p>更多详细教程请参考常见问题或联系技术支持。</p>
+            `;
+            showModal('使用指南', guideContent);
+        }
+
+        function showSupport() {
+            const supportContent = `
+                <h3>技术支持</h3>
+                <p>如果您在使用过程中遇到任何问题，可以通过以下方式获取帮助：</p>
+                <ul style="text-align: left; margin: 1rem 0;">
+                    <li><strong>常见问题</strong>：查看网站上的常见问题页面，可能已经有您需要的答案。</li>
+                    <li><strong>邮件支持</strong>：发送邮件到 zayugu@zohomail.com，我们会在24小时内回复。</li>
+                </ul>
+                <p>我们建议您先查看常见问题，大多数问题都能在那里找到答案。</p>
+            `;
+            showModal('技术支持', supportContent);
+        }
+
+        function showFeedback() {
+            const feedbackContent = `
+                <h3>反馈建议</h3>
+                <p>感谢您使用 TeachSack！我们非常重视您的反馈。</p>
+                <p>如果您有任何建议或意见，请发送邮件到：</p>
+                <p style="font-size: 1.2rem; font-weight: 600; margin: 1rem 0;">zayugu@zohomail.com</p>
+                <p>您的每一条反馈都对我们非常重要，帮助我们不断改进产品。</p>
+            `;
+            showModal('反馈建议', feedbackContent);
+        }
+
+        function showAbout() {
+            const aboutContent = `
+                <h3>关于 TeachSack</h3>
+                <p>TeachSack 是一款专为教师打造的智能化教学辅助工具，致力于让课堂更有趣，让教学更高效。</p>
+                <p><strong>愿景</strong>：成为最受教师喜爱的教学辅助工具</p>
+                <p><strong>使命</strong>：用技术赋能教育，让每一堂课都精彩</p>
+                <p><strong>价值观</strong>：创新、专注、用户至上</p>
+                <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">版本：v1.2.14</p>
+            `;
+            showModal('关于我们', aboutContent);
+        }
+
+        function showPrivacy() {
+            const privacyContent = `
+                <h3>隐私政策</h3>
+                <p>我们非常重视您的隐私。TeachSack 是一款本地应用，所有数据都存储在您的设备上。</p>
+                <ul style="text-align: left; margin: 1rem 0;">
+                    <li><strong>数据存储</strong>：所有数据（学生名单、成绩、设置等）仅存储在您的本地设备上，不会上传到任何服务器。</li>
+                    <li><strong>激活验证</strong>：激活码验证仅在本地进行，无需联网。</li>
+                    <li><strong>设备信息</strong>：为了实现设备绑定功能，我们会收集设备的硬件信息用于生成唯一的设备 ID。</li>
+                    <li><strong>数据安全</strong>：您的数据完全由您控制，您可以随时导出或删除所有数据。</li>
+                </ul>
+                <p>我们承诺不会收集、存储或传输任何个人身份信息。</p>
+            `;
+            showModal('隐私政策', privacyContent);
+        }
+
+        function showTerms() {
+            const termsContent = `
+                <h3>用户协议</h3>
+                <p>欢迎使用 TeachSack！请仔细阅读以下用户协议。</p>
+                <ul style="text-align: left; margin: 1rem 0;">
+                    <li><strong>授权使用</strong>：TeachSack 提供免费试用，激活后可享受持续使用权限。</li>
+                    <li><strong>激活码</strong>：每个激活码仅适用于一台设备，不得转让或分享。</li>
+                    <li><strong>软件修改</strong>：未经授权，不得修改、复制或分发 TeachSack 软件。</li>
+                    <li><strong>免责声明</strong>：TeachSack 仅供教学辅助使用，对于因使用本软件造成的任何损失，我们不承担责任。</li>
+                    <li><strong>协议更新</strong>：我们保留随时更新本协议的权利，更新后会通过软件通知用户。</li>
+                </ul>
+                <p>使用本软件即表示您同意以上条款。</p>
+            `;
+            showModal('用户协议', termsContent);
+        }
+
+        function showChangelog() {
+            const changelogContent = `
+                <h3>更新日志</h3>
+                <div style="text-align: left; margin: 1rem 0;">
+                    <p><strong>v1.2.14</strong> (2026-07-12)</p>
+                    <ul style="margin-left: 1.5rem;">
+                        <li>界面整体更简洁克制，减少光晕和装饰效果</li>
+                        <li>顶部按钮和太阳图标放大、线条加粗，暗色下也清晰可辨</li>
+                        <li>工具卡片动画更自然，配色更统一；浅色模式计时器跟随主题变化</li>
+                    </ul>
+                    <p><strong>v1.2.13</strong> (2026-07-12)</p>
+                    <ul style="margin-left: 1.5rem;">
+                        <li>授权管理新增「获取激活码」入口，一键跳转购买页</li>
+                        <li>授权管理新增「如何获取激活码」引导弹窗，手把手教用户购买与激活</li>
+                        <li>更新日志容器改用暗色自定义滚动条</li>
+                        <li>浅色主题金色文字对比度修复，达到 WCAG AA 无障碍标准</li>
+                        <li>明暗主题品牌色统一对齐，按钮组件收口</li>
+                    </ul>
+                    <p><strong>v1.2.12</strong> (2026-07-12)</p>
+                    <ul style="margin-left: 1.5rem;">
+                        <li>试用次数防重置加固：新增「用尽锚点」，重置数据也无法清零试用次数</li>
+                        <li>修复隐藏的试用次数重置后门接口</li>
+                        <li>应用内新增更新日志：每次更新自动弹窗，并在「关于」页常驻展示</li>
+                    </ul>
+                    <p><strong>v1.2.11</strong> (2026-07-11)</p>
+                    <ul style="margin-left: 1.5rem;">
+                        <li>反馈提交优化：显示真实发送成功/失败提示，编码声明 UTF-8 提升稳定性</li>
+                    </ul>
+                    <p><strong>v1.2.10</strong> (2026-07-11)</p>
+                    <ul style="margin-left: 1.5rem;">
+                        <li>设置页「关于」优化：新增职责分工展示，界面信息更清晰</li>
+                        <li>精简意见反馈入口，操作更聚焦</li>
+                    </ul>
+                    <p><strong>v1.2.9</strong> (2026-07-11)</p>
+                    <ul style="margin-left: 1.5rem;">
+                        <li>修复设置页「关于」版本号仍显示旧版的问题，现已正确显示当前版本</li>
+                    </ul>
+                    <p><strong>v1.2.8</strong> (2026-07-11)</p>
+                    <ul style="margin-left: 1.5rem;">
+                        <li>安装体验优化：改为向导式安装，并在桌面创建「Teach Sack」快捷方式、装完自动启动</li>
+                        <li>官网下载区新增安装引导提示，避免重复双击安装包</li>
+                    </ul>
+                    <p><strong>v1.2.7</strong> (2026-07-11)</p>
+                    <ul style="margin-left: 1.5rem;">
+                        <li>自动更新统一为固定 latest 目录：已装的 1.2.4/1.2.5/1.2.6 用户均可无缝自动升级到最新版</li>
+                        <li>根治激活码逻辑：彻底修复同设备可重复激活漏洞</li>
+                        <li>新增「一设备一码」绑定，防止激活码被多机盗用</li>
+                        <li>激活码双密钥兼容：历史已发激活码（含多生成器产出的码）均可正常激活</li>
+                    </ul>
+                    <p><strong>v1.2.4</strong> (2026-07-03)</p>
+                    <ul style="margin-left: 1.5rem;">
+                        <li>修复重置数据功能，确保学生名单被清空</li>
+                        <li>优化数据保存和加载逻辑</li>
+                        <li>修复激活码状态丢失问题</li>
+                        <li>改进初始化顺序控制</li>
+                        <li>优化官网下载按钮功能</li>
+                    </ul>
+                    <p style="margin-top: 1rem;"><strong>v1.2.3</strong> (2026-06-28)</p>
+                    <ul style="margin-left: 1.5rem;">
+                        <li>新增智能卡牌点名功能</li>
+                        <li>新增成绩管理系统</li>
+                        <li>新增课堂互动挑战</li>
+                        <li>新增学生名单管理</li>
+                        <li>新增激活码验证系统</li>
+                    </ul>
+                    <p style="margin-top: 1rem;"><strong>v1.0.0</strong> (2026-06-01)</p>
+                    <ul style="margin-left: 1.5rem;">
+                        <li>初始版本发布</li>
+                        <li>基础功能开发完成</li>
+                    </ul>
+                </div>
+            `;
+            showModal('更新日志', changelogContent);
+        }
+
+        function showContact() {
+            const contactContent = `
+                <h3>联系我们</h3>
+                <p>感谢您使用 TeachSack！如有任何问题或建议，欢迎联系我们。</p>
+                <p><strong>邮箱地址</strong></p>
+                <p style="font-size: 1.1rem; margin: 1rem 0;">zayugu@zohomail.com</p>
+                <p>我们会在24小时内回复您的邮件。</p>
+            `;
+            showModal('联系我们', contactContent);
+        }
+
+        function showModal(title, content) {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(31, 35, 48, 0.45); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; z-index: 10000; animation: fadeIn 0.3s ease;';
+            
+            const modalContent = document.createElement('div');
+            modalContent.className = 'modal-content';
+            modalContent.style.cssText = 'background: #ffffff; border: 1.5px solid #ff7a4d; border-radius: 22px; padding: 2.5rem; max-width: 500px; width: 90%; text-align: center; color: #1f2330; box-shadow: 0 24px 60px rgba(60,50,30,0.22); animation: scaleIn 0.3s ease;';
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.textContent = '关闭';
+            closeBtn.style.cssText = 'margin-top: 2rem; padding: 0.75rem 2rem; border-radius: 14px; border: none; background: #ff7a4d; color: #fff; font-weight: 600; cursor: pointer; transition: background 0.3s ease;';
+            closeBtn.onclick = function() {
+                modal.remove();
+            };
+            
+            modalContent.innerHTML = `
+                <h2 style="margin-bottom: 1.5rem;">${title}</h2>
+                <div style="color: var(--text-secondary); line-height: 1.8;">${content}</div>
+            `;
+            modalContent.appendChild(closeBtn);
+            
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+            
+            const style = document.createElement('style');
+            style.textContent = '@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } } @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }';
+            document.head.appendChild(style);
+        }
+
+        const faqItems = document.querySelectorAll('.faq-item');
+        
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                item.classList.toggle('active');
+            });
+        });
+
+        const navLinks = document.querySelectorAll('nav a[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        window.downloadWindows = function() {
+            showToast('正在开始 Windows 版本下载...');
+            const btn = document.getElementById('btn-windows');
+            const originalHTML = btn.innerHTML;
+            
+            btn.innerHTML = `<div class="platform-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v4"/><path d="M10 9l2 2 2-2"/><path d="M6 18h12"/></svg></div><div class="platform-info"><div class="platform-name">下载中...</div><div class="platform-version">请稍候</div></div>`;
+            btn.style.opacity = '0.7';
+            btn.style.cursor = 'wait';
+            
+            setTimeout(() => {
+                window.open('https://gitee.com/qwezasxf/teaching-toolbox/releases/download/v1.2.14/Teach-Sack-Setup-1.2.14.exe', '_blank');
+                btn.innerHTML = `<div class="platform-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></div><div class="platform-info"><div class="platform-name">下载已开始</div><div class="platform-version">Windows</div></div>`;
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'pointer';
+                }, 2000);
+            }, 500);
+        };
+
+        window.downloadMacOS = function() {
+            showToast('macOS 版本即将发布，敬请期待！');
+        };
+
+        window.downloadLinux = function() {
+            showToast('Linux 版本即将发布，敬请期待！');
+        };
+
+
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideUp {
+                from { transform: translateX(-50%) translateY(50px); opacity: 0; }
+                to { transform: translateX(-50%) translateY(0); opacity: 1; }
+            }
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        /* ===== 动态着色器背景：sphere 球体光晕风格（原生 WebGL，零依赖，无外部 CDN）===== */
+        (function initShaderBackground() {
+            const canvas = document.getElementById('shader-bg');
+            if (!canvas) return;
+            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            if (!gl) { canvas.style.display = 'none'; return; } // 不支持则回退到静态光斑
+
+            const vsSrc = `
+                attribute vec2 a_pos;
+                void main() { gl_Position = vec4(a_pos, 0.0, 1.0); }
+            `;
+            const fsSrc = `
+                precision highp float;
+                uniform float u_time;
+                uniform vec2 u_res;
+                float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+                float noise(vec2 p){
+                    vec2 i = floor(p), f = fract(p);
+                    vec2 u = f * f * (3.0 - 2.0 * f);
+                    return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x),
+                               mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
+                }
+                float fbm(vec2 p){
+                    float v = 0.0, a = 0.5;
+                    for (int i = 0; i < 5; i++) { v += a * noise(p); p *= 2.0; a *= 0.5; }
+                    return v;
+                }
+                // 极光帘幕：把彩色光带 mix 进背景，避免 additive 过曝
+                vec3 auroraCurtain(vec2 uv, float t, float seed, vec3 colA, vec3 colB){
+                    float warp = fbm(vec2(uv.x * 2.0 + seed, t * 0.15 + seed * 3.0));
+                    float center = 0.48 + warp * 0.36 + 0.20 * sin(uv.x * 1.8 + t * 0.40 + seed);
+                    float d = abs(uv.y - center);
+                    float band = smoothstep(0.26, 0.0, d);
+                    // 垂直光丝流动
+                    float rays = fbm(vec2(uv.x * 24.0 + seed * 7.0, uv.y * 5.0 - t * 0.7));
+                    band *= 0.35 + 0.65 * rays;
+                    // 颜色流动
+                    float mixV = 0.5 + 0.5 * sin(uv.x * 2.4 + t * 0.5 + seed);
+                    vec3 col = mix(colA, colB, mixV);
+                    col *= 1.25; // 提亮
+                    return col * band;
+                }
+                // 漂浮光尘（梦幻感）
+                float dust(vec2 uv, float t, float aspect){
+                    float acc = 0.0;
+                    for (int l = 0; l < 3; l++){
+                        float fl = float(l);
+                        vec2 gp = uv * (9.0 + fl * 5.0);
+                        gp.x *= aspect;
+                        gp += vec2(t * (0.04 + fl * 0.018), t * 0.025 * (1.0 + fl * 0.3));
+                        vec2 cell = floor(gp);
+                        vec2 f = fract(gp) - 0.5;
+                        vec2 jit = vec2(hash(cell + fl * 13.0), hash(cell + fl * 31.0)) - 0.5;
+                        float d = length(f - jit * 0.55);
+                        float tw = 0.5 + 0.5 * sin(t * (0.8 + fl * 0.4) + hash(cell + fl) * 6.2831);
+                        acc += smoothstep(0.16, 0.0, d) * tw * (0.14 / (1.0 + fl));
+                    }
+                    return acc;
+                }
+                void main(){
+                    vec2 uv = gl_FragCoord.xy / u_res;
+                    float aspect = u_res.x / u_res.y;
+                    float t = u_time * 0.60;
+
+                    vec3 coral = vec3(1.0, 0.40, 0.22);   // 浓珊瑚
+                    vec3 lilac = vec3(0.62, 0.50, 1.0);  // 浓淡紫
+                    vec3 sky   = vec3(0.40, 0.65, 1.0);  // 亮天蓝
+                    vec3 slate = vec3(0.38, 0.42, 0.50);
+
+                    // 1. 浅冷灰底，不要太白，让极光能被看见
+                    vec3 base = vec3(0.86, 0.88, 0.93);
+                    base = mix(base, slate, 0.08 * fbm(uv * 2.0 + vec2(t * 0.1, t * 0.05)));
+                    vec3 col = base;
+
+                    // 2. 三层极光帘幕，用 mix 强混合（避免 additive 过曝）
+                    vec3 a1 = auroraCurtain(uv, t, 0.0, coral, lilac);
+                    col = mix(col, a1, clamp(a1, vec3(0.0), vec3(1.0)).x * 0.85);
+                    vec3 a2 = auroraCurtain(uv, t, 14.3, lilac, sky);
+                    col = mix(col, a2, clamp(a2, vec3(0.0), vec3(1.0)).x * 0.70);
+                    vec3 a3 = auroraCurtain(uv, t, 28.7, coral, sky);
+                    col = mix(col, a3, clamp(a3, vec3(0.0), vec3(1.0)).x * 0.55);
+
+                    // 3. 漂浮光尘
+                    float d2 = dust(uv, t, aspect);
+                    col += (coral * 0.5 + sky * 0.5 + vec3(0.9)) * d2 * 0.6;
+
+                    // 4. 柔和暗角
+                    float vignette = smoothstep(1.25, 0.5, length((uv - 0.5) * 1.6));
+                    col = mix(col * 0.92, col, vignette);
+
+                    gl_FragColor = vec4(col, 1.0);
+                }
+            `;
+
+            function compile(type, src) {
+                const s = gl.createShader(type);
+                gl.shaderSource(s, src);
+                gl.compileShader(s);
+                if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+                    console.warn('Shader compile error:', gl.getShaderInfoLog(s));
+                    return null;
+                }
+                return s;
+            }
+            const vs = compile(gl.VERTEX_SHADER, vsSrc);
+            const fs = compile(gl.FRAGMENT_SHADER, fsSrc);
+            if (!vs || !fs) { canvas.style.display = 'none'; return; }
+            const prog = gl.createProgram();
+            gl.attachShader(prog, vs);
+            gl.attachShader(prog, fs);
+            gl.linkProgram(prog);
+            if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { canvas.style.display = 'none'; return; }
+            gl.useProgram(prog);
+
+            const buf = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+            const loc = gl.getAttribLocation(prog, 'a_pos');
+            gl.enableVertexAttribArray(loc);
+            gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+            const uTime = gl.getUniformLocation(prog, 'u_time');
+            const uRes = gl.getUniformLocation(prog, 'u_res');
+
+            function resize() {
+                // 降低内部分辨率保证性能，配合 CSS blur 仍显柔和
+                const q = 0.45;
+                const w = Math.max(1, Math.floor(window.innerWidth * q));
+                const h = Math.max(1, Math.floor(window.innerHeight * q));
+                canvas.width = w;
+                canvas.height = h;
+                gl.viewport(0, 0, w, h);
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            let raf = null, last = 0, elapsed = 0;
+            function render(now) {
+                if (!last) last = now;
+                elapsed += (now - last) / 1000;
+                last = now;
+                gl.uniform1f(uTime, elapsed);
+                gl.uniform2f(uRes, canvas.width, canvas.height);
+                gl.drawArrays(gl.TRIANGLES, 0, 3);
+                raf = requestAnimationFrame(render);
+            }
+            // 页面不可见时暂停，省电省 GPU
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    if (raf) cancelAnimationFrame(raf);
+                    raf = null;
+                } else if (!raf) {
+                    last = 0;
+                    raf = requestAnimationFrame(render);
+                }
+            });
+            raf = requestAnimationFrame(render);
+        })();
+    </script>
+</body>
+</html>

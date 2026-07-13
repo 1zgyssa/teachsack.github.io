@@ -1,0 +1,11 @@
+{
+  "name": "teachsack-api",
+  "version": "1.5.0",
+  "description": "TeachSack License Validation API",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {}
+}
