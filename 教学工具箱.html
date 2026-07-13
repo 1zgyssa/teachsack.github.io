@@ -5240,6 +5240,11 @@
                 clearInterval(focusInterval);
                 focusInterval = null;
             }
+            // 取消仍在排队的防抖异步保存，避免与下方同步落盘竞态
+            if (window.__appAutosaveTimer) {
+                clearTimeout(window.__appAutosaveTimer);
+                window.__appAutosaveTimer = null;
+            }
             // 退出前把当前会话数据同步落盘，确保本次运行新增/修改的数据在重启后依然保留
             try {
                 if (window.electronAPI && window.electronAPI.saveDataFileSync && typeof gatherBackupData === 'function') {
@@ -6000,6 +6005,40 @@
             }
             return backupData;
         }
+
+        // ========== 运行时防抖自动保存（防崩溃 / 强杀 / 断电导致中途数据丢失）==========
+        // 任意 localStorage 写入都会触发 ~1.2s 防抖落盘；beforeunload 再同步兜底一次
+        function scheduleAppAutosave() {
+            if (!window.electronAPI || !window.electronAPI.saveDataFile) return;
+            if (window.__appAutosaveTimer) clearTimeout(window.__appAutosaveTimer);
+            window.__appAutosaveTimer = setTimeout(() => {
+                window.__appAutosaveTimer = null;
+                try {
+                    const data = gatherBackupData();
+                    if (data && data.data && Object.keys(data.data).length > 0) {
+                        window.electronAPI.saveDataFile(data);
+                    }
+                } catch (e) {
+                    console.error('自动保存失败:', e);
+                }
+            }, 1200);
+        }
+
+        // 劫持 localStorage.setItem / removeItem，使任意写入都触发自动保存
+        (function installAutosave() {
+            const _setItem = Storage.prototype.setItem;
+            const _removeItem = Storage.prototype.removeItem;
+            Storage.prototype.setItem = function() {
+                const r = _setItem.apply(this, arguments);
+                if (this === localStorage) scheduleAppAutosave();
+                return r;
+            };
+            Storage.prototype.removeItem = function() {
+                const r = _removeItem.apply(this, arguments);
+                if (this === localStorage) scheduleAppAutosave();
+                return r;
+            };
+        })();
 
         const DataBackupModule = (function() {
 
