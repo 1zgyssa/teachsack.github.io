@@ -104,49 +104,8 @@
             font-weight: 400;
         }
 
-        /* ===== 排版惊艳升级：巨幅镂空背景字 / 关键词马克笔 / 字阶层级 + Eyebrow ===== */
-        /* ① 巨幅镂空背景字：Hero 主标题背后的品牌水印，居中 + 左右渐隐，参考居中水印式大 logo */
-        .hero-outline {
-            position: absolute;
-            top: 44%;
-            left: 0;
-            right: 0;
-            width: 100%;
-            transform: translateY(-50%);
-            text-align: center;
-            font-family: 'Baloo 2', 'ZCOOL KuaiLe', sans-serif;
-            font-weight: 800;
-            font-size: clamp(4.5rem, 13vw, 9.5rem);
-            line-height: 0.85;
-            letter-spacing: -0.03em;
-            color: transparent;
-            -webkit-text-stroke: 1.5px rgba(43, 196, 224, 0.15);
-            text-stroke: 1.5px rgba(43, 196, 224, 0.15);
-            white-space: nowrap;
-            pointer-events: none;
-            user-select: none;
-            z-index: 0;
-            -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.85) 10%, rgba(0,0,0,0.85) 90%, transparent 100%);
-            mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.85) 10%, rgba(0,0,0,0.85) 90%, transparent 100%);
-        }
-        @media (max-width: 768px) {
-            .hero-outline { font-size: 3.8rem; top: 46%; opacity: 0.65; }
-        }
-
-        /* ② 关键词马克笔高亮：仿手绘荧光笔，单色珊瑚克制 */
-        .marker {
-            background: linear-gradient(104deg, rgba(237,132,114,0) 0.9%, rgba(237,132,114,0.55) 2.4%, rgba(237,132,114,0.45) 95%, rgba(237,132,114,0) 99%);
-            background-repeat: no-repeat;
-            background-size: 100% 0.62em;
-            background-position: 0 88%;
-            border-radius: 3px;
-            padding: 0 0.08em;
-            box-sizing: border-box;
-            -webkit-box-decoration-break: clone;
-            box-decoration-break: clone;
-        }
-
-        /* ③ Eyebrow 小标签：编辑式短横线 + 宽字距，替代原本药丸徽标 */
+        /* ===== 排版：字阶层级 + Eyebrow 小标签 ===== */
+        /* Eyebrow 小标签：编辑式短横线 + 宽字距 */
         .section-subtitle {
             display: inline-flex;
             align-items: center;
@@ -1752,38 +1711,6 @@
     .download-card, .pricing-card,
     .download-link-btn, .buy-btn {
         position: relative; overflow: hidden;
-    }
-    .download-card::after,
-    .pricing-card::after, .download-link-btn::after, .buy-btn::after {
-        content: ""; position: absolute; top: 0; left: -160%;
-        width: 60%; height: 100%;
-        background: linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%);
-        transform: skewX(-18deg); pointer-events: none; opacity: 0;
-    }
-    .download-card:hover::after,
-    .pricing-card:hover::after, .download-link-btn:hover::after, .buy-btn:hover::after {
-        animation: shimmerSweep 0.85s ease forwards;
-    }
-    /* 功能卡片：聚光灯跟随鼠标（交互反馈，不碰 transform，不与 GSAP 视差冲突） */
-    .feature-card::after {
-        content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0;
-        background: radial-gradient(200px circle at var(--mx,50%) var(--my,30%), rgba(43,196,224,0.28), rgba(43,196,224,0.08) 38%, transparent 62%);
-        transition: opacity 0.35s ease;
-        z-index: 1;
-    }
-    .feature-card:hover::after { opacity: 1; }
-    /* 产品展示卡：同样的聚光灯跟随鼠标，手感与功能卡统一 */
-    .showcase-image::after {
-        content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0;
-        background: radial-gradient(220px circle at var(--mx,50%) var(--my,40%), rgba(43,196,224,0.30), rgba(43,196,224,0.08) 38%, transparent 62%);
-        transition: opacity 0.35s ease;
-        z-index: 2;
-    }
-    .showcase-image:hover::after { opacity: 1; }
-    @keyframes shimmerSweep {
-        0% { left: -160%; opacity: 0; }
-        20% { opacity: 1; }
-        100% { left: 160%; opacity: 0; }
     }
     /* 体验动画 C：全局滚动进度条 */
     #scroll-progress {
@@ -10962,12 +10889,11 @@ camera-controls/dist/camera-controls.module.js:
     </nav>
 
     <section class="hero" id="home">
-        <div class="hero-outline" aria-hidden="true">TeachSack</div>
         <div class="hero-content">
             <div class="hero-text">
                 <span class="hero-subtitle">v1.2.14 全新版本</span>
                 <h1 class="hero-title" id="hero-title-mount"></h1>
-                <p class="hero-description reveal">专为教师打造的<span class="marker">智能教学工具箱</span>，让<span class="marker">点名、出卷与课堂互动</span>变得轻松有趣。</p>
+                <p class="hero-description reveal">专为教师打造的智能教学工具箱，让点名、出卷与课堂互动变得轻松有趣。</p>
                 <div class="hero-buttons reveal">
                     <span id="hero-cta-mount" class="hero-cta-mount"></span>
                     <a href="#features" class="secondary-btn">
@@ -10984,7 +10910,7 @@ camera-controls/dist/camera-controls.module.js:
             <div class="section-header reveal">
                 <span class="section-subtitle">核心功能</span>
                 <h2 class="section-title">强大的教学辅助工具</h2>
-                <p class="section-description">TeachSack 提供全方位的<span class="marker">教学辅助</span>功能，帮助教师轻松管理课堂，提升教学效率。</p>
+                <p class="section-description">TeachSack 提供全方位的教学辅助功能，帮助教师轻松管理课堂，提升教学效率。</p>
                 <div class="fx-progress"><span></span></div>
             </div>
             <div class="features-grid reveal-stagger">
@@ -11039,7 +10965,7 @@ camera-controls/dist/camera-controls.module.js:
             <div class="section-header reveal">
                 <span class="section-subtitle">产品特色</span>
                 <h2 class="section-title">为什么选择 TeachSack</h2>
-                <p class="section-description">TeachSack 致力于为教师提供<span class="marker">最优质</span>的教学辅助体验。</p>
+                <p class="section-description">TeachSack 致力于为教师提供最优质的教学辅助体验。</p>
             </div>
             <div class="product-banner reveal-stagger">
                 <div class="product-point reveal">
@@ -11072,7 +10998,7 @@ camera-controls/dist/camera-controls.module.js:
             <div class="section-header reveal">
                 <span class="section-subtitle">产品展示</span>
                 <h2 class="section-title">直观的操作体验</h2>
-                <p class="section-description">简洁美观的界面设计，流畅的操作体验，让教学工作更加<span class="marker">轻松愉悦</span>。</p>
+                <p class="section-description">简洁美观的界面设计，流畅的操作体验，让教学工作更加轻松愉悦。</p>
             </div>
             <div class="showcase-grid reveal">
                 <div class="showcase-image reveal">
@@ -11127,7 +11053,7 @@ camera-controls/dist/camera-controls.module.js:
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="M8 10l4 4 4-4"/><path d="M4 19h16"/></svg>
                 </div>
                 <h2 class="download-title">立即下载 TeachSack</h2>
-                <p class="download-description">免费下载使用，目前支持 Windows，macOS 与 Linux 版本即将推出，<span class="marker">无广告</span>干扰。</p>
+                <p class="download-description">免费下载使用，目前支持 Windows，macOS 与 Linux 版本即将推出，无广告干扰。</p>
                 
                 <div class="download-platforms">
                     <div class="download-card-item">
@@ -11197,7 +11123,7 @@ camera-controls/dist/camera-controls.module.js:
             <div class="section-header reveal">
                 <span class="section-subtitle">购买授权</span>
                 <h2 class="section-title">永久授权，一次购买终身使用</h2>
-                <p class="section-description">¥19.9 <span class="marker">买断制</span>，享受所有功能和后续更新</p>
+                <p class="section-description">¥19.9 买断制，享受所有功能和后续更新</p>
             </div>
             <div class="pricing-card reveal">
                 <div class="pricing-badge">限时特惠</div>
@@ -11738,22 +11664,6 @@ camera-controls/dist/camera-controls.module.js:
             }, { passive: true });
             window.addEventListener('resize', update);
             update();
-        })();
-
-        /* 功能卡片：聚光灯跟随鼠标（交互反馈） */
-        (function () {
-            const cards = document.querySelectorAll('.feature-card, .showcase-image');
-            cards.forEach(function (card) {
-                card.addEventListener('mousemove', function (e) {
-                    const r = card.getBoundingClientRect();
-                    card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
-                    card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
-                });
-                card.addEventListener('mouseleave', function () {
-                    card.style.setProperty('--mx', '50%');
-                    card.style.setProperty('--my', '30%');
-                });
-            });
         })();
 
     </script>
