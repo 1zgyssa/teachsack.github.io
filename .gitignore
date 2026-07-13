@@ -56,3 +56,15 @@ data/
 .env
 .env.local
 .env.*.local
+
+# ===== Agent 内部产物（绝不入库，仅留本地磁盘）=====
+.workbuddy/
+.wrangler/
+tmp/
+_cleanup_backup/
+.impeccable.md
+__verify_final.js
+_css_check7.py
+_css_out7.txt
+server-deploy
+BACKEND_UNIFICATION.md
