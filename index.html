@@ -126,7 +126,7 @@
             height: 100%;
             z-index: -2;
             pointer-events: none;
-            filter: blur(20px) saturate(120%);
+            filter: blur(13px) saturate(125%);
             opacity: 0.95;
         }
 
@@ -2335,13 +2335,15 @@
                     for (int i = 0; i < 5; i++) { v += a * noise(p); p *= 2.0; a *= 0.5; }
                     return v;
                 }
-                // 带光照、Fresnel 边缘发光、高光呼吸的发光球体
-                vec4 ballShade(vec2 uv, vec2 center, float radius, float aspect, vec3 baseCol, float tLocal){
+                // 带光照、Fresnel 边缘发光、高光呼吸、外层辉光的发光球体
+                vec4 ballShade(vec2 uv, vec2 center, float radius, float aspect, vec3 baseCol, float tLocal, out vec3 glow){
                     vec2 d = (uv - center);
                     d.x *= aspect;
                     float dist = length(d) / radius;
                     float edge = (fbm(uv * 3.5 + tLocal * 0.3) - 0.5) * 0.18;
-                    float mask = smoothstep(1.0, 0.12, dist + edge);
+                    float body = smoothstep(1.0, 0.12, dist + edge);
+                    // 外层柔光晕（梦幻辉光）
+                    glow = baseCol * smoothstep(1.7, 0.9, dist + edge) * 0.45;
                     float r = clamp(dist, 0.0, 1.0);
                     float z = sqrt(1.0 - r * r);
                     vec2 nxy = d / max(dist, 0.0001);
@@ -2355,47 +2357,74 @@
                     // 高光随时间缓慢游走
                     float pulse = 0.88 + 0.12 * sin(tLocal * 1.3);
                     vec3 shaded = baseCol * (0.22 + 0.95 * diff * pulse + 0.45 * rim) + vec3(spec) * 0.32;
-                    return vec4(shaded, mask);
+                    return vec4(shaded, body);
+                }
+                // 漂浮光尘（梦幻感）
+                float dust(vec2 uv, float t, float aspect){
+                    float acc = 0.0;
+                    for (int l = 0; l < 3; l++){
+                        float fl = float(l);
+                        vec2 gp = uv * (9.0 + fl * 5.0);
+                        gp.x *= aspect;
+                        gp += vec2(t * (0.04 + fl * 0.018), t * 0.025 * (1.0 + fl * 0.3));
+                        vec2 cell = floor(gp);
+                        vec2 f = fract(gp) - 0.5;
+                        vec2 jit = vec2(hash(cell + fl * 13.0), hash(cell + fl * 31.0)) - 0.5;
+                        float d = length(f - jit * 0.55);
+                        float tw = 0.5 + 0.5 * sin(t * (0.8 + fl * 0.4) + hash(cell + fl) * 6.2831);
+                        acc += smoothstep(0.16, 0.0, d) * tw * (0.10 / (1.0 + fl));
+                    }
+                    return acc;
                 }
                 void main(){
                     vec2 uv = gl_FragCoord.xy / u_res;
                     float aspect = u_res.x / u_res.y;
-                    float t = u_time * 0.45;
+                    float t = u_time * 0.42;
 
                     vec3 white = vec3(0.972, 0.976, 0.990);
                     vec3 coral = vec3(1.0, 0.46, 0.29);
                     vec3 slate = vec3(0.40, 0.43, 0.49);
 
-                    // 背景：极淡冷灰流动，让整体有呼吸感
-                    float bgBreathe = 0.5 + 0.5 * sin(t * 0.2 + uv.x * 2.5);
-                    vec3 col = mix(white, slate, 0.07 * bgBreathe + 0.03 * fbm(uv * 2.0 + t * 0.15));
+                    // 背景：流动极光（梦幻柔彩）
+                    float aur1 = fbm(uv * 1.6 + vec2(t * 0.05, t * 0.03));
+                    float aur2 = fbm(uv * 2.2 - vec2(t * 0.04, t * 0.06) + 5.0);
+                    vec3 col = white;
+                    col = mix(col, coral, 0.05 * smoothstep(0.4, 0.9, aur1));
+                    col = mix(col, slate, 0.045 * smoothstep(0.4, 0.9, aur2));
 
-                    // 主球：珊瑚，偏左下，大幅移动 + 呼吸半径
+                    // 主球 + 外层辉光
                     vec2 c1 = vec2(0.32, 0.62);
                     c1.x += 0.14 * sin(t * 0.55);
                     c1.y += 0.11 * cos(t * 0.45);
                     float R1 = 0.50 + 0.05 * sin(t * 0.70);
-                    vec4 b1 = ballShade(uv, c1, R1, aspect, coral, t);
+                    vec3 g1; vec4 b1 = ballShade(uv, c1, R1, aspect, coral, t, g1);
 
                     // 辅球：板岩灰，右上，较小
                     vec2 c2 = vec2(0.80, 0.30);
                     c2.x += 0.10 * cos(t * 0.40);
                     c2.y += 0.08 * sin(t * 0.55);
                     float R2 = 0.32 + 0.03 * cos(t * 0.60);
-                    vec4 b2 = ballShade(uv, c2, R2, aspect, slate, t + 2.0);
+                    vec3 g2; vec4 b2 = ballShade(uv, c2, R2, aspect, slate, t + 2.0, g2);
 
-                    // 小卫星球：珊瑚亮色，围绕主球缓慢公转，增加灵动感
+                    // 小卫星球：珊瑚亮色，围绕主球缓慢公转
                     float orbit = t * 0.35;
                     vec2 c3 = c1 + vec2(0.62 * cos(orbit), 0.62 * sin(orbit) * 0.6);
-                    vec4 b3 = ballShade(uv, c3, 0.14, aspect, coral * 1.15, t + 4.0);
+                    vec3 g3; vec4 b3 = ballShade(uv, c3, 0.14, aspect, coral * 1.15, t + 4.0, g3);
 
-                    // 混合
+                    // 叠加外层辉光
+                    col += g1 * 0.9 + g2 * 0.7 + g3 * 0.8;
+
+                    // 混合球体本体
                     col = mix(col, b1.rgb, b1.a * 0.92);
                     col = mix(col, b2.rgb, b2.a * 0.60);
                     col = mix(col, b3.rgb, b3.a * 0.80);
 
+                    // 漂浮光尘
+                    float d2 = dust(uv, t, aspect);
+                    col += (coral * 0.5 + vec3(1.0)) * d2 * 0.5;
+
                     // 整体保持浅调，融入冷白主题
-                    col = mix(white, col, 0.95);
+                    col = mix(white, col, 0.90);
                     gl_FragColor = vec4(col, 1.0);
                 }
             `;
