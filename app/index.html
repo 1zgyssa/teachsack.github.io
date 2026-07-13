@@ -432,9 +432,14 @@
 
         .feature-card:hover {
             transform: translateY(-4px);
-            border-color: rgba(92, 100, 112, 0.40);
+            border-color: rgba(43, 196, 224, 0.55);
             background: var(--panel-strong);
             box-shadow: var(--shadow-card-hover);
+        }
+        .feature-card:hover .feature-icon {
+            color: #2bc4e0;
+            background: rgba(43, 196, 224, 0.14);
+            transform: translateY(-3px) scale(1.06);
         }
 
         .feature-icon {
@@ -447,6 +452,7 @@
             justify-content: center;
             background: var(--indigo-soft);
             margin-bottom: 1.7rem;
+            transition: transform 0.3s var(--ease), color 0.3s ease, background 0.3s ease;
         }
 
         .feature-icon .icon {
@@ -1671,6 +1677,14 @@
     .pricing-card:hover::after, .download-link-btn:hover::after, .buy-btn:hover::after {
         animation: shimmerSweep 0.85s ease forwards;
     }
+    /* 功能卡片：聚光灯跟随鼠标（交互反馈，不碰 transform，不与 GSAP 视差冲突） */
+    .feature-card::after {
+        content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0;
+        background: radial-gradient(200px circle at var(--mx,50%) var(--my,30%), rgba(43,196,224,0.28), rgba(43,196,224,0.08) 38%, transparent 62%);
+        transition: opacity 0.35s ease;
+        z-index: 1;
+    }
+    .feature-card:hover::after { opacity: 1; }
     @keyframes shimmerSweep {
         0% { left: -160%; opacity: 0; }
         20% { opacity: 1; }
@@ -2501,6 +2515,22 @@
             }, { passive: true });
             window.addEventListener('resize', update);
             update();
+        })();
+
+        /* 功能卡片：聚光灯跟随鼠标（交互反馈） */
+        (function () {
+            const cards = document.querySelectorAll('.feature-card');
+            cards.forEach(function (card) {
+                card.addEventListener('mousemove', function (e) {
+                    const r = card.getBoundingClientRect();
+                    card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+                    card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+                });
+                card.addEventListener('mouseleave', function () {
+                    card.style.setProperty('--mx', '50%');
+                    card.style.setProperty('--my', '30%');
+                });
+            });
         })();
 
     </script>
