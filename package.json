@@ -87,6 +87,7 @@
     "rcedit": "^5.0.2"
   },
   "dependencies": {
+    "7zip-bin": "^5.2.0",
     "cors": "^2.8.6",
     "electron-updater": "^6.8.9",
     "express": "^5.2.1"
