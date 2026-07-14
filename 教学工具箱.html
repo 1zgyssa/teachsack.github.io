@@ -2684,7 +2684,24 @@
                 inset 0 0 60px rgba(0, 0, 0, 0.5);
             max-width: 420px;
             width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
             animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        /* 弹窗卡片内容超长时自定义滚动条，避免底部按钮被顶出屏幕点不到 */
+        .custom-modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-modal-content::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+        .custom-modal-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 215, 0, 0.4);
+            border-radius: 4px;
+        }
+        .custom-modal-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 215, 0, 0.6);
         }
 
         .custom-toast {
@@ -5122,6 +5139,7 @@
                 date: '2026-07-13',
                 items: [
                     '🐛 修复：点名器页手动输入名单框中文/空格输入法被吞，导致偶尔输不进',
+                    '🐛 修复：更新日志内容较长时弹窗撑满屏幕、按钮被顶出可视区导致无法关闭',
                     '💾 修复：重置数据无法持久化，新增退出同步落盘与运行时防抖自动保存（三层持久化防线，防崩溃/强杀/断电）',
                     '🎨 主按钮新增 Uiverse 风格中心扩散高光，交互更丝滑',
                     '📝 关于页更新产品负责人分工与版本时间'
