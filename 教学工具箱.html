@@ -5129,11 +5129,18 @@
         let focusInterval = null;
 
         // ========== 更新日志 ==========
-        const APP_VERSION = '1.2.15';
+        const APP_VERSION = '1.2.16';
         const LAST_SEEN_VERSION_KEY = 'app_last_seen_version';
 
         // 应用内更新日志（最新版本置顶）。每次发版在此追加一条即可。
         const CHANGELOG = [
+            {
+                version: '1.2.16',
+                date: '2026-07-14',
+                items: [
+                    '🐛 修复：重置数据后退出重进，旧名单/默认名单被重新写回的问题（重置改为同步落盘 + 显式清空名单，杜绝竞态与默认名单误注入）'
+                ]
+            },
             {
                 version: '1.2.15',
                 date: '2026-07-13',
@@ -6013,12 +6020,11 @@
             };
             DATA_KEYS.forEach(key => {
                 if (key === 'classRoster') {
+                    // 即使名单为空也显式写入 "[]"，确保空名单被持久化，
+                    // 避免"键缺失"被误判为首次运行而重新注入默认名单
                     const classRosterValue = localStorage.getItem('classRoster');
-                    if (!classRosterValue) return;
-                    try {
-                        const parsed = JSON.parse(classRosterValue);
-                        if (parsed.length === 0) return;
-                    } catch { return; }
+                    backupData.data[key] = classRosterValue !== null ? classRosterValue : '[]';
+                    return;
                 }
                 const value = localStorage.getItem(key);
                 if (value !== null) {
@@ -6229,7 +6235,16 @@
                             localStorage.setItem(key, licenseData[key]);
                         });
                         
+                        // 内存中也写入空名单，使当前会话立即反映重置态
+                        localStorage.setItem('classRoster', '[]');
+                        localStorage.setItem('calledStudents', '[]');
                         localStorage.setItem('reset_flag', 'true');
+
+                        // 取消可能仍在排队的防抖自动保存，避免它用旧数据覆盖本次重置结果
+                        if (window.__appAutosaveTimer) {
+                            clearTimeout(window.__appAutosaveTimer);
+                            window.__appAutosaveTimer = null;
+                        }
                         
                         if (window.electronAPI) {
                                 const resetBackupData = {
@@ -6240,15 +6255,30 @@
                                 Object.keys(licenseData).forEach(key => {
                                     resetBackupData.data[key] = licenseData[key];
                                 });
-                                // 把重置标记也持久化到文件，防止下次启动时再次加载默认示例数据
+                                // 显式写入空名单，确保磁盘文件明确为"重置态"，
+                                // 无歧义、不依赖 reset_flag 间接推断，也杜绝默认名单被重新注入
+                                resetBackupData.data['classRoster'] = '[]';
+                                resetBackupData.data['calledStudents'] = '[]';
                                 resetBackupData.data['reset_flag'] = 'true';
-                                const saveResult = await window.electronAPI.saveDataFile(resetBackupData);
-                                if (!saveResult || !saveResult.success) {
-                                    console.error('重置数据保存失败:', saveResult && saveResult.error);
+                                // 用同步落盘，避免 await 期间被防抖保存/竞态覆盖，保证重置结果一定写盘
+                                let saveOk = true;
+                                try {
+                                    if (window.electronAPI.saveDataFileSync) {
+                                        const r = window.electronAPI.saveDataFileSync(resetBackupData);
+                                        saveOk = !!(r && r.success);
+                                    } else {
+                                        const r = await window.electronAPI.saveDataFile(resetBackupData);
+                                        saveOk = !!(r && r.success);
+                                    }
+                                } catch (e) {
+                                    console.error('重置数据保存异常:', e);
+                                    saveOk = false;
+                                }
+                                if (!saveOk) {
                                     showCustomModal({
                                         icon: '❌',
                                         title: '重置失败',
-                                        message: '重置后的数据文件保存失败，请检查应用权限或磁盘空间。\n\n' + (saveResult && saveResult.error ? '错误：' + saveResult.error : ''),
+                                        message: '重置后的数据文件保存失败，请检查应用权限或磁盘空间。',
                                         confirmText: '确定',
                                         showCancel: false
                                     });
