@@ -4133,7 +4133,7 @@
                     <div class="settings-section-title">ℹ️ 关于</div>
                     <div class="settings-item">
                         <label class="settings-label">版本号</label>
-                        <span class="settings-value">1.2.15</span>
+                        <span class="settings-value" id="aboutVersion">1.2.15</span>
                     </div>
                     <div class="settings-item">
                         <label class="settings-label">产品负责人</label>
@@ -4141,7 +4141,7 @@
                     </div>
                     <div class="settings-item">
                         <label class="settings-label">更新时间</label>
-                        <span class="settings-value">2026年7月13日</span>
+                        <span class="settings-value" id="aboutUpdateDate">2026年7月13日</span>
                     </div>
                     <div class="settings-item" style="display: block;">
                         <label class="settings-label">更新日志</label>
@@ -5208,6 +5208,14 @@
         ];
 
         function renderAboutChangelog() {
+            const versionEl = document.getElementById('aboutVersion');
+            if (versionEl) versionEl.textContent = APP_VERSION;
+            const dateEl = document.getElementById('aboutUpdateDate');
+            if (dateEl) {
+                const today = new Date();
+                const dateStr = today.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' }).replace(/\//g, '年').replace(/,/, '月') + '日';
+                dateEl.textContent = dateStr;
+            }
             const container = document.getElementById('changelogList');
             if (!container) return;
             let html = '';
