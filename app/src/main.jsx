@@ -96,7 +96,7 @@ const dlMount = document.getElementById('download-cta-mount');
 if (dlMount) {
   createRoot(dlMount).render(
     <Magnet magnetStrength={3} padding={12}>
-      <a href="https://gitee.com/qwezasxf/teaching-toolbox/releases/download/v1.2.15/Teach-Sack-Setup-1.2.15.exe" className="download-link-btn" target="_blank" rel="noopener">立即下载</a>
+      <a href="https://gitee.com/qwezasxf/teaching-toolbox/releases/download/v1.2.17/Teach-Sack-Setup-1.2.17.exe" className="download-link-btn" target="_blank" rel="noopener">立即下载</a>
     </Magnet>
   );
 }

@@ -332,9 +332,7 @@
             padding: 80px;
             border-radius: 0;
             overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            text-align: center;
         }
         .app.fullscreen-mode .toolbox-title {
             font-size: 80px;
@@ -350,6 +348,7 @@
             justify-content: center;
             gap: 40px;
             max-width: 1400px;
+            margin: 0 auto;
         }
         .app.fullscreen-mode .tool-card {
             padding: 50px 60px;
@@ -5129,11 +5128,18 @@
         let focusInterval = null;
 
         // ========== 更新日志 ==========
-        const APP_VERSION = '1.2.16';
+        const APP_VERSION = '1.2.17';
         const LAST_SEEN_VERSION_KEY = 'app_last_seen_version';
 
         // 应用内更新日志（最新版本置顶）。每次发版在此追加一条即可。
         const CHANGELOG = [
+            {
+                version: '1.2.17',
+                date: '2026-07-14',
+                items: [
+                    '🐛 修复：开启大屏模式后，随机分组 / 课堂计时器 / 知识闯关 / 成绩统计等功能页面无法滚动、完整画面被裁剪的问题（大屏容器改回可靠的块级滚动容器）'
+                ]
+            },
             {
                 version: '1.2.16',
                 date: '2026-07-14',
